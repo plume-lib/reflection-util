@@ -16,18 +16,33 @@ public final class Signatures {
 
   /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
   private static HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>
-      primitiveFieldDescriptor =
+      primitiveToFieldDescriptor =
           new HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>(8);
 
   static {
-    primitiveFieldDescriptor.put("boolean", "Z");
-    primitiveFieldDescriptor.put("byte", "B");
-    primitiveFieldDescriptor.put("char", "C");
-    primitiveFieldDescriptor.put("double", "D");
-    primitiveFieldDescriptor.put("float", "F");
-    primitiveFieldDescriptor.put("int", "I");
-    primitiveFieldDescriptor.put("long", "J");
-    primitiveFieldDescriptor.put("short", "S");
+    primitiveToFieldDescriptor.put("boolean", "Z");
+    primitiveToFieldDescriptor.put("byte", "B");
+    primitiveToFieldDescriptor.put("char", "C");
+    primitiveToFieldDescriptor.put("double", "D");
+    primitiveToFieldDescriptor.put("float", "F");
+    primitiveToFieldDescriptor.put("int", "I");
+    primitiveToFieldDescriptor.put("long", "J");
+    primitiveToFieldDescriptor.put("short", "S");
+  }
+
+  /** Map from field descriptor (sach as "I") to primitive type (such as "int"). */
+  private static HashMap<String, String> fieldDescriptorToPrimitive =
+      new HashMap<String, String>(8);
+
+  static {
+    fieldDescriptorToPrimitive.put("Z", "boolean");
+    fieldDescriptorToPrimitive.put("B", "byte");
+    fieldDescriptorToPrimitive.put("C", "char");
+    fieldDescriptorToPrimitive.put("D", "double");
+    fieldDescriptorToPrimitive.put("F", "float");
+    fieldDescriptorToPrimitive.put("I", "int");
+    fieldDescriptorToPrimitive.put("J", "long");
+    fieldDescriptorToPrimitive.put("S", "short");
   }
 
   /**
@@ -45,7 +60,7 @@ public final class Signatures {
       dims++;
       sansArray = sansArray.substring(0, sansArray.length() - 2);
     }
-    String result = primitiveFieldDescriptor.get(sansArray);
+    String result = primitiveToFieldDescriptor.get(sansArray);
     if (result == null) {
       result = "L" + sansArray + ";";
     }
@@ -64,7 +79,7 @@ public final class Signatures {
    * @throws IllegalArgumentException if primitiveName is not a valid primitive type name
    */
   public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(String primitiveName) {
-    String result = primitiveFieldDescriptor.get(primitiveName);
+    String result = primitiveToFieldDescriptor.get(primitiveName);
     if (result == null) {
       throw new IllegalArgumentException("Not the name of a primitive type: " + primitiveName);
     }
@@ -126,19 +141,6 @@ public final class Signatures {
     return result;
   }
 
-  private static HashMap<String, String> primitiveClassesFromJvm = new HashMap<String, String>(8);
-
-  static {
-    primitiveClassesFromJvm.put("Z", "boolean");
-    primitiveClassesFromJvm.put("B", "byte");
-    primitiveClassesFromJvm.put("C", "char");
-    primitiveClassesFromJvm.put("D", "double");
-    primitiveClassesFromJvm.put("F", "float");
-    primitiveClassesFromJvm.put("I", "int");
-    primitiveClassesFromJvm.put("J", "long");
-    primitiveClassesFromJvm.put("S", "short");
-  }
-
   // does not convert "V" to "void".  Should it?
   /**
    * Convert a field descriptor to a binary name. For example, convert "[Ljava/lang/Object;" to
@@ -161,7 +163,7 @@ public final class Signatures {
     if (classname.startsWith("L") && classname.endsWith(";")) {
       result = classname.substring(1, classname.length() - 1);
     } else {
-      result = primitiveClassesFromJvm.get(classname);
+      result = fieldDescriptorToPrimitive.get(classname);
       if (result == null) {
         throw new Error("Malformed base class: " + classname);
       }
