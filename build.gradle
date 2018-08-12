@@ -32,8 +32,7 @@ targetCompatibility = 1.8
 // Turn Javadoc warnings into errors.
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
-  // Can't enable private because WeakIdentityHashMap.java doesn't have exhaustive Javadoc comments
-  // options.addStringOption('private', '-quiet')
+  options.addStringOption('private', '-quiet')
 }
 
 task javadocWeb(type: Javadoc) {

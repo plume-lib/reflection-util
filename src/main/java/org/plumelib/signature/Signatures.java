@@ -14,19 +14,20 @@ import org.checkerframework.checker.signature.qual.SourceNameForNonArrayNonInner
 /** Conversion utilities between Java and JVM string formats, for types and signatures. */
 public final class Signatures {
 
+  /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
   private static HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>
-      primitiveClassesJvm =
+      primitiveFieldDescriptor =
           new HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>(8);
 
   static {
-    primitiveClassesJvm.put("boolean", "Z");
-    primitiveClassesJvm.put("byte", "B");
-    primitiveClassesJvm.put("char", "C");
-    primitiveClassesJvm.put("double", "D");
-    primitiveClassesJvm.put("float", "F");
-    primitiveClassesJvm.put("int", "I");
-    primitiveClassesJvm.put("long", "J");
-    primitiveClassesJvm.put("short", "S");
+    primitiveFieldDescriptor.put("boolean", "Z");
+    primitiveFieldDescriptor.put("byte", "B");
+    primitiveFieldDescriptor.put("char", "C");
+    primitiveFieldDescriptor.put("double", "D");
+    primitiveFieldDescriptor.put("float", "F");
+    primitiveFieldDescriptor.put("int", "I");
+    primitiveFieldDescriptor.put("long", "J");
+    primitiveFieldDescriptor.put("short", "S");
   }
 
   /**
@@ -44,7 +45,7 @@ public final class Signatures {
       dims++;
       sansArray = sansArray.substring(0, sansArray.length() - 2);
     }
-    String result = primitiveClassesJvm.get(sansArray);
+    String result = primitiveFieldDescriptor.get(sansArray);
     if (result == null) {
       result = "L" + sansArray + ";";
     }
@@ -63,7 +64,7 @@ public final class Signatures {
    * @throws IllegalArgumentException if primitiveName is not a valid primitive type name
    */
   public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(String primitiveName) {
-    String result = primitiveClassesJvm.get(primitiveName);
+    String result = primitiveFieldDescriptor.get(primitiveName);
     if (result == null) {
       throw new IllegalArgumentException("Not the name of a primitive type: " + primitiveName);
     }
