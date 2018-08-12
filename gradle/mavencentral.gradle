@@ -1,0 +1,83 @@
+// To make a release:
+//  * Update the version number in ../README.md and in this file.
+//  * Run in the top-level directory:  ./gradlew uploadArchives && ./gradlew javadocWeb
+//  * Browse to https://oss.sonatype.org/#stagingRepositories
+// Your ~/.gradle/gradle.properties file must contain:
+//   ossrhUsername=YOUR_USER_NAME_HERE
+//   ossrhPassword=YOUR_PASSWORD_HERE
+
+///////////////////////////////////////////////////////////////////////////
+/// Maven Central publishing
+/// (From http://central.sonatype.org/pages/gradle.html )
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = "org.plumelib"
+archivesBaseName = "signature-util"
+version = "0.0.1"
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required { project.gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+  doFirst {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+          name 'Signature-util'
+          packaging 'jar'
+          description 'Utility libraries for Java.'
+          url 'https://github.com/plume-lib/signature-util'
+
+          scm {
+            connection 'scm:git:git@github.com:plume-lib/signature-util.git'
+            developerConnection 'scm:git:git@github.com:plume-lib/signature-util.git'
+            url 'git@github.com:plume-lib/signature-util.git'
+          }
+
+          licenses {
+            license {
+              name 'MIT License'
+              url 'https://opensource.org/licenses/MIT'
+            }
+          }
+
+          developers {
+            developer {
+              id 'mernst'
+              name 'Michael Ernst'
+              email 'mernst@alum.mit.edu'
+            }
+          }
+        }
+      }
+    }
+  }
+}
