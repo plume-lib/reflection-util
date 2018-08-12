@@ -15,7 +15,7 @@ apply plugin: 'signing'
 
 group = "org.plumelib"
 archivesBaseName = "signature-util"
-version = "0.0.1"
+version = "0.0.2"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -53,7 +53,7 @@ uploadArchives {
         pom.project {
           name 'Signature-util'
           packaging 'jar'
-          description 'Utility libraries for Java.'
+          description 'Convert among string representations of Java types.'
           url 'https://github.com/plume-lib/signature-util'
 
           scm {

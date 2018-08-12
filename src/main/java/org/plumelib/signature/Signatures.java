@@ -11,13 +11,8 @@ import org.checkerframework.checker.signature.qual.SourceNameForNonArrayNonInner
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
 // This should convert among all of them.  But perhaps just add functionality as the need comes up.
 
-/**
- * Utility functions for working with the JVM.
- *
- * <p>Currently contains conversion utilities between Java and JVM string formats, for types and
- * signatures.
- */
-public final class SignatureUtil {
+/** Conversion utilities between Java and JVM string formats, for types and signatures. */
+public final class Signatures {
 
   private static HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>
       primitiveClassesJvm =
