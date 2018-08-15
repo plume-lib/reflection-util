@@ -6,14 +6,6 @@ import org.checkerframework.checker.signature.qual.FieldDescriptor;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.junit.Test;
 
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.checker.signature.qual.*;
-import org.checkerframework.common.value.qual.*;
-*/
-
 /** Test code for the Signatures class. */
 @SuppressWarnings({
   "interning", // interning is due to apparent bugs
