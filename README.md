@@ -11,7 +11,7 @@ In a gradle buildfile, write
 
 ```
 dependencies {
-  implementation 'org.plumelib:signature-util:0.0.4'
+  implementation 'org.plumelib:signature-util:0.0.6'
 }
 ```
 
