@@ -6,7 +6,7 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.FieldDescriptor;
-import org.checkerframework.checker.signature.qual.SourceNameForNonArrayNonInner;
+import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
 
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
 // This should convert among all of them.  But perhaps just add functionality as the need comes up.
@@ -15,9 +15,9 @@ import org.checkerframework.checker.signature.qual.SourceNameForNonArrayNonInner
 public final class Signatures {
 
   /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
-  private static HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>
+  private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
       primitiveToFieldDescriptor =
-          new HashMap<@SourceNameForNonArrayNonInner String, @FieldDescriptor String>(8);
+          new HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>(8);
 
   static {
     primitiveToFieldDescriptor.put("boolean", "Z");
