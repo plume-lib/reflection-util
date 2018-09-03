@@ -14,8 +14,8 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = "org.plumelib"
-archivesBaseName = "signature-util"
-version = "0.0.6"
+archivesBaseName = "reflection-util"
+version = "0.0.1"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -51,15 +51,15 @@ uploadArchives {
         }
 
         pom.project {
-          name 'Signature-util'
+          name 'Reflection-util'
           packaging 'jar'
           description 'Convert among string representations of Java types.'
-          url 'https://github.com/plume-lib/signature-util'
+          url 'https://github.com/plume-lib/reflection-util'
 
           scm {
-            connection 'scm:git:git@github.com:plume-lib/signature-util.git'
-            developerConnection 'scm:git:git@github.com:plume-lib/signature-util.git'
-            url 'git@github.com:plume-lib/signature-util.git'
+            connection 'scm:git:git@github.com:plume-lib/reflection-util.git'
+            developerConnection 'scm:git:git@github.com:plume-lib/reflection-util.git'
+            url 'git@github.com:plume-lib/reflection-util.git'
           }
 
           licenses {

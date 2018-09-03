@@ -1,5 +1,5 @@
 plugins {
-  // To create a fat jar build/libs/signature-util-all.jar, run: ./gradlew shadowJar
+  // To create a fat jar build/libs/reflection-util-all.jar, run: ./gradlew shadowJar
   id "com.github.johnrengelman.shadow" version "2.0.4"
   // Run the Error Prone linter.
   id "net.ltgt.errorprone-base" version "0.0.16"
@@ -37,7 +37,7 @@ javadoc {
 
 task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
-  destinationDir = file("/cse/web/research/plumelib/signature-util/api")
+  destinationDir = file("/cse/web/research/plumelib/reflection-util/api")
   classpath = project.sourceSets.main.compileClasspath
 }
 

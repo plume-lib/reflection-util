@@ -1,4 +1,4 @@
-package org.plumelib.signature;
+package org.plumelib.reflection;
 
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
