@@ -52,11 +52,9 @@ task requireJavadoc(type: Javadoc) {
   destinationDir.deleteDir()
   source = sourceSets.main.allJava
   classpath = project.sourceSets.main.compileClasspath
-  // TODO: uncomment.  "requireJavadoc" has no effect over "javadoc" while this line is commented.
   options.memberLevel = JavadocMemberLevel.PRIVATE
   options.docletpath = project.sourceSets.main.compileClasspath as List
   options.doclet = "org.plumelib.javadoc.RequireJavadoc"
-  options.addStringOption('skip', 'WeakIdentityHashMap|WeakHasherMap')
 }
 
 /* Make Emacs TAGS table */
