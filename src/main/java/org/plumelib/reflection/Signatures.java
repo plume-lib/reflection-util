@@ -16,8 +16,7 @@ public final class Signatures {
 
   /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
   private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
-      primitiveToFieldDescriptor =
-          new HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>(8);
+      primitiveToFieldDescriptor = new HashMap<>(8);
 
   static {
     primitiveToFieldDescriptor.put("boolean", "Z");
@@ -31,8 +30,7 @@ public final class Signatures {
   }
 
   /** Map from field descriptor (sach as "I") to primitive type (such as "int"). */
-  private static HashMap<String, String> fieldDescriptorToPrimitive =
-      new HashMap<String, String>(8);
+  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
 
   static {
     fieldDescriptorToPrimitive.put("Z", "boolean");
