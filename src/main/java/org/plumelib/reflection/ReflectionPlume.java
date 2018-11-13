@@ -85,17 +85,16 @@ public final class ReflectionPlume {
   // TODO: Should create a method that handles any ClassGetName (including primitives), but not
   // fully-qualified names.  A routine with a polymorphic parameter type is confusing.
   /**
-   * Like {@link Class#forName(String)}, but also works when the string represents a primitive type
-   * or a fully-qualified name (as opposed to a binary name).
+   * Like {@link Class#forName(String)}: given a string representing a non-array class, returns the
+   * Class. Unlike {@link Class#forName(String)}, the argument may be a primitive type or a
+   * fully-qualified name (in addition to a binary name).
    *
    * <p>If the given name can't be found, this method changes the last '.' to a dollar sign ($) and
    * tries again. This accounts for inner classes that are incorrectly passed in in fully-qualified
    * format instead of binary format. (It should try multiple dollar signs, not just at the last
    * position.)
    *
-   * <p>Recall the rather odd specification for {@link Class#forName(String)}: the argument is a
-   * binary name for non-arrays, but a field descriptor for arrays. This method uses the same rules,
-   * but additionally handles primitive types and, for non-arrays, fully-qualified names.
+   * <p>This method does not handle arrays.
    *
    * @param className name of the class
    * @return the Class corresponding to className
@@ -108,20 +107,22 @@ public final class ReflectionPlume {
     Class<?> result = primitiveClasses.get(className);
     if (result != null) {
       return result;
-    } else {
-      try {
-        return Class.forName(className);
-      } catch (ClassNotFoundException e) {
+    }
+    try {
+      return Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      while (true) {
         int pos = className.lastIndexOf('.');
         if (pos < 0) {
           throw e;
         }
         @SuppressWarnings("signature") // checked below & exception is handled
         @ClassGetName String innerName = className.substring(0, pos) + "$" + className.substring(pos + 1);
+        className = innerName;
         try {
-          return Class.forName(innerName);
+          return Class.forName(className);
         } catch (ClassNotFoundException ee) {
-          throw e;
+          continue; // nothing to do
         }
       }
     }
@@ -455,6 +456,7 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
+  @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(@PolyNull Object[] objects) {
     Class<T> result = null;
     for (Object obj : objects) {
@@ -473,6 +475,7 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
+  @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(List<? extends @Nullable Object> objects) {
     Class<T> result = null;
     for (Object obj : objects) {
