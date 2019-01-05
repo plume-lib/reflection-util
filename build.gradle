@@ -1,4 +1,6 @@
 plugins {
+  id 'java-library'
+
   // To create a fat jar build/libs/reflection-util-all.jar, run: ./gradlew shadowJar
   id "com.github.johnrengelman.shadow" version "2.0.4"
   // Run the Error Prone linter.
@@ -7,27 +9,31 @@ plugins {
   // this issue is fixed: https://github.com/google/google-java-format/issues/5
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
   // id "com.github.sherter.google-java-format" version "0.7.1"
+
+  id "org.checkerframework" version "0.1.0"
 }
-
-apply plugin: 'java-library'
-
-// Checker Framework pluggable type-checking
-apply from: "${buildscript.sourceFile.parent}/gradle/checkerframework.gradle"
 
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
-
-dependencies {
-  testImplementation 'junit:junit:4.12'
-  errorprone 'com.google.errorprone:error_prone_core:2.3.1'
-}
 
 repositories {
   mavenCentral()
 }
 
+dependencies {
+  testImplementation 'junit:junit:4.12'
+  errorprone 'com.google.errorprone:error_prone_core:2.3.1'
+
+  annotationProcessor 'org.checkerframework:checker:2.+'
+  annotationProcessor 'org.checkerframework:jdk8:2.+'
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+checkerframework.addChecker('org.checkerframework.checker.nullness.NullnessChecker')
+
+/// Javadoc
 
 // Turn Javadoc warnings into errors.
 javadoc {
@@ -41,14 +47,14 @@ task javadocWeb(type: Javadoc) {
   classpath = project.sourceSets.main.compileClasspath
 }
 
-// `requireJavadoc` target ensures that all Java elements have Javadoc documentation.
 configurations {
-  requireJavadoc
+  requireJavadoc  // ensure that all Java elements have Javadoc documentation.
 }
 dependencies {
   implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
 }
 task requireJavadoc(type: Javadoc) {
+  description = 'Ensures that Javadoc documentation exists.'
   destinationDir.deleteDir()
   source = sourceSets.main.allJava
   classpath = project.sourceSets.main.compileClasspath
@@ -56,6 +62,9 @@ task requireJavadoc(type: Javadoc) {
   options.docletpath = project.sourceSets.main.compileClasspath as List
   options.doclet = "org.plumelib.javadoc.RequireJavadoc"
 }
+
+
+/// Emacs support
 
 /* Make Emacs TAGS table */
 task tags(type: Exec) {
