@@ -2,10 +2,10 @@
 //  * Update the version number in ../README.md and in this file.
 //  * Update CHANGELOG.md.
 //  * Run in the top-level directory:  ./gradlew clean uploadArchives && ./gradlew javadocWeb
-//  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release
-//  * Commit new version number, then add a git tag:
-//    # Stage changes
-//    git commit -m "Version 0.0.2" && git tag -a v0.0.2 -m "Version 0.0.2"
+//  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
+//  * Stage changes.
+//  * Add a git tag:
+//    VER=0.0.2 && git commit -m "Version $VER" && git tag -a v$VER -m "Version $VER" && git push --tags
 //  * Make a GitHub release. Go to the GitHub releases page, make a release, attach the .jar file from build/libs/
 // Your ~/.gradle/gradle.properties file must contain:
 //   ossrhUsername=YOUR_USER_NAME_HERE
