@@ -1,3 +1,4 @@
+// Checker Framework pluggable type-checking
 buildscript {
   repositories {
     mavenLocal()
@@ -40,7 +41,17 @@ targetCompatibility = 1.8
 
 checkerFramework {
   checkers = [
-    'org.checkerframework.checker.nullness.NullnessChecker'
+    'org.checkerframework.checker.formatter.FormatterChecker',
+    'org.checkerframework.checker.index.IndexChecker',
+    'org.checkerframework.checker.interning.InterningChecker',
+    'org.checkerframework.checker.lock.LockChecker',
+    'org.checkerframework.checker.nullness.NullnessChecker',
+    'org.checkerframework.checker.nullness.NullnessRawnessChecker',
+    'org.checkerframework.checker.regex.RegexChecker',
+    'org.checkerframework.checker.signature.SignatureChecker'
+  ]
+  extraJavacArgs = [
+    '-AcheckPurityAnnotations'
   ]
 }
 
