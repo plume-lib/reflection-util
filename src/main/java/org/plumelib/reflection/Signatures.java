@@ -44,8 +44,11 @@ public final class Signatures {
   }
 
   /**
-   * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
-   * "[Ljava/lang/Object;" or "int" to "I".
+   * Convert a binary name to a field descriptor. For example, convert "pkg.Outer$Inner" to
+   * "Lpkg/Outer$Inner;".
+   *
+   * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
+   * them. It converts "java.lang.Object[]" to "[Ljava/lang/Object;" or "int" to "I".
    *
    * @param classname name of the class, in binary class name format
    * @return name of the class, in field descriptor format
@@ -87,11 +90,14 @@ public final class Signatures {
   /**
    * Convert from a BinaryName to the format of {@link Class#getName()}.
    *
+   * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
+   * them. It converts "java.lang.Object[]" to "[Ljava.lang.Object;" or "int" to "int".
+   *
    * @param bn the binary name to convert
    * @return the class name, in Class.getName format
    */
   @SuppressWarnings("signature") // conversion routine
-  public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn) {
+  public static @ClassGetName String binaryNameToClassGetName(@BinaryName String bn) {
     if (bn.endsWith("[]")) {
       return binaryNameToFieldDescriptor(bn).replace('/', '.');
     } else {
@@ -106,7 +112,7 @@ public final class Signatures {
    * @return the class name, in Class.getName format
    */
   @SuppressWarnings("signature") // conversion routine
-  public static @ClassGetName String fieldDescriptorToClassGetName(/*FieldDescriptor*/ String fd) {
+  public static @ClassGetName String fieldDescriptorToClassGetName(@FieldDescriptor String fd) {
     if (fd.startsWith("[")) {
       return fd.replace('/', '.');
     } else {

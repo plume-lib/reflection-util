@@ -30,9 +30,6 @@ public final class TestSignatures {
     assert Signatures.binaryNameToFieldDescriptor("Integer").equals("LInteger;");
     assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer")
         .equals("LJava/lang/Integer;");
-    assert Signatures.binaryNameToFieldDescriptor("int[][]").equals("[[I");
-    assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer[][][]")
-        .equals("[[[LJava/lang/Integer;");
 
     // public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn)
     assert Signatures.binaryNameToClassGetName("boolean").equals("boolean");
@@ -45,9 +42,6 @@ public final class TestSignatures {
     assert Signatures.binaryNameToClassGetName("short").equals("short");
     assert Signatures.binaryNameToClassGetName("Integer").equals("Integer");
     assert Signatures.binaryNameToClassGetName("Java.lang.Integer").equals("Java.lang.Integer");
-    assert Signatures.binaryNameToClassGetName("int[][]").equals("[[I");
-    assert Signatures.binaryNameToClassGetName("Java.lang.Integer[][][]")
-        .equals("[[[LJava.lang.Integer;");
 
     // public static String arglistToJvm(String arglist)
     assert Signatures.arglistToJvm("()").equals("()");
@@ -111,21 +105,41 @@ public final class TestSignatures {
     // More tests for type representation conversions.
     // Table from Signature Checker manual.
     checkTypeStrings("int", "int", "int", "I");
-    checkTypeStrings("int[][]", "int[][]", "[[I", "[[I");
     checkTypeStrings("MyClass", "MyClass", "MyClass", "LMyClass;");
-    checkTypeStrings("MyClass[]", "MyClass[]", "[LMyClass;", "[LMyClass;");
     checkTypeStrings(
         "java.lang.Integer", "java.lang.Integer", "java.lang.Integer", "Ljava/lang/Integer;");
-    checkTypeStrings(
-        "java.lang.Integer[]",
-        "java.lang.Integer[]",
-        "[Ljava.lang.Integer;",
-        "[Ljava/lang/Integer;");
     checkTypeStrings(
         "java.lang.Byte.ByteCache",
         "java.lang.Byte$ByteCache",
         "java.lang.Byte$ByteCache",
         "Ljava/lang/Byte$ByteCache;");
+  }
+
+  // Tests implementation details of some routines that accept more arguments than claimed by their
+  // specification.
+  @SuppressWarnings({"ArrayEquals", "signature"})
+  @Test
+  public void testSignaturesImplementation() {
+
+    // public static String binaryNameToFieldDescriptor(String classname)
+    assert Signatures.binaryNameToFieldDescriptor("int[][]").equals("[[I");
+    assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer[][][]")
+        .equals("[[[LJava/lang/Integer;");
+
+    // public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn)
+    assert Signatures.binaryNameToClassGetName("int[][]").equals("[[I");
+    assert Signatures.binaryNameToClassGetName("Java.lang.Integer[][][]")
+        .equals("[[[LJava.lang.Integer;");
+
+    // More tests for type representation conversions.
+    // Table from Signature Checker manual.
+    checkTypeStrings("int[][]", "int[][]", "[[I", "[[I");
+    checkTypeStrings("MyClass[]", "MyClass[]", "[LMyClass;", "[LMyClass;");
+    checkTypeStrings(
+        "java.lang.Integer[]",
+        "java.lang.Integer[]",
+        "[Ljava.lang.Integer;",
+        "[Ljava/lang/Integer;");
     checkTypeStrings(
         "java.lang.Byte.ByteCache[]",
         "java.lang.Byte$ByteCache[]",
