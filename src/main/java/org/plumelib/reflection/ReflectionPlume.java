@@ -290,16 +290,18 @@ public final class ReflectionPlume {
     String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
     Class<?>[] argclasses = args_seen.get(all_argnames);
     if (argclasses == null) {
-      String[] argnames;
+      @BinaryName String[] argnames;
       if (all_argnames.equals("")) {
         argnames = new String[0];
       } else {
-        argnames = all_argnames.split(",");
+        @SuppressWarnings("signature") // string manipulation: splitting a method signature
+        @BinaryName String[] bnArgnames = all_argnames.split(" *, *");
+        argnames = bnArgnames;
       }
 
       @MonotonicNonNull Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
-        String bnArgname = argnames[i].trim();
+        @BinaryName String bnArgname = argnames[i];
         @ClassGetName String cgnArgname = Signatures.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
