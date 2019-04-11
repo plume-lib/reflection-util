@@ -18,23 +18,23 @@ public final class TestReflectionPlume {
   @Test
   public void test_classForName() {
     try {
-      assert ReflectionPlume.classForName("int").equals(int.class);
-      assert ReflectionPlume.classForName("boolean").equals(boolean.class);
-      assert ReflectionPlume.classForName("java.lang.Class").equals(Class.class);
-      assert ReflectionPlume.classForName("java.util.Map.Entry").equals(java.util.Map.Entry.class);
-      assert ReflectionPlume.classForName("java.util.Map$Entry").equals(java.util.Map.Entry.class);
+      assert ReflectionPlume.classForName("int") == int.class;
+      assert ReflectionPlume.classForName("boolean") == boolean.class;
+      assert ReflectionPlume.classForName("java.lang.Class") == Class.class;
+      assert ReflectionPlume.classForName("java.util.Map.Entry") == java.util.Map.Entry.class;
+      assert ReflectionPlume.classForName("java.util.Map$Entry") == java.util.Map.Entry.class;
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume.Inner.InnerInner")
-          .equals(Inner.InnerInner.class);
+          == Inner.InnerInner.class;
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume.Inner$InnerInner")
-          .equals(Inner.InnerInner.class);
+          == Inner.InnerInner.class;
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume$Inner.InnerInner")
-          .equals(Inner.InnerInner.class);
+          == Inner.InnerInner.class;
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume$Inner$InnerInner")
-          .equals(Inner.InnerInner.class);
+          == Inner.InnerInner.class;
     } catch (ClassNotFoundException e) {
       throw new Error(e);
     }
