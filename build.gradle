@@ -1,28 +1,19 @@
-// Checker Framework pluggable type-checking
-buildscript {
-  repositories {
-    mavenLocal()
-  }
-
-  dependencies {
-    classpath 'com.jaredsburrows:gradle-checker-framework-plugin:0.2.3-SNAPSHOT'
-  }
-}
-
 plugins {
   id 'java-library'
 
   // To create a fat jar build/libs/reflection-util-all.jar, run: ./gradlew shadowJar
   id "com.github.johnrengelman.shadow" version "2.0.4"
+
   // Run the Error Prone linter.
   id "net.ltgt.errorprone-base" version "0.0.16"
+  // Checker Framework pluggable type-checking
+  id 'org.checkerframework' version '0.3.0'
+
   // Formating is disabled due to poor handling of type annotations; wait until
   // this issue is fixed: https://github.com/google/google-java-format/issues/5
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
   // id "com.github.sherter.google-java-format" version "0.7.1"
 }
-
-apply plugin: 'com.jaredsburrows.checkerframework'
 
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
@@ -39,6 +30,7 @@ dependencies {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+apply plugin: 'org.checkerframework'
 checkerFramework {
   checkers = [
     'org.checkerframework.checker.formatter.FormatterChecker',
