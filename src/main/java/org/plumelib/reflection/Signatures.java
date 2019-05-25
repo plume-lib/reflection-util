@@ -7,6 +7,7 @@ import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
 import org.checkerframework.checker.signature.qual.FieldDescriptor;
+import org.checkerframework.checker.signature.qual.FqBinaryName;
 
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
 // This should convert among all of them.  But perhaps just add functionality as the need comes up.
@@ -223,5 +224,20 @@ public final class Signatures {
       }
     }
     return result + ")";
+  }
+
+  /**
+   * Returns the element type for the given FqBinaryName, which results from removing all the array
+   * brackets.
+   *
+   * @param fqBinaryName "a fully-qualified binary name" ({@code @FqBinaryNome})
+   * @return the base element type of the argument, with all array brackets stripped
+   */
+  @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
+  public static @ClassGetName String fqBinaryNameElementType(@FqBinaryName String fqBinaryName) {
+    int bracketPos = fqBinaryName.indexOf('[');
+    if (bracketPos == -1) {
+      return fqBinaryName;
+    } else return fqBinaryName.substring(0, bracketPos);
   }
 }
