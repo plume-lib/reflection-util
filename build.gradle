@@ -66,7 +66,7 @@ configurations {
   requireJavadoc  // ensure that all Java elements have Javadoc documentation.
 }
 dependencies {
-  implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
+  compileOnly group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
 }
 task requireJavadoc(type: Javadoc) {
   description = 'Ensures that Javadoc documentation exists.'
