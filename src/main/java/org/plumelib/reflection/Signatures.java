@@ -18,35 +18,6 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
 /** Conversion utilities between Java and JVM string formats, for types and signatures. */
 public final class Signatures {
 
-  /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
-  private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
-      primitiveToFieldDescriptor = new HashMap<>(8);
-
-  static {
-    primitiveToFieldDescriptor.put("boolean", "Z");
-    primitiveToFieldDescriptor.put("byte", "B");
-    primitiveToFieldDescriptor.put("char", "C");
-    primitiveToFieldDescriptor.put("double", "D");
-    primitiveToFieldDescriptor.put("float", "F");
-    primitiveToFieldDescriptor.put("int", "I");
-    primitiveToFieldDescriptor.put("long", "J");
-    primitiveToFieldDescriptor.put("short", "S");
-  }
-
-  /** Map from field descriptor (sach as "I") to primitive type (such as "int"). */
-  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
-
-  static {
-    fieldDescriptorToPrimitive.put("Z", "boolean");
-    fieldDescriptorToPrimitive.put("B", "byte");
-    fieldDescriptorToPrimitive.put("C", "char");
-    fieldDescriptorToPrimitive.put("D", "double");
-    fieldDescriptorToPrimitive.put("F", "float");
-    fieldDescriptorToPrimitive.put("I", "int");
-    fieldDescriptorToPrimitive.put("J", "long");
-    fieldDescriptorToPrimitive.put("S", "short");
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Accessing parts of types
   ///
@@ -93,9 +64,24 @@ public final class Signatures {
   /// Type conversions
   ///
 
+  /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
+  private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
+      primitiveToFieldDescriptor = new HashMap<>(8);
+
+  static {
+    primitiveToFieldDescriptor.put("boolean", "Z");
+    primitiveToFieldDescriptor.put("byte", "B");
+    primitiveToFieldDescriptor.put("char", "C");
+    primitiveToFieldDescriptor.put("double", "D");
+    primitiveToFieldDescriptor.put("float", "F");
+    primitiveToFieldDescriptor.put("int", "I");
+    primitiveToFieldDescriptor.put("long", "J");
+    primitiveToFieldDescriptor.put("short", "S");
+  }
+
   /**
-   * Convert a binary name to a field descriptor. For example, convert "pkg.Outer$Inner" to
-   * "Lpkg/Outer$Inner;".
+   * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
+   * "[Ljava/lang/Object;" or "int" to "I" or "pkg.Outer$Inner" to "Lpkg/Outer$Inner;".
    *
    * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
    * them. It converts "java.lang.Object[]" to "[Ljava/lang/Object;" or "int" to "I".
@@ -168,6 +154,20 @@ public final class Signatures {
     } else {
       return fieldDescriptorToBinaryName(fd);
     }
+  }
+
+  /** A map from field descriptor (sach as "I") to Java primitive type (such as "int"). */
+  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
+
+  static {
+    fieldDescriptorToPrimitive.put("Z", "boolean");
+    fieldDescriptorToPrimitive.put("B", "byte");
+    fieldDescriptorToPrimitive.put("C", "char");
+    fieldDescriptorToPrimitive.put("D", "double");
+    fieldDescriptorToPrimitive.put("F", "float");
+    fieldDescriptorToPrimitive.put("I", "int");
+    fieldDescriptorToPrimitive.put("J", "long");
+    fieldDescriptorToPrimitive.put("S", "short");
   }
 
   // does not convert "V" to "void".  Should it?
