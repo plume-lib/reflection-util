@@ -12,6 +12,9 @@ cache:
 jdk:
   - oraclejdk8
 
+# Temporary
+install:
+
 # Add "verGJF" task when google-java-format handles type annotations better;
 # see https://github.com/google/google-java-format/issues/5
 script: ./gradlew dependencies && ./gradlew build javadoc && ./gradlew requireJavadoc
