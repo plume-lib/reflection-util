@@ -1,12 +1,16 @@
 # Reflection-Util change log
 
-## 1.0.0
+## 0.0.4
 
 - Add methods in class Signatures:
    - getArrayElementType
    - internalFormToBinaryName
    - internalFormToClassGetName
    - isClassGetName
+
+## 0.0.3
+
+- Reduce dependencies on other projects
 
 ## 0.0.2
 
