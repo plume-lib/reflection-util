@@ -13,11 +13,11 @@ jdk:
   - oraclejdk8
 
 # Temporary
-install: ./gradlew dependencies && ./gradlew assemble
+install: ./gradlew dependencies && ./gradlew printCompileClasspath && ./gradlew assemble
 
 # Add "verGJF" task when google-java-format handles type annotations better;
 # see https://github.com/google/google-java-format/issues/5
-script: ./gradlew dependencies && ./gradlew build javadoc && ./gradlew requireJavadoc
+script: ./gradlew build javadoc && ./gradlew requireJavadoc
 
 git:
   depth: 9
