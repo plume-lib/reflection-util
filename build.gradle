@@ -91,3 +91,14 @@ task tags(type: Exec) {
   description "Run etags to create an Emacs TAGS table"
   commandLine "bash", "-c", "find src/ -name '*.java' | sort | xargs etags"
 }
+
+
+/// Gradle debugging
+
+task printCompileClasspath {
+  description = 'Print the compile-time classpath'
+  doFirst {
+    println "Compile classpath:"
+    sourceSets.main.compileClasspath.each { println it}
+  }
+}
