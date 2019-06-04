@@ -34,7 +34,9 @@ public final class Signatures {
     int bracketPos = fqBinaryName.indexOf('[');
     if (bracketPos == -1) {
       return fqBinaryName;
-    } else return fqBinaryName.substring(0, bracketPos);
+    } else {
+      return fqBinaryName.substring(0, bracketPos);
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
