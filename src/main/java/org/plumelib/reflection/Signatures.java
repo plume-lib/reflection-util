@@ -2,11 +2,15 @@ package org.plumelib.reflection;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
 import org.checkerframework.checker.signature.qual.FieldDescriptor;
+import org.checkerframework.checker.signature.qual.FqBinaryName;
+import org.checkerframework.checker.signature.qual.InternalForm;
+import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
 // This should convert among all of them.  But perhaps just add functionality as the need comes up.
@@ -14,7 +18,55 @@ import org.checkerframework.checker.signature.qual.FieldDescriptor;
 /** Conversion utilities between Java and JVM string formats, for types and signatures. */
 public final class Signatures {
 
-  /** Map from primitive type (such as "int") to field descriptor (such as "I"). */
+  ///////////////////////////////////////////////////////////////////////////
+  /// Accessing parts of types
+  ///
+
+  /**
+   * Returns the element type for the given type name, which results from removing all the array
+   * brackets.
+   *
+   * @param fqBinaryName "a fully-qualified binary name" ({@code @FqBinaryNome})
+   * @return the base element type of the argument, with all array brackets stripped
+   */
+  @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
+  public static @ClassGetName String getArrayElementType(@FqBinaryName String fqBinaryName) {
+    int bracketPos = fqBinaryName.indexOf('[');
+    if (bracketPos == -1) {
+      return fqBinaryName;
+    } else {
+      return fqBinaryName.substring(0, bracketPos);
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Type tests
+  ///
+
+  /** A regular expression for the ClassGetName string format. */
+  static Pattern classGetNamePattern =
+      Pattern.compile(
+          // Same string as in ClassGetName.java.
+          "(^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*|\\$[A-Za-z_0-9]+)*$)|^\\[+([BCDFIJSZ]|L[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*|\\$[A-Za-z_0-9]+)*;)$");
+
+  /**
+   * Returns true if the argument has the format of a ClassGetName. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is @ClassGetName
+   */
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetName.class)
+  @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
+  public static boolean isClassGetName(String s) {
+    return classGetNamePattern.matcher(s).matches();
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Type conversions
+  ///
+
+  /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
   private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
       primitiveToFieldDescriptor = new HashMap<>(8);
 
@@ -29,23 +81,9 @@ public final class Signatures {
     primitiveToFieldDescriptor.put("short", "S");
   }
 
-  /** Map from field descriptor (sach as "I") to primitive type (such as "int"). */
-  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
-
-  static {
-    fieldDescriptorToPrimitive.put("Z", "boolean");
-    fieldDescriptorToPrimitive.put("B", "byte");
-    fieldDescriptorToPrimitive.put("C", "char");
-    fieldDescriptorToPrimitive.put("D", "double");
-    fieldDescriptorToPrimitive.put("F", "float");
-    fieldDescriptorToPrimitive.put("I", "int");
-    fieldDescriptorToPrimitive.put("J", "long");
-    fieldDescriptorToPrimitive.put("S", "short");
-  }
-
   /**
-   * Convert a binary name to a field descriptor. For example, convert "pkg.Outer$Inner" to
-   * "Lpkg/Outer$Inner;".
+   * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
+   * "[Ljava/lang/Object;" or "int" to "I" or "pkg.Outer$Inner" to "Lpkg/Outer$Inner;".
    *
    * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
    * them. It converts "java.lang.Object[]" to "[Ljava/lang/Object;" or "int" to "I".
@@ -120,29 +158,18 @@ public final class Signatures {
     }
   }
 
-  /**
-   * Convert a fully-qualified argument list from Java format to JVML format. For example, convert
-   * "(java.lang.Integer[], int, java.lang.Integer[][])" to
-   * "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)".
-   *
-   * @param arglist an argument list, in Java format
-   * @return argument list, in JVML format
-   */
-  public static String arglistToJvm(String arglist) {
-    if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
-      throw new Error("Malformed arglist: " + arglist);
-    }
-    String result = "(";
-    String commaSepArgs = arglist.substring(1, arglist.length() - 1);
-    StringTokenizer argsTokenizer = new StringTokenizer(commaSepArgs, ",", false);
-    while (argsTokenizer.hasMoreTokens()) {
-      @SuppressWarnings("signature") // substring
-      @BinaryName String arg = argsTokenizer.nextToken().trim();
-      result += binaryNameToFieldDescriptor(arg);
-    }
-    result += ")";
-    // System.out.println("arglistToJvm: " + arglist + " => " + result);
-    return result;
+  /** A map from field descriptor (sach as "I") to Java primitive type (such as "int"). */
+  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
+
+  static {
+    fieldDescriptorToPrimitive.put("Z", "boolean");
+    fieldDescriptorToPrimitive.put("B", "byte");
+    fieldDescriptorToPrimitive.put("C", "char");
+    fieldDescriptorToPrimitive.put("D", "double");
+    fieldDescriptorToPrimitive.put("F", "float");
+    fieldDescriptorToPrimitive.put("I", "int");
+    fieldDescriptorToPrimitive.put("J", "long");
+    fieldDescriptorToPrimitive.put("S", "short");
   }
 
   // does not convert "V" to "void".  Should it?
@@ -176,6 +203,55 @@ public final class Signatures {
       result += "[]";
     }
     return result.replace('/', '.');
+  }
+
+  /**
+   * Given a class name in internal form, return it in ClassGetName form.
+   *
+   * @param internalForm a class name in internal form
+   * @return the class name in ClassGetName form
+   */
+  public static @ClassGetName String internalFormToClassGetName(@InternalForm String internalForm) {
+    return internalForm.replace('/', '.');
+  }
+
+  /**
+   * Given a class name in internal form, return it in as a binary name.
+   *
+   * @param internalForm a class name in internal form
+   * @return the class name sa a binary name
+   */
+  public static @BinaryName String internalFormToBinaryName(@InternalForm String internalForm) {
+    return internalForm.replace('/', '.');
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Strings combining multiple types
+  ///
+
+  /**
+   * Convert a fully-qualified argument list from Java format to JVML format. For example, convert
+   * "(java.lang.Integer[], int, java.lang.Integer[][])" to
+   * "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)".
+   *
+   * @param arglist an argument list, in Java format
+   * @return argument list, in JVML format
+   */
+  public static String arglistToJvm(String arglist) {
+    if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
+      throw new Error("Malformed arglist: " + arglist);
+    }
+    String result = "(";
+    String commaSepArgs = arglist.substring(1, arglist.length() - 1);
+    StringTokenizer argsTokenizer = new StringTokenizer(commaSepArgs, ",", false);
+    while (argsTokenizer.hasMoreTokens()) {
+      @SuppressWarnings("signature") // substring
+      @BinaryName String arg = argsTokenizer.nextToken().trim();
+      result += binaryNameToFieldDescriptor(arg);
+    }
+    result += ")";
+    // System.out.println("arglistToJvm: " + arglist + " => " + result);
+    return result;
   }
 
   /**
