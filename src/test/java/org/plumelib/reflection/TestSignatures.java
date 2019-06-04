@@ -13,10 +13,33 @@ import org.junit.Test;
 })
 public final class TestSignatures {
 
-  // This cannot be static because it instantiates an inner class.
+  ///////////////////////////////////////////////////////////////////////////
+  /// Accessing parts of types
+  ///
+
+  @Test
+  public void testGetArrayElementType() {
+    assert Signatures.getArrayElementType("int[][][]").equals("int");
+    assert Signatures.getArrayElementType("int").equals("int");
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Type tests
+  ///
+
+  @Test
+  public void testIsClassGetName() {
+    assert !Signatures.isClassGetName("int[][][]");
+    assert Signatures.isClassGetName("int");
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Type conversions
+  ///
+
   @SuppressWarnings("ArrayEquals")
   @Test
-  public void testSignatures() {
+  public void testConversions() {
 
     // public static String binaryNameToFieldDescriptor(String classname)
     assert Signatures.binaryNameToFieldDescriptor("boolean").equals("Z");
@@ -42,19 +65,6 @@ public final class TestSignatures {
     assert Signatures.binaryNameToClassGetName("short").equals("short");
     assert Signatures.binaryNameToClassGetName("Integer").equals("Integer");
     assert Signatures.binaryNameToClassGetName("Java.lang.Integer").equals("Java.lang.Integer");
-
-    // public static String arglistToJvm(String arglist)
-    assert Signatures.arglistToJvm("()").equals("()");
-    assert Signatures.arglistToJvm("(int)").equals("(I)");
-    assert Signatures.arglistToJvm("(int, int)").equals("(II)");
-    assert Signatures.arglistToJvm("(int, long, short)").equals("(IJS)");
-    assert Signatures.arglistToJvm("(java.lang.Integer, int, java.lang.Integer)")
-        .equals("(Ljava/lang/Integer;ILjava/lang/Integer;)");
-    assert Signatures.arglistToJvm("(int[])").equals("([I)");
-    assert Signatures.arglistToJvm("(int[], int, int)").equals("([III)");
-    assert Signatures.arglistToJvm("(int, int[][], int)").equals("(I[[II)");
-    assert Signatures.arglistToJvm("(java.lang.Integer[], int, java.lang.Integer[][])")
-        .equals("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)");
 
     // public static String fieldDescriptorToBinaryName(String classname)
     assert Signatures.fieldDescriptorToBinaryName("Z").equals("boolean");
@@ -89,18 +99,17 @@ public final class TestSignatures {
     assert Signatures.fieldDescriptorToClassGetName("[[LJava/lang/Integer;")
         .equals("[[LJava.lang.Integer;");
 
-    // public static String arglistFromJvm(String arglist)
-    assert Signatures.arglistFromJvm("()").equals("()");
-    assert Signatures.arglistFromJvm("(I)").equals("(int)");
-    assert Signatures.arglistFromJvm("(II)").equals("(int, int)");
-    assert Signatures.arglistFromJvm("(IJS)").equals("(int, long, short)");
-    assert Signatures.arglistFromJvm("(Ljava/lang/Integer;ILjava/lang/Integer;)")
-        .equals("(java.lang.Integer, int, java.lang.Integer)");
-    assert Signatures.arglistFromJvm("([I)").equals("(int[])");
-    assert Signatures.arglistFromJvm("([III)").equals("(int[], int, int)");
-    assert Signatures.arglistFromJvm("(I[[II)").equals("(int, int[][], int)");
-    assert Signatures.arglistFromJvm("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)")
-        .equals("(java.lang.Integer[], int, java.lang.Integer[][])");
+    assert Signatures.internalFormToClassGetName("MyClass").equals("MyClass");
+    assert Signatures.internalFormToClassGetName("MyClass$22").equals("MyClass$22");
+    assert Signatures.internalFormToClassGetName("java/lang/Integer").equals("java.lang.Integer");
+    assert Signatures.internalFormToClassGetName("pkg/Outer$Inner").equals("pkg.Outer$Inner");
+    assert Signatures.internalFormToClassGetName("pkg/Outer$22").equals("pkg.Outer$22");
+
+    assert Signatures.internalFormToBinaryName("MyClass").equals("MyClass");
+    assert Signatures.internalFormToBinaryName("MyClass$22").equals("MyClass$22");
+    assert Signatures.internalFormToBinaryName("java/lang/Integer").equals("java.lang.Integer");
+    assert Signatures.internalFormToBinaryName("pkg/Outer$Inner").equals("pkg.Outer$Inner");
+    assert Signatures.internalFormToBinaryName("pkg/Outer$22").equals("pkg.Outer$22");
 
     // More tests for type representation conversions.
     // Table from Signature Checker manual.
@@ -157,5 +166,38 @@ public final class TestSignatures {
         : bn + " => " + Signatures.binaryNameToClassGetName(bn) + ", should be " + cgn;
     assert cgn.equals(Signatures.fieldDescriptorToClassGetName(fd)) : fd + " => " + cgn;
     assert bn.equals(Signatures.fieldDescriptorToBinaryName(fd));
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Strings combining multiple types
+  ///
+
+  @Test
+  public void testSignatures() {
+    // public static String arglistToJvm(String arglist)
+    assert Signatures.arglistToJvm("()").equals("()");
+    assert Signatures.arglistToJvm("(int)").equals("(I)");
+    assert Signatures.arglistToJvm("(int, int)").equals("(II)");
+    assert Signatures.arglistToJvm("(int, long, short)").equals("(IJS)");
+    assert Signatures.arglistToJvm("(java.lang.Integer, int, java.lang.Integer)")
+        .equals("(Ljava/lang/Integer;ILjava/lang/Integer;)");
+    assert Signatures.arglistToJvm("(int[])").equals("([I)");
+    assert Signatures.arglistToJvm("(int[], int, int)").equals("([III)");
+    assert Signatures.arglistToJvm("(int, int[][], int)").equals("(I[[II)");
+    assert Signatures.arglistToJvm("(java.lang.Integer[], int, java.lang.Integer[][])")
+        .equals("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)");
+
+    // public static String arglistFromJvm(String arglist)
+    assert Signatures.arglistFromJvm("()").equals("()");
+    assert Signatures.arglistFromJvm("(I)").equals("(int)");
+    assert Signatures.arglistFromJvm("(II)").equals("(int, int)");
+    assert Signatures.arglistFromJvm("(IJS)").equals("(int, long, short)");
+    assert Signatures.arglistFromJvm("(Ljava/lang/Integer;ILjava/lang/Integer;)")
+        .equals("(java.lang.Integer, int, java.lang.Integer)");
+    assert Signatures.arglistFromJvm("([I)").equals("(int[])");
+    assert Signatures.arglistFromJvm("([III)").equals("(int[], int, int)");
+    assert Signatures.arglistFromJvm("(I[[II)").equals("(int, int[][], int)");
+    assert Signatures.arglistFromJvm("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)")
+        .equals("(java.lang.Integer[], int, java.lang.Integer[][])");
   }
 }
