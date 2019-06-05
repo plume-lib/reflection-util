@@ -1,6 +1,6 @@
 # Reflection-Util change log
 
-## ??
+## 0.0.4
 
 - Add methods in class Signatures:
    - getArrayElementType
