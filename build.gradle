@@ -30,6 +30,7 @@ dependencies {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+// Checker Framework pluggable type-checking
 apply plugin: 'org.checkerframework'
 dependencies {
   compileOnly 'org.checkerframework:checker-qual:2.8.2'
@@ -49,6 +50,7 @@ checkerFramework {
     'org.checkerframework.checker.signature.SignatureChecker'
   ]
   extraJavacArgs = [
+    '-Werror',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions'
