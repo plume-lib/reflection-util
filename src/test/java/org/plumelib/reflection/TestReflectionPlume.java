@@ -29,7 +29,6 @@ public final class TestReflectionPlume {
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume.Inner$InnerInner")
           == Inner.InnerInner.class;
-      @SuppressWarnings("signature") // argument is illegal, but routine works anyway
       boolean success =
           ReflectionPlume.classForName(
                   "org.plumelib.reflection.TestReflectionPlume$Inner.InnerInner")

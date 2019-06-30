@@ -8,7 +8,6 @@ import org.junit.Test;
 
 /** Test code for the Signatures class. */
 @SuppressWarnings({
-  "interning", // interning is due to apparent bugs
   "UseCorrectAssertInTests" // I don't see the problem with using `assert`
 })
 public final class TestSignatures {
