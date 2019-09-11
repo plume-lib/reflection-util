@@ -2,6 +2,7 @@ package org.plumelib.reflection;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.signature.qual.BinaryName;
@@ -81,6 +82,8 @@ public final class Signatures {
     primitiveToFieldDescriptor.put("short", "S");
   }
 
+  private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
+
   /**
    * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
    * "[Ljava/lang/Object;" or "int" to "I" or "pkg.Outer$Inner" to "Lpkg/Outer$Inner;".
@@ -88,22 +91,19 @@ public final class Signatures {
    * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
    * them. It converts "java.lang.Object[]" to "[Ljava/lang/Object;" or "int" to "I".
    *
-   * @param classname name of the class, in binary class name format
+   * @param typename name of the type, in fully-qualified binary name format
    * @return name of the class, in field descriptor format
    */
   @SuppressWarnings("signature") // conversion routine
-  public static @FieldDescriptor String binaryNameToFieldDescriptor(@BinaryName String classname) {
-    int dims = 0;
-    String sansArray = classname;
-    while (sansArray.endsWith("[]")) {
-      dims++;
-      sansArray = sansArray.substring(0, sansArray.length() - 2);
-    }
-    String result = primitiveToFieldDescriptor.get(sansArray);
+  public static @FieldDescriptor String binaryNameToFieldDescriptor(@FqBinaryName String typename) {
+    Matcher m = arrayBracketsPattern.matcher(typename);
+    String classname = m.replaceFirst("");
+    int dimensions = (typename.length() - classname.length()) / 2;
+    String result = primitiveToFieldDescriptor.get(classname);
     if (result == null) {
-      result = "L" + sansArray + ";";
+      result = "L" + classname + ";";
     }
-    for (int i = 0; i < dims; i++) {
+    for (int i = 0; i < dimensions; i++) {
       result = "[" + result;
     }
     return result.replace('.', '/');
@@ -172,24 +172,24 @@ public final class Signatures {
     fieldDescriptorToPrimitive.put("S", "short");
   }
 
+  private static Pattern fdArrayBracketsPattern = Pattern.compile("^\\[+");
+
   // does not convert "V" to "void".  Should it?
   /**
    * Convert a field descriptor to a binary name. For example, convert "[Ljava/lang/Object;" to
    * "java.lang.Object[]" or "I" to "int".
    *
-   * @param classname name of the type, in JVML format
+   * @param typename name of the type, in JVML format
    * @return name of the type, in Java format
    */
   @SuppressWarnings("signature") // conversion routine
-  public static @BinaryName String fieldDescriptorToBinaryName(String classname) {
-    if (classname.equals("")) {
+  public static @BinaryName String fieldDescriptorToBinaryName(String typename) {
+    if (typename.equals("")) {
       throw new Error("Empty string passed to fieldDescriptorToBinaryName");
     }
-    int dims = 0;
-    while (classname.startsWith("[")) {
-      dims++;
-      classname = classname.substring(1);
-    }
+    Matcher m = fdArrayBracketsPattern.matcher(typename);
+    String classname = m.replaceFirst("");
+    int dimensions = typename.length() - classname.length();
     String result;
     if (classname.startsWith("L") && classname.endsWith(";")) {
       result = classname.substring(1, classname.length() - 1);
@@ -199,7 +199,7 @@ public final class Signatures {
         throw new Error("Malformed base class: " + classname);
       }
     }
-    for (int i = 0; i < dims; i++) {
+    for (int i = 0; i < dimensions; i++) {
       result += "[]";
     }
     return result.replace('/', '.');
