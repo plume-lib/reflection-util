@@ -32,6 +32,32 @@ public final class TestSignatures {
     assert Signatures.isClassGetName("int");
   }
 
+  @Test
+  public void testIsBinaryName() {
+    assert Signatures.isBinaryName("int");
+    assert !Signatures.isBinaryName("int[][]");
+    assert Signatures.isBinaryName("java.lang.String");
+    assert !Signatures.isBinaryName("java.lang.String[]");
+    assert Signatures.isBinaryName("MyClass$22");
+    assert !Signatures.isBinaryName("MyClass$22[]");
+    assert Signatures.isBinaryName("pkg.Outer$Inner");
+    assert !Signatures.isBinaryName("pkg.Outer$Inner[]");
+  }
+
+  @Test
+  public void testIsFqBinaryName() {
+    assert !Signatures.isFqBinaryName("hello world");
+    assert !Signatures.isFqBinaryName("[[I");
+    assert Signatures.isFqBinaryName("int");
+    assert Signatures.isFqBinaryName("int[][]");
+    assert Signatures.isFqBinaryName("java.lang.String");
+    assert Signatures.isFqBinaryName("java.lang.String[]");
+    assert Signatures.isFqBinaryName("MyClass$22");
+    assert Signatures.isFqBinaryName("MyClass$22[]");
+    assert Signatures.isFqBinaryName("pkg.Outer$Inner");
+    assert Signatures.isFqBinaryName("pkg.Outer$Inner[]");
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Type conversions
   ///

@@ -16,7 +16,11 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
 // This should convert among all of them.  But perhaps just add functionality as the need comes up.
 
-/** Conversion utilities between Java and JVM string formats, for types and signatures. */
+/**
+ * Conversion utilities between Java and JVM string formats, for types and signatures.
+ *
+ * <p>Also predicates for testing strings.
+ */
 public final class Signatures {
 
   ///////////////////////////////////////////////////////////////////////////
@@ -63,6 +67,44 @@ public final class Signatures {
     return classGetNamePattern.matcher(s).matches();
   }
 
+  /** A regular expression for the BinaryName string format. */
+  static Pattern binaryNamePattern =
+      Pattern.compile(
+          // Same string as in BinaryName.java.
+          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*(\\$[A-Za-z_0-9]+)*$");
+
+  /**
+   * Returns true if the argument has the format of a BinaryName. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is @BinaryName
+   */
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryName.class)
+  @SuppressWarnings("signature")
+  public static boolean isBinaryName(String s) {
+    return binaryNamePattern.matcher(s).matches();
+  }
+
+  /** A regular expression for the FqBinaryName string format. */
+  static Pattern fqBinaryNamePattern =
+      Pattern.compile(
+          // Same string as in FqBinaryName.java.
+          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*(\\$[A-Za-z_0-9]+)*(\\[\\])*$");
+
+  /**
+   * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is @FqBinaryName
+   */
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FqBinaryName.class)
+  @SuppressWarnings("signature")
+  public static boolean isFqBinaryName(String s) {
+    return fqBinaryNamePattern.matcher(s).matches();
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Type conversions
   ///
@@ -82,6 +124,7 @@ public final class Signatures {
     primitiveToFieldDescriptor.put("short", "S");
   }
 
+  /** Matches the "[][][]" at the end of a Java array type. */
   private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
 
   /**
@@ -172,6 +215,7 @@ public final class Signatures {
     fieldDescriptorToPrimitive.put("S", "short");
   }
 
+  /** Matches the "[[[" prefix of a field descriptor for an array. */
   private static Pattern fdArrayBracketsPattern = Pattern.compile("^\\[+");
 
   // does not convert "V" to "void".  Should it?
