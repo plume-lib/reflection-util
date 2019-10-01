@@ -124,9 +124,6 @@ public final class Signatures {
     primitiveToFieldDescriptor.put("short", "S");
   }
 
-  /** Matches the "[][][]" at the end of a Java array type. */
-  private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
-
   /**
    * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
    * "[Ljava/lang/Object;" or "int" to "I" or "pkg.Outer$Inner" to "Lpkg/Outer$Inner;".
@@ -139,17 +136,51 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @FieldDescriptor String binaryNameToFieldDescriptor(@FqBinaryName String typename) {
-    Matcher m = arrayBracketsPattern.matcher(typename);
-    String classname = m.replaceFirst("");
-    int dimensions = (typename.length() - classname.length()) / 2;
-    String result = primitiveToFieldDescriptor.get(classname);
+    ClassGetNameAndDimensions cgnad = ClassGetNameAndDimensions.parseFqBinaryName(typename);
+    String result = primitiveToFieldDescriptor.get(cgnad.classname);
     if (result == null) {
-      result = "L" + classname + ";";
+      result = "L" + cgnad.classname + ";";
     }
-    for (int i = 0; i < dimensions; i++) {
+    for (int i = 0; i < cgnad.dimensions; i++) {
       result = "[" + result;
     }
     return result.replace('.', '/');
+  }
+
+  /** Matches the "[][][]" at the end of a Java array type. */
+  private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
+
+  /** A representation of an array: A pair of class name and the number of array dimensions. */
+  public static class ClassGetNameAndDimensions {
+    /** The class name. */
+    public final @ClassGetName String classname;
+    /** The number of array dimensions. */
+    public final int dimensions;
+    /**
+     * Create a new ClassGetNameAndDimensions.
+     *
+     * @param classname the class name
+     * @param dimensions the number of array dimensions
+     */
+    public ClassGetNameAndDimensions(@ClassGetName String classname, int dimensions) {
+      this.classname = classname;
+      this.dimensions = dimensions;
+    }
+    /**
+     * Constructs a new ClassGetNameAndDimensions by parsing a fully-qualified binary name.
+     *
+     * @param typename the type name to parse, as a fully-qualified binary name (= fully-qualified
+     *     name, but with $ separating outer from inner types)
+     * @return the result of parsing the type name
+     */
+    public static ClassGetNameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
+      Matcher m = arrayBracketsPattern.matcher(typename);
+      @SuppressWarnings("signature:assignment.type.incompatible") // classname is a @ClassGetName
+      // for a non-array; equivalently, a binary name for a non-array
+      @ClassGetName String classname = m.replaceFirst("");
+      int dimensions = (typename.length() - classname.length()) / 2;
+      return new ClassGetNameAndDimensions(classname, dimensions);
+    }
   }
 
   /**

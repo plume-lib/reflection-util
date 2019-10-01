@@ -78,6 +78,9 @@ public final class TestSignatures {
     assert Signatures.binaryNameToFieldDescriptor("Integer").equals("LInteger;");
     assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer")
         .equals("LJava/lang/Integer;");
+    assert Signatures.binaryNameToFieldDescriptor("int[][]").equals("[[I");
+    assert Signatures.binaryNameToFieldDescriptor("java.lang.Object[]")
+        .equals("[Ljava/lang/Object;");
 
     // public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn)
     assert Signatures.binaryNameToClassGetName("boolean").equals("boolean");
@@ -90,6 +93,10 @@ public final class TestSignatures {
     assert Signatures.binaryNameToClassGetName("short").equals("short");
     assert Signatures.binaryNameToClassGetName("Integer").equals("Integer");
     assert Signatures.binaryNameToClassGetName("Java.lang.Integer").equals("Java.lang.Integer");
+    @SuppressWarnings("signature:assignment.type.incompatible") // test beyond the method's contract
+    @BinaryName String intArrayAray = "int[][]", objectArray = "java.lang.Object[]";
+    assert Signatures.binaryNameToClassGetName(intArrayAray).equals("[[I");
+    assert Signatures.binaryNameToClassGetName(objectArray).equals("[Ljava.lang.Object;");
 
     // public static String fieldDescriptorToBinaryName(String classname)
     assert Signatures.fieldDescriptorToBinaryName("Z").equals("boolean");
