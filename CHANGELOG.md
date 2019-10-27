@@ -1,5 +1,9 @@
 # Reflection-Util change log
 
+## 0.1.1
+
+- Fix broken release 0.1.0
+
 ## 0.1.0
 
 - Rename ClassGetNameAndDimensions to ClassnameAndDimensions
