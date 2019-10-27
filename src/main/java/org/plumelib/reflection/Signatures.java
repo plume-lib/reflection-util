@@ -136,12 +136,12 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @FieldDescriptor String binaryNameToFieldDescriptor(@FqBinaryName String typename) {
-    ClassGetNameAndDimensions cgnad = ClassGetNameAndDimensions.parseFqBinaryName(typename);
-    String result = primitiveToFieldDescriptor.get(cgnad.classname);
+    ClassnameAndDimensions cad = ClassnameAndDimensions.parseFqBinaryName(typename);
+    String result = primitiveToFieldDescriptor.get(cad.classname);
     if (result == null) {
-      result = "L" + cgnad.classname + ";";
+      result = "L" + cad.classname + ";";
     }
-    for (int i = 0; i < cgnad.dimensions; i++) {
+    for (int i = 0; i < cad.dimensions; i++) {
       result = "[" + result;
     }
     return result.replace('.', '/');
@@ -151,35 +151,35 @@ public final class Signatures {
   private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
 
   /** A representation of an array: A pair of class name and the number of array dimensions. */
-  public static class ClassGetNameAndDimensions {
-    /** The class name. */
-    public final @ClassGetName String classname;
+  public static class ClassnameAndDimensions {
+    /** The class name. It is a binary name or a primitive */
+    public final @BinaryName String classname;
     /** The number of array dimensions. */
     public final int dimensions;
     /**
-     * Create a new ClassGetNameAndDimensions.
+     * Create a new ClassnameAndDimensions.
      *
-     * @param classname the class name
+     * @param classname the class name: a binary name or a primitive
      * @param dimensions the number of array dimensions
      */
-    public ClassGetNameAndDimensions(@ClassGetName String classname, int dimensions) {
+    public ClassnameAndDimensions(@BinaryName String classname, int dimensions) {
       this.classname = classname;
       this.dimensions = dimensions;
     }
     /**
-     * Constructs a new ClassGetNameAndDimensions by parsing a fully-qualified binary name.
+     * Constructs a new ClassnameAndDimensions by parsing a fully-qualified binary name.
      *
      * @param typename the type name to parse, as a fully-qualified binary name (= fully-qualified
      *     name, but with $ separating outer from inner types)
      * @return the result of parsing the type name
      */
-    public static ClassGetNameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
+    public static ClassnameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
       Matcher m = arrayBracketsPattern.matcher(typename);
       @SuppressWarnings("signature:assignment.type.incompatible") // classname is a @ClassGetName
       // for a non-array; equivalently, a binary name for a non-array
-      @ClassGetName String classname = m.replaceFirst("");
+      @BinaryName String classname = m.replaceFirst("");
       int dimensions = (typename.length() - classname.length()) / 2;
-      return new ClassGetNameAndDimensions(classname, dimensions);
+      return new ClassnameAndDimensions(classname, dimensions);
     }
   }
 
