@@ -1,7 +1,8 @@
 # Reflection-Util change log
 
-## 0.0.5
+## 0.1.0
 
+- Rename ClassGetNameAndDimensions to ClassnameAndDimensions
 - Add methods in class Signatures:
    - isDotSeparatedIdentifiers
 
