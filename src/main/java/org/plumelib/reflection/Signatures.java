@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
@@ -52,7 +53,7 @@ public final class Signatures {
    * @return the basename of the classfile
    */
   @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
-  private static @BinaryName String classfilenameToBinaryName(String classfilename) {
+  public static @BinaryName String classfilenameToBinaryName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
@@ -69,8 +70,15 @@ public final class Signatures {
   // These are not yet special-cased by the typechecker, so provide methods so clients don't have to
   // suppress warnings.
 
-  private static @ClassGetName String addPackage(
-      @DotSeparatedIdentifiers String packagename, @BinaryName String classname) {
+  /**
+   * Given a package name and a class name, combine them to form a qualified class name.
+   *
+   * @param packagename the package name
+   * @param classname the class name
+   * @return the qualified class name
+   */
+  public static @ClassGetName String addPackage(
+      @Nullable @DotSeparatedIdentifiers String packagename, @BinaryName String classname) {
     if (!isBinaryName(classname)) {
       throw new Error("Bad classname argument to addPackage: " + classname);
     }

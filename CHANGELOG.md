@@ -1,8 +1,8 @@
 # Reflection-Util change log
 
-## 0.1.1
+## 0.1.2
 
-- Fix broken release 0.1.0
+- Bug fix
 
 ## 0.1.0
 
