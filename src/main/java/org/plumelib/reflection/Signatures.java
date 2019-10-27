@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
@@ -55,8 +56,8 @@ public final class Signatures {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    @SuppressWarnings() // Legal index, because "/" is not last character
-    @IndexFor("s") int start = classfilename.lastIndexOf("/") + 1;
+    @SuppressWarnings("index:assignment.type.incompatible") // "/" is not last character
+    @IndexFor("classfilename") int start = classfilename.lastIndexOf("/") + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
   }
