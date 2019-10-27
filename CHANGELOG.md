@@ -1,5 +1,10 @@
 # Reflection-Util change log
 
+## 0.0.5
+
+- Add methods in class Signatures:
+   - isDotSeparatedIdentifiers
+
 ## 0.0.4
 
 - Add methods in class Signatures:
