@@ -16,22 +16,71 @@ public final class TestSignatures {
   /// Accessing parts of types
   ///
 
+  /**
+   * Returns the element type for the given type name, which results from removing all the array
+   * brackets.
+   */
   @Test
   public void testGetArrayElementType() {
     assert Signatures.getArrayElementType("int[][][]").equals("int");
     assert Signatures.getArrayElementType("int").equals("int");
   }
 
+  /** Given a filename ending with ".class", return the class name. */
+  public void testClassfilenameToBinaryName() {
+    assert Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class").equals("Quux");
+    assert Signatures.classfilenameToBinaryName("Quux.class").equals("Quux");
+    assert Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux$22.class").equals("Quux$22");
+    assert Signatures.classfilenameToBinaryName("Quux$22.class").equals("Quux$22");
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// String concatenations
+  ///
+
+  /*
+   * Given a package name and a class name, combine them to form a qualified class name.
+   */
+  public void testAddPackage() {
+    assert Signatures.addPackage(null, "Foo").equals("Foo");
+    assert Signatures.addPackage(null, "a.b.c").equals("a.b.c.Foo");
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Type tests
   ///
 
+  /**
+   * Returns true if the argument has the format of a ClassGetName. The type it refers to might or
+   * might not exist.
+   */
   @Test
   public void testIsClassGetName() {
-    assert !Signatures.isClassGetName("int[][][]");
     assert Signatures.isClassGetName("int");
+    assert Signatures.isClassGetName("[[I");
+    assert !Signatures.isClassGetName("int[][]");
+    assert Signatures.isClassGetName("java.lang.String");
+    assert !Signatures.isClassGetName("java.lang.String[]");
+    assert Signatures.isClassGetName("MyClass$22");
+    assert !Signatures.isClassGetName("MyClass$22[]");
+    assert Signatures.isClassGetName("pkg.Outer$Inner");
+    assert !Signatures.isClassGetName("pkg.Outer$Inner[]");
+    assert Signatures.isClassGetName("[LMyClass;");
+    assert Signatures.isClassGetName("MyClass$22");
+    // Commented out due to bug in Checker Framework.  Enable after CF version 3.0 is released.
+    // assert Signatures.isClassGetName("[LMyClass$22;");
+    assert Signatures.isClassGetName("java.lang.Integer");
+    assert Signatures.isClassGetName("[Ljava.lang.Integer;");
+    assert Signatures.isClassGetName("pkg.Outer$Inner");
+    assert Signatures.isClassGetName("[Lpkg.Outer$Inner;");
+    assert Signatures.isClassGetName("pkg.Outer$22");
+    assert Signatures.isClassGetName("[Lpkg.Outer$22;");
   }
 
+  /**
+   * Returns true if the argument has the format of a BinaryName. The type it refers to might or
+   * might not exist.
+   */
   @Test
   public void testIsBinaryName() {
     assert Signatures.isBinaryName("int");
@@ -44,6 +93,10 @@ public final class TestSignatures {
     assert !Signatures.isBinaryName("pkg.Outer$Inner[]");
   }
 
+  /**
+   * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
+   * might not exist.
+   */
   @Test
   public void testIsFqBinaryName() {
     assert !Signatures.isFqBinaryName("hello world");
@@ -56,6 +109,24 @@ public final class TestSignatures {
     assert Signatures.isFqBinaryName("MyClass$22[]");
     assert Signatures.isFqBinaryName("pkg.Outer$Inner");
     assert Signatures.isFqBinaryName("pkg.Outer$Inner[]");
+  }
+
+  /**
+   * Returns true if the argument has the format of a DotSeparatedIdentifiers. The package or type
+   * it refers to might or might not exist.
+   */
+  @Test
+  public void testIsDotSeparatedIdentifiers() {
+    assert !Signatures.isDotSeparatedIdentifiers("hello world");
+    assert !Signatures.isDotSeparatedIdentifiers("[[I");
+    assert Signatures.isDotSeparatedIdentifiers("int");
+    assert !Signatures.isDotSeparatedIdentifiers("int[][]");
+    assert Signatures.isDotSeparatedIdentifiers("java.lang.String");
+    assert !Signatures.isDotSeparatedIdentifiers("java.lang.String[]");
+    assert !Signatures.isDotSeparatedIdentifiers("MyClass$22");
+    assert !Signatures.isDotSeparatedIdentifiers("MyClass$22[]");
+    assert !Signatures.isDotSeparatedIdentifiers("pkg.Outer$Inner");
+    assert !Signatures.isDotSeparatedIdentifiers("pkg.Outer$Inner[]");
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -201,11 +272,11 @@ public final class TestSignatures {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Strings combining multiple types
+  /// Method signatures, which combine multiple types
   ///
 
   @Test
-  public void testSignatures() {
+  public void testSignatureConversions() {
     // public static String arglistToJvm(String arglist)
     assert Signatures.arglistToJvm("()").equals("()");
     assert Signatures.arglistToJvm("(int)").equals("(I)");
