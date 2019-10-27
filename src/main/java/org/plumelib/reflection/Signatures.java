@@ -34,13 +34,54 @@ public final class Signatures {
    * @param fqBinaryName "a fully-qualified binary name" ({@code @FqBinaryNome})
    * @return the base element type of the argument, with all array brackets stripped
    */
-  @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
+  @SuppressWarnings("signature") // @FqBinaryName = @ClassGetName plus optional array brackets
   public static @ClassGetName String getArrayElementType(@FqBinaryName String fqBinaryName) {
     int bracketPos = fqBinaryName.indexOf('[');
     if (bracketPos == -1) {
       return fqBinaryName;
     } else {
       return fqBinaryName.substring(0, bracketPos);
+    }
+  }
+
+  /**
+   * Given a filename ending with ".class", return the class name.
+   *
+   * @param classfilename the name of a classfile
+   * @return the basename of the classfile
+   */
+  @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
+  private static @BinaryName String classfilenameToBinaryName(String classfilename) {
+    if (!classfilename.endsWith(".class")) {
+      throw new IllegalArgumentException("Bad class file name: " + classfilename);
+    }
+    @SuppressWarnings() // Legal index, because "/" is not last character
+    @IndexFor("s") int start = classfilename.lastIndexOf("/") + 1;
+    int end = classfilename.length() - 6;
+    return classfilename.substring(start, end);
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// String concatenations
+  ///
+
+  // These are not yet special-cased by the typechecker, so provide methods so clients don't have to
+  // suppress warnings.
+
+  private static @ClassGetName String addPackage(
+      @DotSeparatedIdentifiers String packagename, @BinaryName String classname) {
+    if (!isBinaryName(classname)) {
+      throw new Error("Bad classname argument to addPackage: " + classname);
+    }
+    if (packagename == null) {
+      return classname;
+    } else {
+      if (!isDotSeparatedIdentifiers(packagename)) {
+        throw new Error("Bad packagename argument to addPackage: " + packagename);
+      }
+      @SuppressWarnings("signature:assignment.type.incompatible") // string concatenation
+      @ClassGetName String result = packagename + "." + classname;
+      return result;
     }
   }
 
@@ -320,7 +361,7 @@ public final class Signatures {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Strings combining multiple types
+  /// Method signatures, which combine multiple types
   ///
 
   /**

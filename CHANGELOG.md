@@ -4,6 +4,8 @@
 
 - Rename ClassGetNameAndDimensions to ClassnameAndDimensions
 - Add methods in class Signatures:
+   - addPackage
+   - classfilenameToBinaryName
    - isBinaryName
    - isDotSeparatedIdentifiers
    - isFqBinaryName
