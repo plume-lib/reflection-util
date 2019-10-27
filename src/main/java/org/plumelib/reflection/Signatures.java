@@ -105,6 +105,25 @@ public final class Signatures {
     return fqBinaryNamePattern.matcher(s).matches();
   }
 
+  /** A regular expression for the DotSeparatedIdentifiers string format. */
+  static Pattern dotSeparatedIdentifiersPattern =
+      Pattern.compile(
+          // Same string as in DotSeparatedIdentifiers.java.
+          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*$");
+
+  /**
+   * Returns true if the argument has the format of a DotSeparatedIdentifiers. The package or type
+   * it refers to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is @DotSeparatedIdentifiers
+   */
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = DotSeparatedIdentifiers.class)
+  @SuppressWarnings("signature")
+  public static boolean isDotSeparatedIdentifiers(String s) {
+    return dotSeparatedIdentifiersPattern.matcher(s).matches();
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Type conversions
   ///
