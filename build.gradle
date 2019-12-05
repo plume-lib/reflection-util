@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
   testImplementation 'junit:junit:4.12'
-  errorprone 'com.google.errorprone:error_prone_core:2.3.3'
+  errorprone 'com.google.errorprone:error_prone_core:2.3.4'
 }
 
 sourceCompatibility = 1.8
