@@ -1,5 +1,7 @@
 package org.plumelib.reflection;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,11 +20,11 @@ public final class TestReflectionPlume {
   @Test
   public void test_classForName() {
     try {
-      assert ReflectionPlume.classForName("int") == int.class;
-      assert ReflectionPlume.classForName("boolean") == boolean.class;
-      assert ReflectionPlume.classForName("java.lang.Class") == Class.class;
-      assert ReflectionPlume.classForName("java.util.Map.Entry") == java.util.Map.Entry.class;
-      assert ReflectionPlume.classForName("java.util.Map$Entry") == java.util.Map.Entry.class;
+      assertTrue(ReflectionPlume.classForName("int") == int.class);
+      assertTrue(ReflectionPlume.classForName("boolean") == boolean.class);
+      assertTrue(ReflectionPlume.classForName("java.lang.Class") == Class.class);
+      assertTrue(ReflectionPlume.classForName("java.util.Map.Entry") == java.util.Map.Entry.class);
+      assertTrue(ReflectionPlume.classForName("java.util.Map$Entry") == java.util.Map.Entry.class);
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume.Inner.InnerInner")
           == Inner.InnerInner.class;
@@ -33,7 +35,7 @@ public final class TestReflectionPlume {
           ReflectionPlume.classForName(
                   "org.plumelib.reflection.TestReflectionPlume$Inner.InnerInner")
               == Inner.InnerInner.class;
-      assert success;
+      assertTrue(success);
       assert ReflectionPlume.classForName(
               "org.plumelib.reflection.TestReflectionPlume$Inner$InnerInner")
           == Inner.InnerInner.class;
@@ -44,31 +46,31 @@ public final class TestReflectionPlume {
 
   @Test
   public void test_fullyQualifiedNameToSimpleName() {
-    assert ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String");
-    assert ReflectionPlume.fullyQualifiedNameToSimpleName("String").equals("String");
+    assertTrue(ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String"));
+    assertTrue(ReflectionPlume.fullyQualifiedNameToSimpleName("String").equals("String"));
   }
 
   @Test
   public void test_isSubtype() {
     // private boolean isSubtype(Class<?> sub, Class<?> sup) {
-    assert ReflectionPlume.isSubtype(Integer.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Cloneable.class, Cloneable.class);
-    assert ReflectionPlume.isSubtype(Object.class, Object.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Number.class);
-    assert !ReflectionPlume.isSubtype(Number.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Comparable.class);
-    assert !ReflectionPlume.isSubtype(Comparable.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Object.class);
-    assert !ReflectionPlume.isSubtype(Object.class, Integer.class);
-    assert !ReflectionPlume.isSubtype(Integer.class, Float.class);
-    assert ReflectionPlume.isSubtype(Collection.class, Iterable.class);
-    assert !ReflectionPlume.isSubtype(Iterable.class, Collection.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, Iterable.class);
-    assert !ReflectionPlume.isSubtype(Iterable.class, ArrayList.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, Cloneable.class);
-    assert !ReflectionPlume.isSubtype(Cloneable.class, ArrayList.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, List.class);
-    assert !ReflectionPlume.isSubtype(List.class, ArrayList.class);
+    assertTrue(ReflectionPlume.isSubtype(Integer.class, Integer.class));
+    assertTrue(ReflectionPlume.isSubtype(Cloneable.class, Cloneable.class));
+    assertTrue(ReflectionPlume.isSubtype(Object.class, Object.class));
+    assertTrue(ReflectionPlume.isSubtype(Integer.class, Number.class));
+    assertTrue(!ReflectionPlume.isSubtype(Number.class, Integer.class));
+    assertTrue(ReflectionPlume.isSubtype(Integer.class, Comparable.class));
+    assertTrue(!ReflectionPlume.isSubtype(Comparable.class, Integer.class));
+    assertTrue(ReflectionPlume.isSubtype(Integer.class, Object.class));
+    assertTrue(!ReflectionPlume.isSubtype(Object.class, Integer.class));
+    assertTrue(!ReflectionPlume.isSubtype(Integer.class, Float.class));
+    assertTrue(ReflectionPlume.isSubtype(Collection.class, Iterable.class));
+    assertTrue(!ReflectionPlume.isSubtype(Iterable.class, Collection.class));
+    assertTrue(ReflectionPlume.isSubtype(ArrayList.class, Iterable.class));
+    assertTrue(!ReflectionPlume.isSubtype(Iterable.class, ArrayList.class));
+    assertTrue(ReflectionPlume.isSubtype(ArrayList.class, Cloneable.class));
+    assertTrue(!ReflectionPlume.isSubtype(Cloneable.class, ArrayList.class));
+    assertTrue(ReflectionPlume.isSubtype(ArrayList.class, List.class));
+    assertTrue(!ReflectionPlume.isSubtype(List.class, ArrayList.class));
   }
 
   @Test
@@ -83,14 +85,13 @@ public final class TestReflectionPlume {
       assert null
           != ReflectionPlume.methodForName(
               "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])");
-      assert null != ReflectionPlume.methodForName("java.lang.Math.min(int,int)");
+      assertTrue(null != ReflectionPlume.methodForName("java.lang.Math.min(int,int)"));
     } catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
     }
     try {
-      java.lang.reflect.Method m =
-          ReflectionPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName()");
+      ReflectionPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName()");
       throw new Error("Didn't throw NoSuchMethodException");
     } catch (NoSuchMethodException e) {
       // nothing to do; this is the expected case
