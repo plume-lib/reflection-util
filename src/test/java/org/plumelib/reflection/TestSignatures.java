@@ -1,5 +1,6 @@
 package org.plumelib.reflection;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.checkerframework.checker.signature.qual.BinaryName;
@@ -24,18 +25,17 @@ public final class TestSignatures {
    */
   @Test
   public void testGetArrayElementType() {
-    assertTrue(Signatures.getArrayElementType("int[][][]").equals("int"));
-    assertTrue(Signatures.getArrayElementType("int").equals("int"));
+    assertEquals("int", Signatures.getArrayElementType("int[][][]"));
+    assertEquals("int", Signatures.getArrayElementType("int"));
   }
 
   /** Given a filename ending with ".class", return the class name. */
   @Test
   public void testClassfilenameToBinaryName() {
-    assertTrue(Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class").equals("Quux"));
-    assertTrue(Signatures.classfilenameToBinaryName("Quux.class").equals("Quux"));
-    assertTrue(
-        Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux$22.class").equals("Quux$22"));
-    assertTrue(Signatures.classfilenameToBinaryName("Quux$22.class").equals("Quux$22"));
+    assertEquals("Quux", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class"));
+    assertEquals("Quux", Signatures.classfilenameToBinaryName("Quux.class"));
+    assertEquals("Quux$22", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux$22.class"));
+    assertEquals("Quux$22", Signatures.classfilenameToBinaryName("Quux$22.class"));
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -47,8 +47,8 @@ public final class TestSignatures {
    */
   @Test
   public void testAddPackage() {
-    assertTrue(Signatures.addPackage(null, "Foo").equals("Foo"));
-    assertTrue(Signatures.addPackage("a.b.c", "Foo").equals("a.b.c.Foo"));
+    assertEquals("Foo", Signatures.addPackage(null, "Foo"));
+    assertEquals("a.b.c.Foo", Signatures.addPackage("a.b.c", "Foo"));
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -143,84 +143,81 @@ public final class TestSignatures {
   public void testConversions() {
 
     // public static String binaryNameToFieldDescriptor(String classname)
-    assertTrue(Signatures.binaryNameToFieldDescriptor("boolean").equals("Z"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("byte").equals("B"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("char").equals("C"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("double").equals("D"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("float").equals("F"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("int").equals("I"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("long").equals("J"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("short").equals("S"));
-    assertTrue(Signatures.binaryNameToFieldDescriptor("Integer").equals("LInteger;"));
-    assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer")
-        .equals("LJava/lang/Integer;");
-    assertTrue(Signatures.binaryNameToFieldDescriptor("int[][]").equals("[[I"));
-    assert Signatures.binaryNameToFieldDescriptor("java.lang.Object[]")
-        .equals("[Ljava/lang/Object;");
+    assertEquals("Z", Signatures.binaryNameToFieldDescriptor("boolean"));
+    assertEquals("B", Signatures.binaryNameToFieldDescriptor("byte"));
+    assertEquals("C", Signatures.binaryNameToFieldDescriptor("char"));
+    assertEquals("D", Signatures.binaryNameToFieldDescriptor("double"));
+    assertEquals("F", Signatures.binaryNameToFieldDescriptor("float"));
+    assertEquals("I", Signatures.binaryNameToFieldDescriptor("int"));
+    assertEquals("J", Signatures.binaryNameToFieldDescriptor("long"));
+    assertEquals("S", Signatures.binaryNameToFieldDescriptor("short"));
+    assertEquals("LInteger;", Signatures.binaryNameToFieldDescriptor("Integer"));
+    assertEquals(
+        "LJava/lang/Integer;", Signatures.binaryNameToFieldDescriptor("Java.lang.Integer"));
+    assertEquals("[[I", Signatures.binaryNameToFieldDescriptor("int[][]"));
+    assertEquals(
+        "[Ljava/lang/Object;", Signatures.binaryNameToFieldDescriptor("java.lang.Object[]"));
 
     // public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn)
-    assertTrue(Signatures.binaryNameToClassGetName("boolean").equals("boolean"));
-    assertTrue(Signatures.binaryNameToClassGetName("byte").equals("byte"));
-    assertTrue(Signatures.binaryNameToClassGetName("char").equals("char"));
-    assertTrue(Signatures.binaryNameToClassGetName("double").equals("double"));
-    assertTrue(Signatures.binaryNameToClassGetName("float").equals("float"));
-    assertTrue(Signatures.binaryNameToClassGetName("int").equals("int"));
-    assertTrue(Signatures.binaryNameToClassGetName("long").equals("long"));
-    assertTrue(Signatures.binaryNameToClassGetName("short").equals("short"));
-    assertTrue(Signatures.binaryNameToClassGetName("Integer").equals("Integer"));
-    assertTrue(
-        Signatures.binaryNameToClassGetName("Java.lang.Integer").equals("Java.lang.Integer"));
+    assertEquals("boolean", Signatures.binaryNameToClassGetName("boolean"));
+    assertEquals("byte", Signatures.binaryNameToClassGetName("byte"));
+    assertEquals("char", Signatures.binaryNameToClassGetName("char"));
+    assertEquals("double", Signatures.binaryNameToClassGetName("double"));
+    assertEquals("float", Signatures.binaryNameToClassGetName("float"));
+    assertEquals("int", Signatures.binaryNameToClassGetName("int"));
+    assertEquals("long", Signatures.binaryNameToClassGetName("long"));
+    assertEquals("short", Signatures.binaryNameToClassGetName("short"));
+    assertEquals("Integer", Signatures.binaryNameToClassGetName("Integer"));
+    assertEquals("Java.lang.Integer", Signatures.binaryNameToClassGetName("Java.lang.Integer"));
     @SuppressWarnings("signature:assignment.type.incompatible") // test beyond the method's contract
     @BinaryName String intArrayAray = "int[][]", objectArray = "java.lang.Object[]";
-    assertTrue(Signatures.binaryNameToClassGetName(intArrayAray).equals("[[I"));
-    assertTrue(Signatures.binaryNameToClassGetName(objectArray).equals("[Ljava.lang.Object;"));
+    assertEquals("[[I", Signatures.binaryNameToClassGetName(intArrayAray));
+    assertEquals("[Ljava.lang.Object;", Signatures.binaryNameToClassGetName(objectArray));
 
     // public static String fieldDescriptorToBinaryName(String classname)
-    assertTrue(Signatures.fieldDescriptorToBinaryName("Z").equals("boolean"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("B").equals("byte"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("C").equals("char"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("D").equals("double"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("F").equals("float"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("I").equals("int"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("J").equals("long"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("S").equals("short"));
-    assertTrue(Signatures.fieldDescriptorToBinaryName("LInteger;").equals("Integer"));
-    assert Signatures.fieldDescriptorToBinaryName("LJava/lang/Integer;")
-        .equals("Java.lang.Integer");
-    assertTrue(Signatures.fieldDescriptorToBinaryName("[[I").equals("int[][]"));
-    assert Signatures.fieldDescriptorToBinaryName("[[LJava/lang/Integer;")
-        .equals("Java.lang.Integer[][]");
+    assertEquals("boolean", Signatures.fieldDescriptorToBinaryName("Z"));
+    assertEquals("byte", Signatures.fieldDescriptorToBinaryName("B"));
+    assertEquals("char", Signatures.fieldDescriptorToBinaryName("C"));
+    assertEquals("double", Signatures.fieldDescriptorToBinaryName("D"));
+    assertEquals("float", Signatures.fieldDescriptorToBinaryName("F"));
+    assertEquals("int", Signatures.fieldDescriptorToBinaryName("I"));
+    assertEquals("long", Signatures.fieldDescriptorToBinaryName("J"));
+    assertEquals("short", Signatures.fieldDescriptorToBinaryName("S"));
+    assertEquals("Integer", Signatures.fieldDescriptorToBinaryName("LInteger;"));
+    assertEquals(
+        "Java.lang.Integer", Signatures.fieldDescriptorToBinaryName("LJava/lang/Integer;"));
+    assertEquals("int[][]", Signatures.fieldDescriptorToBinaryName("[[I"));
+    assertEquals(
+        "Java.lang.Integer[][]", Signatures.fieldDescriptorToBinaryName("[[LJava/lang/Integer;"));
 
     // public static @ClassGetName String
     //     fieldDescriptorToClassGetName(/*FieldDescriptor*/ String fd)
-    assertTrue(Signatures.fieldDescriptorToClassGetName("Z").equals("boolean"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("B").equals("byte"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("C").equals("char"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("D").equals("double"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("F").equals("float"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("I").equals("int"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("J").equals("long"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("S").equals("short"));
-    assertTrue(Signatures.fieldDescriptorToClassGetName("LInteger;").equals("Integer"));
-    assert Signatures.fieldDescriptorToClassGetName("LJava/lang/Integer;")
-        .equals("Java.lang.Integer");
-    assertTrue(Signatures.fieldDescriptorToClassGetName("[[I").equals("[[I"));
-    assert Signatures.fieldDescriptorToClassGetName("[[LJava/lang/Integer;")
-        .equals("[[LJava.lang.Integer;");
+    assertEquals("boolean", Signatures.fieldDescriptorToClassGetName("Z"));
+    assertEquals("byte", Signatures.fieldDescriptorToClassGetName("B"));
+    assertEquals("char", Signatures.fieldDescriptorToClassGetName("C"));
+    assertEquals("double", Signatures.fieldDescriptorToClassGetName("D"));
+    assertEquals("float", Signatures.fieldDescriptorToClassGetName("F"));
+    assertEquals("int", Signatures.fieldDescriptorToClassGetName("I"));
+    assertEquals("long", Signatures.fieldDescriptorToClassGetName("J"));
+    assertEquals("short", Signatures.fieldDescriptorToClassGetName("S"));
+    assertEquals("Integer", Signatures.fieldDescriptorToClassGetName("LInteger;"));
+    assertEquals(
+        "Java.lang.Integer", Signatures.fieldDescriptorToClassGetName("LJava/lang/Integer;"));
+    assertEquals("[[I", Signatures.fieldDescriptorToClassGetName("[[I"));
+    assertEquals(
+        "[[LJava.lang.Integer;", Signatures.fieldDescriptorToClassGetName("[[LJava/lang/Integer;"));
 
-    assertTrue(Signatures.internalFormToClassGetName("MyClass").equals("MyClass"));
-    assertTrue(Signatures.internalFormToClassGetName("MyClass$22").equals("MyClass$22"));
-    assertTrue(
-        Signatures.internalFormToClassGetName("java/lang/Integer").equals("java.lang.Integer"));
-    assertTrue(Signatures.internalFormToClassGetName("pkg/Outer$Inner").equals("pkg.Outer$Inner"));
-    assertTrue(Signatures.internalFormToClassGetName("pkg/Outer$22").equals("pkg.Outer$22"));
+    assertEquals("MyClass", Signatures.internalFormToClassGetName("MyClass"));
+    assertEquals("MyClass$22", Signatures.internalFormToClassGetName("MyClass$22"));
+    assertEquals("java.lang.Integer", Signatures.internalFormToClassGetName("java/lang/Integer"));
+    assertEquals("pkg.Outer$Inner", Signatures.internalFormToClassGetName("pkg/Outer$Inner"));
+    assertEquals("pkg.Outer$22", Signatures.internalFormToClassGetName("pkg/Outer$22"));
 
-    assertTrue(Signatures.internalFormToBinaryName("MyClass").equals("MyClass"));
-    assertTrue(Signatures.internalFormToBinaryName("MyClass$22").equals("MyClass$22"));
-    assertTrue(
-        Signatures.internalFormToBinaryName("java/lang/Integer").equals("java.lang.Integer"));
-    assertTrue(Signatures.internalFormToBinaryName("pkg/Outer$Inner").equals("pkg.Outer$Inner"));
-    assertTrue(Signatures.internalFormToBinaryName("pkg/Outer$22").equals("pkg.Outer$22"));
+    assertEquals("MyClass", Signatures.internalFormToBinaryName("MyClass"));
+    assertEquals("MyClass$22", Signatures.internalFormToBinaryName("MyClass$22"));
+    assertEquals("java.lang.Integer", Signatures.internalFormToBinaryName("java/lang/Integer"));
+    assertEquals("pkg.Outer$Inner", Signatures.internalFormToBinaryName("pkg/Outer$Inner"));
+    assertEquals("pkg.Outer$22", Signatures.internalFormToBinaryName("pkg/Outer$22"));
 
     // More tests for type representation conversions.
     // Table from Signature Checker manual.
@@ -242,14 +239,15 @@ public final class TestSignatures {
   public void testSignaturesImplementation() {
 
     // public static String binaryNameToFieldDescriptor(String classname)
-    assertTrue(Signatures.binaryNameToFieldDescriptor("int[][]").equals("[[I"));
-    assert Signatures.binaryNameToFieldDescriptor("Java.lang.Integer[][][]")
-        .equals("[[[LJava/lang/Integer;");
+    assertEquals("[[I", Signatures.binaryNameToFieldDescriptor("int[][]"));
+    assertEquals(
+        "[[[LJava/lang/Integer;",
+        Signatures.binaryNameToFieldDescriptor("Java.lang.Integer[][][]"));
 
     // public static @ClassGetName String binaryNameToClassGetName(/*BinaryName*/ String bn)
-    assertTrue(Signatures.binaryNameToClassGetName("int[][]").equals("[[I"));
-    assert Signatures.binaryNameToClassGetName("Java.lang.Integer[][][]")
-        .equals("[[[LJava.lang.Integer;");
+    assertEquals("[[I", Signatures.binaryNameToClassGetName("int[][]"));
+    assertEquals(
+        "[[[LJava.lang.Integer;", Signatures.binaryNameToClassGetName("Java.lang.Integer[][][]"));
 
     // More tests for type representation conversions.
     // Table from Signature Checker manual.
@@ -274,11 +272,10 @@ public final class TestSignatures {
       @BinaryName String bn,
       @ClassGetName String cgn,
       @FieldDescriptor String fd) {
-    assertTrue(fd.equals(Signatures.binaryNameToFieldDescriptor(bn)));
-    assert cgn.equals(Signatures.binaryNameToClassGetName(bn))
-        : bn + " => " + Signatures.binaryNameToClassGetName(bn) + ", should be " + cgn;
-    assertTrue(cgn.equals(Signatures.fieldDescriptorToClassGetName(fd)));
-    assertTrue(bn.equals(Signatures.fieldDescriptorToBinaryName(fd)));
+    assertEquals(fd, Signatures.binaryNameToFieldDescriptor(bn));
+    assertEquals(cgn, Signatures.binaryNameToClassGetName(bn));
+    assertEquals(cgn, Signatures.fieldDescriptorToClassGetName(fd));
+    assertEquals(bn, Signatures.fieldDescriptorToBinaryName(fd));
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -288,29 +285,33 @@ public final class TestSignatures {
   @Test
   public void testSignatureConversions() {
     // public static String arglistToJvm(String arglist)
-    assertTrue(Signatures.arglistToJvm("()").equals("()"));
-    assertTrue(Signatures.arglistToJvm("(int)").equals("(I)"));
-    assertTrue(Signatures.arglistToJvm("(int, int)").equals("(II)"));
-    assertTrue(Signatures.arglistToJvm("(int, long, short)").equals("(IJS)"));
-    assert Signatures.arglistToJvm("(java.lang.Integer, int, java.lang.Integer)")
-        .equals("(Ljava/lang/Integer;ILjava/lang/Integer;)");
-    assertTrue(Signatures.arglistToJvm("(int[])").equals("([I)"));
-    assertTrue(Signatures.arglistToJvm("(int[], int, int)").equals("([III)"));
-    assertTrue(Signatures.arglistToJvm("(int, int[][], int)").equals("(I[[II)"));
-    assert Signatures.arglistToJvm("(java.lang.Integer[], int, java.lang.Integer[][])")
-        .equals("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)");
+    assertEquals("()", Signatures.arglistToJvm("()"));
+    assertEquals("(I)", Signatures.arglistToJvm("(int)"));
+    assertEquals("(II)", Signatures.arglistToJvm("(int, int)"));
+    assertEquals("(IJS)", Signatures.arglistToJvm("(int, long, short)"));
+    assertEquals(
+        "(Ljava/lang/Integer;ILjava/lang/Integer;)",
+        Signatures.arglistToJvm("(java.lang.Integer, int, java.lang.Integer)"));
+    assertEquals("([I)", Signatures.arglistToJvm("(int[])"));
+    assertEquals("([III)", Signatures.arglistToJvm("(int[], int, int)"));
+    assertEquals("(I[[II)", Signatures.arglistToJvm("(int, int[][], int)"));
+    assertEquals(
+        "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)",
+        Signatures.arglistToJvm("(java.lang.Integer[], int, java.lang.Integer[][])"));
 
     // public static String arglistFromJvm(String arglist)
-    assertTrue(Signatures.arglistFromJvm("()").equals("()"));
-    assertTrue(Signatures.arglistFromJvm("(I)").equals("(int)"));
-    assertTrue(Signatures.arglistFromJvm("(II)").equals("(int, int)"));
-    assertTrue(Signatures.arglistFromJvm("(IJS)").equals("(int, long, short)"));
-    assert Signatures.arglistFromJvm("(Ljava/lang/Integer;ILjava/lang/Integer;)")
-        .equals("(java.lang.Integer, int, java.lang.Integer)");
-    assertTrue(Signatures.arglistFromJvm("([I)").equals("(int[])"));
-    assertTrue(Signatures.arglistFromJvm("([III)").equals("(int[], int, int)"));
-    assertTrue(Signatures.arglistFromJvm("(I[[II)").equals("(int, int[][], int)"));
-    assert Signatures.arglistFromJvm("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)")
-        .equals("(java.lang.Integer[], int, java.lang.Integer[][])");
+    assertEquals("()", Signatures.arglistFromJvm("()"));
+    assertEquals("(int)", Signatures.arglistFromJvm("(I)"));
+    assertEquals("(int, int)", Signatures.arglistFromJvm("(II)"));
+    assertEquals("(int, long, short)", Signatures.arglistFromJvm("(IJS)"));
+    assertEquals(
+        "(java.lang.Integer, int, java.lang.Integer)",
+        Signatures.arglistFromJvm("(Ljava/lang/Integer;ILjava/lang/Integer;)"));
+    assertEquals("(int[])", Signatures.arglistFromJvm("([I)"));
+    assertEquals("(int[], int, int)", Signatures.arglistFromJvm("([III)"));
+    assertEquals("(int, int[][], int)", Signatures.arglistFromJvm("(I[[II)"));
+    assertEquals(
+        "(java.lang.Integer[], int, java.lang.Integer[][])",
+        Signatures.arglistFromJvm("([Ljava/lang/Integer;I[[Ljava/lang/Integer;)"));
   }
 }

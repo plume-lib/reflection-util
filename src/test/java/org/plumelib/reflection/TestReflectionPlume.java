@@ -1,5 +1,7 @@
 package org.plumelib.reflection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -46,8 +48,8 @@ public final class TestReflectionPlume {
 
   @Test
   public void test_fullyQualifiedNameToSimpleName() {
-    assertTrue(ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String"));
-    assertTrue(ReflectionPlume.fullyQualifiedNameToSimpleName("String").equals("String"));
+    assertEquals("String", ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String"));
+    assertEquals("String", ReflectionPlume.fullyQualifiedNameToSimpleName("String"));
   }
 
   @Test
@@ -79,13 +81,13 @@ public final class TestReflectionPlume {
     //
     // Just test that the method is found (return value is non-null and non-erroneous).
     try {
-      assert null
-          != ReflectionPlume.methodForName(
-              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])");
-      assert null
-          != ReflectionPlume.methodForName(
-              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])");
-      assertTrue(null != ReflectionPlume.methodForName("java.lang.Math.min(int,int)"));
+      assertNotNull(
+          ReflectionPlume.methodForName(
+              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])"));
+      assertNotNull(
+          ReflectionPlume.methodForName(
+              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])"));
+      assertNotNull(ReflectionPlume.methodForName("java.lang.Math.min(int,int)"));
     } catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
