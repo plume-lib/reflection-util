@@ -77,7 +77,7 @@ public final class Signatures {
    * @param classname the class name
    * @return the qualified class name
    */
-  public static @ClassGetName String addPackage(
+  public static @BinaryName String addPackage(
       @Nullable @DotSeparatedIdentifiers String packagename, @BinaryName String classname) {
     if (!isBinaryName(classname)) {
       throw new Error("Bad classname argument to addPackage: " + classname);
@@ -89,7 +89,7 @@ public final class Signatures {
         throw new Error("Bad packagename argument to addPackage: " + packagename);
       }
       @SuppressWarnings("signature:assignment.type.incompatible") // string concatenation
-      @ClassGetName String result = packagename + "." + classname;
+      @BinaryName String result = packagename + "." + classname;
       return result;
     }
   }
