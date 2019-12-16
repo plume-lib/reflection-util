@@ -1,5 +1,10 @@
 # Reflection-Util change log
 
+## 0.2.0
+
+- Rename Signatures.classfilenameToBinaryName to classfilenameToBaseName
+- New method Signatures.classfilenameToBinaryName returns qualified name
+
 ## 0.1.2
 
 - Bug fix

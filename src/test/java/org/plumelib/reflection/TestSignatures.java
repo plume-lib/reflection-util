@@ -29,13 +29,30 @@ public final class TestSignatures {
     assertEquals("int", Signatures.getArrayElementType("int"));
   }
 
-  /** Given a filename ending with ".class", return the class name. */
+  /** Given a filename ending with ".class", return the binary name of the class. */
   @Test
   public void testClassfilenameToBinaryName() {
-    assertEquals("Quux", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class"));
+    assertEquals(
+        "foo.bar.baz.Quux", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class"));
+    assertEquals(
+        "foo.bar.baz.Quux", Signatures.classfilenameToBinaryName("foo/bar/baz/Quux.class"));
     assertEquals("Quux", Signatures.classfilenameToBinaryName("Quux.class"));
-    assertEquals("Quux$22", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux$22.class"));
+    assertEquals(
+        "foo.bar.baz.Quux$22", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux$22.class"));
+    assertEquals(
+        "foo.bar.baz.Quux$22", Signatures.classfilenameToBinaryName("foo/bar/baz/Quux$22.class"));
     assertEquals("Quux$22", Signatures.classfilenameToBinaryName("Quux$22.class"));
+  }
+
+  /** Given a filename ending with ".class", return the simple binary name of the class. */
+  @Test
+  public void testClassfilenameToBaseName() {
+    assertEquals("Quux", Signatures.classfilenameToBaseName("/foo/bar/baz/Quux.class"));
+    assertEquals("Quux", Signatures.classfilenameToBaseName("foo/bar/baz/Quux.class"));
+    assertEquals("Quux", Signatures.classfilenameToBaseName("Quux.class"));
+    assertEquals("Quux$22", Signatures.classfilenameToBaseName("/foo/bar/baz/Quux$22.class"));
+    assertEquals("Quux$22", Signatures.classfilenameToBaseName("foo/bar/baz/Quux$22.class"));
+    assertEquals("Quux$22", Signatures.classfilenameToBaseName("Quux$22.class"));
   }
 
   ///////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 package org.plumelib.reflection;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -25,6 +26,9 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
  */
 public final class Signatures {
 
+  /** The file-system-specific directory separator. */
+  private static final String dirSep = File.separator;
+
   ///////////////////////////////////////////////////////////////////////////
   /// Accessing parts of types
   ///
@@ -47,9 +51,9 @@ public final class Signatures {
   }
 
   /**
-   * Given a filename ending with ".class", return the class name.
+   * Given a filename ending with ".class", return the binary name of the class.
    *
-   * @param classfilename the name of a classfile
+   * @param classfilename the name of a classfile, relative to a directory on the CLASSPATH
    * @return the basename of the classfile
    */
   @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
@@ -57,7 +61,27 @@ public final class Signatures {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    @SuppressWarnings("index:assignment.type.incompatible") // "/" is not last character
+    classfilename = classfilename.substring(0, classfilename.length() - 6);
+    if (classfilename.startsWith("/") || classfilename.startsWith(dirSep)) {
+      classfilename = classfilename.substring(1);
+    }
+    // This might misbehave for a Windows file whose name contains "/".
+    return classfilename.replace("/", ".").replace(dirSep, ".");
+  }
+
+  /**
+   * Given a filename ending with ".class", return the simple (unqualified) binary name of the
+   * class.
+   *
+   * @param classfilename the name of a classfile
+   * @return the basename of the classfile
+   */
+  @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
+  public static @BinaryName String classfilenameToBaseName(String classfilename) {
+    if (!classfilename.endsWith(".class")) {
+      throw new IllegalArgumentException("Bad class file name: " + classfilename);
+    }
+    @SuppressWarnings("index:assignment.type.incompatible") // "/" is not the last character
     @IndexFor("classfilename") int start = classfilename.lastIndexOf("/") + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
