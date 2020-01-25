@@ -8,8 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -94,7 +97,9 @@ public final class ReflectionPlume {
    * format instead of binary format. (It should try multiple dollar signs, not just at the last
    * position.)
    *
-   * <p>This method does not handle arrays.
+   * <p>Recall the rather odd specification for {@link Class#forName(String)}: the argument is a
+   * binary name for non-arrays, but a field descriptor for arrays. This method uses the same rules,
+   * but additionally handles primitive types and, for non-arrays, fully-qualified names.
    *
    * @param className name of the class
    * @return the Class corresponding to className
@@ -230,6 +235,21 @@ public final class ReflectionPlume {
     if (!found) {
       System.setProperty("java.class.path", dir + pathSep + cp);
     }
+  }
+
+  /**
+   * Returns the classpath as a multi-line string.
+   *
+   * @return the classpath as a multi-line string
+   */
+  public static String classpathToString() {
+    StringJoiner result = new StringJoiner(System.lineSeparator());
+    ClassLoader cl = ClassLoader.getSystemClassLoader();
+    URL[] urls = ((URLClassLoader) cl).getURLs();
+    for (URL url : urls) {
+      result.add(url.getFile());
+    }
+    return result.toString();
   }
 
   ///////////////////////////////////////////////////////////////////////////
