@@ -1,5 +1,9 @@
 # Reflection-Util change log
 
+## 0.2.1
+
+- New method ReflectionPlume.classpathToString
+
 ## 0.2.0
 
 - Rename Signatures.classfilenameToBinaryName to classfilenameToBaseName
