@@ -202,6 +202,42 @@ public final class Signatures {
   /// Type conversions
   ///
 
+  /** Matches the "[][][]" at the end of a Java array type. */
+  private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
+
+  /** A representation of an array: A pair of class name and the number of array dimensions. */
+  public static class ClassnameAndDimensions {
+    /** The class name. It is a binary name or a primitive. */
+    public final @BinaryName String classname;
+    /** The number of array dimensions. */
+    public final int dimensions;
+    /**
+     * Create a new ClassnameAndDimensions.
+     *
+     * @param classname the class name: a binary name or a primitive
+     * @param dimensions the number of array dimensions
+     */
+    public ClassnameAndDimensions(@BinaryName String classname, int dimensions) {
+      this.classname = classname;
+      this.dimensions = dimensions;
+    }
+    /**
+     * Constructs a new ClassnameAndDimensions by parsing a fully-qualified binary name.
+     *
+     * @param typename the type name to parse, as a fully-qualified binary name (= fully-qualified
+     *     name, but with $ separating outer from inner types)
+     * @return the result of parsing the type name
+     */
+    public static ClassnameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
+      Matcher m = arrayBracketsPattern.matcher(typename);
+      @SuppressWarnings("signature:assignment.type.incompatible") // classname is a @ClassGetName
+      // for a non-array; equivalently, a binary name for a non-array
+      @BinaryName String classname = m.replaceFirst("");
+      int dimensions = (typename.length() - classname.length()) / 2;
+      return new ClassnameAndDimensions(classname, dimensions);
+    }
+  }
+
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
   private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
       primitiveToFieldDescriptor = new HashMap<>(8);
@@ -238,42 +274,6 @@ public final class Signatures {
       result = "[" + result;
     }
     return result.replace('.', '/');
-  }
-
-  /** Matches the "[][][]" at the end of a Java array type. */
-  private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
-
-  /** A representation of an array: A pair of class name and the number of array dimensions. */
-  public static class ClassnameAndDimensions {
-    /** The class name. It is a binary name or a primitive */
-    public final @BinaryName String classname;
-    /** The number of array dimensions. */
-    public final int dimensions;
-    /**
-     * Create a new ClassnameAndDimensions.
-     *
-     * @param classname the class name: a binary name or a primitive
-     * @param dimensions the number of array dimensions
-     */
-    public ClassnameAndDimensions(@BinaryName String classname, int dimensions) {
-      this.classname = classname;
-      this.dimensions = dimensions;
-    }
-    /**
-     * Constructs a new ClassnameAndDimensions by parsing a fully-qualified binary name.
-     *
-     * @param typename the type name to parse, as a fully-qualified binary name (= fully-qualified
-     *     name, but with $ separating outer from inner types)
-     * @return the result of parsing the type name
-     */
-    public static ClassnameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
-      Matcher m = arrayBracketsPattern.matcher(typename);
-      @SuppressWarnings("signature:assignment.type.incompatible") // classname is a @ClassGetName
-      // for a non-array; equivalently, a binary name for a non-array
-      @BinaryName String classname = m.replaceFirst("");
-      int dimensions = (typename.length() - classname.length()) / 2;
-      return new ClassnameAndDimensions(classname, dimensions);
-    }
   }
 
   /**
