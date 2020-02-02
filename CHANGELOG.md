@@ -1,5 +1,7 @@
 # Reflection-Util change log
 
+- New methods binaryNameToFullyQualified and internalFormToFullyQualified
+
 ## 0.2.1
 
 - New method ReflectionPlume.classpathToString

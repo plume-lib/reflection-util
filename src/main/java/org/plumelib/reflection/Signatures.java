@@ -13,6 +13,7 @@ import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
 import org.checkerframework.checker.signature.qual.FieldDescriptor;
 import org.checkerframework.checker.signature.qual.FqBinaryName;
+import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.checker.signature.qual.InternalForm;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
@@ -311,6 +312,20 @@ public final class Signatures {
   }
 
   /**
+   * Converts a binary name to a fully-qualified name.
+   *
+   * @param binaryName a type in binary name format
+   * @return a fully-qualified name
+   */
+  @SuppressWarnings("signature:return.type.incompatible") // implementation bug. There are binary
+  // names for anonymous classes, but no fully-qualified names for them.  Given a valid binary name
+  // "pkg.Outer$22", it produces "pkg.Outer.22" which is not a valid fully-qualified name.
+  public static @FullyQualifiedName String binaryNameToFullyQualified(
+      @BinaryName String binaryName) {
+    return binaryName.replaceAll("\\$", ".");
+  }
+
+  /**
    * Convert from a FieldDescriptor to the format of {@link Class#getName()}.
    *
    * @param fd the class, in field descriptor format
@@ -391,6 +406,17 @@ public final class Signatures {
    */
   public static @BinaryName String internalFormToBinaryName(@InternalForm String internalForm) {
     return internalForm.replace('/', '.');
+  }
+
+  /**
+   * Given a class name in internal form, return it in as a fully-qualified name.
+   *
+   * @param internalForm a type in internal form
+   * @return a fully-qualified name
+   */
+  public static @FullyQualifiedName String internalFormToFullyQualified(
+      @InternalForm String internalForm) {
+    return binaryNameToFullyQualified(internalFormToBinaryName(internalForm));
   }
 
   ///////////////////////////////////////////////////////////////////////////
