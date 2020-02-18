@@ -1,5 +1,7 @@
 # Reflection-Util change log
 
+## 0.2.2
+
 - New methods binaryNameToFullyQualified and internalFormToFullyQualified
 
 ## 0.2.1
