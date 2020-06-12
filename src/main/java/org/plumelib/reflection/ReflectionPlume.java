@@ -46,8 +46,8 @@ public final class ReflectionPlume {
    * @return true iff sub is a subtype of sup
    */
   @SuppressWarnings({
-    "all:purity.not.deterministic.call", // getInterfaces() is used as a set
-    "all:method.guarantee.violated" // getInterfaces() is used as a set
+    "allcheckers:purity.not.deterministic.call", // getInterfaces() is used as a set
+    "allcheckers:method.guarantee.violated" // getInterfaces() is used as a set
   })
   @Pure
   public static boolean isSubtype(Class<?> sub, Class<?> sup) {
