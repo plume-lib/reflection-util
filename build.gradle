@@ -21,8 +21,10 @@ repositories {
 }
 
 dependencies {
-  testImplementation 'junit:junit:4.13'
   errorprone 'com.google.errorprone:error_prone_core:2.4.0'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 sourceCompatibility = 1.8
@@ -30,6 +32,13 @@ targetCompatibility = 1.8
 
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
+
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter'
+        excludeEngines 'junit-vintage'
+    }
+}
 
 /// Error Prone linter
 
