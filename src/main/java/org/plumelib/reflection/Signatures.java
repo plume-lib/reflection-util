@@ -15,6 +15,7 @@ import org.checkerframework.checker.signature.qual.FieldDescriptor;
 import org.checkerframework.checker.signature.qual.FqBinaryName;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.checker.signature.qual.InternalForm;
+import org.checkerframework.checker.signature.qual.PrimitiveType;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 // TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
@@ -240,7 +241,7 @@ public final class Signatures {
   }
 
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
-  private static HashMap<@DotSeparatedIdentifiers String, @FieldDescriptor String>
+  private static HashMap<@PrimitiveType String, @FieldDescriptor String>
       primitiveToFieldDescriptor = new HashMap<>(8);
 
   static {
