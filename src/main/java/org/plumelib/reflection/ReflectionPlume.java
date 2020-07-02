@@ -63,7 +63,12 @@ public final class ReflectionPlume {
     }
 
     // Handle interfaces
-    for (Class<?> ifc : sub.getInterfaces()) {
+    @SuppressWarnings({
+      "allcheckers:purity.not.deterministic.call.method",
+      "lock:method.guarantee.violated"
+    }) // order doesn't matter
+    Class<?>[] interfaces = sub.getInterfaces();
+    for (Class<?> ifc : interfaces) {
       if (ifc == sup || isSubtype(ifc, sup)) {
         return true;
       }
