@@ -3,6 +3,7 @@
 
 package org.plumelib.reflection;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -248,7 +249,8 @@ public final class ReflectionPlume {
    *
    * @return the classpath as a multi-line string
    */
-  public static String classpathToString() {
+  @SuppressWarnings("UnusedMethod") // This implementation works only on Java 8, not Java 11.
+  private static String classpathToStringJava8Only() {
     StringJoiner result = new StringJoiner(System.lineSeparator());
     ClassLoader cl = ClassLoader.getSystemClassLoader();
     URL[] urls = ((URLClassLoader) cl).getURLs();
@@ -256,6 +258,16 @@ public final class ReflectionPlume {
       result.add(url.getFile());
     }
     return result.toString();
+  }
+
+  /**
+   * Returns the classpath as a multi-line string.
+   *
+   * @return the classpath as a multi-line string
+   */
+  public static String classpathToString() {
+    return System.getProperty("java.class.path")
+        .replace(File.pathSeparator, System.lineSeparator());
   }
 
   ///////////////////////////////////////////////////////////////////////////

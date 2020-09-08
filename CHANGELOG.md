@@ -1,5 +1,9 @@
 # Reflection-Util change log
 
+## 1.0.1
+
+- Make ReflectionUtil.classpathToString work on Java 11
+
 ## 1.0.0
 
 - Release 1.0.0.
