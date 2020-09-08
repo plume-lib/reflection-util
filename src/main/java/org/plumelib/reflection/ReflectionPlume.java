@@ -91,8 +91,6 @@ public final class ReflectionPlume {
     primitiveClasses.put("short", Short.TYPE);
   }
 
-  // The @ClassGetName annotation encourages proper use, even though this can take a
-  // fully-qualified name (only for a non-array).
   // TODO: Should create a method that handles any ClassGetName (including primitives), but not
   // fully-qualified names.  A routine with a polymorphic parameter type is confusing.
   /**
@@ -113,6 +111,8 @@ public final class ReflectionPlume {
    * @return the Class corresponding to className
    * @throws ClassNotFoundException if the class is not found
    */
+  // The @ClassGetName annotation encourages proper use, even though this can take a
+  // fully-qualified name (only for a non-array).
   public static Class<?> classForName(@ClassGetName String className)
       throws ClassNotFoundException {
     Class<?> result = primitiveClasses.get(className);
