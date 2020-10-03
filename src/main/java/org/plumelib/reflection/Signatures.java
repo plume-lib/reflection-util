@@ -8,12 +8,21 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signature.qual.ArrayWithoutPackage;
 import org.checkerframework.checker.signature.qual.BinaryName;
+import org.checkerframework.checker.signature.qual.BinaryNameOrPrimitiveType;
+import org.checkerframework.checker.signature.qual.BinaryNameWithoutPackage;
 import org.checkerframework.checker.signature.qual.ClassGetName;
+import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
+import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiersOrPrimitiveType;
 import org.checkerframework.checker.signature.qual.FieldDescriptor;
+import org.checkerframework.checker.signature.qual.FieldDescriptorForPrimitive;
+import org.checkerframework.checker.signature.qual.FieldDescriptorWithoutPackage;
 import org.checkerframework.checker.signature.qual.FqBinaryName;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
+import org.checkerframework.checker.signature.qual.Identifier;
+import org.checkerframework.checker.signature.qual.IdentifierOrPrimitiveType;
 import org.checkerframework.checker.signature.qual.InternalForm;
 import org.checkerframework.checker.signature.qual.PrimitiveType;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
@@ -121,20 +130,20 @@ public final class Signatures {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Type tests
+  /// Type tests (predicates)
   ///
 
   /**
-   * Returns true if the argument has the format of a ClassGetName. The type it refers to might or
-   * might not exist.
+   * Returns true if the argument has the format of a ArrayWithoutPackage. The type it refers to
+   * might or might not exist.
    *
    * @param s a string
-   * @return true if the string is @ClassGetName
+   * @return true if the string is a @ArrayWithoutPackage
    */
-  @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetName.class)
-  public static boolean isClassGetName(String s) {
-    return SignatureRegexes.ClassGetNamePattern.matcher(s).matches();
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ArrayWithoutPackage.class)
+  public static boolean isArrayWithoutPackage(String s) {
+    return SignatureRegexes.ArrayWithoutPackagePattern.matcher(s).matches();
   }
 
   /**
@@ -142,7 +151,7 @@ public final class Signatures {
    * might not exist.
    *
    * @param s a string
-   * @return true if the string is @BinaryName
+   * @return true if the string is a @BinaryName
    */
   @SuppressWarnings("signature")
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryName.class)
@@ -151,11 +160,136 @@ public final class Signatures {
   }
 
   /**
+   * Returns true if the argument has the format of a BinaryNameWithoutPackage. The type it refers
+   * to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @BinaryNameWithoutPackage
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryNameWithoutPackage.class)
+  public static boolean isBinaryNameWithoutPackage(String s) {
+    return SignatureRegexes.BinaryNameWithoutPackagePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a BinaryNameOrPrimitiveType. The type it refers
+   * to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @BinaryNameOrPrimitiveType
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryNameOrPrimitiveType.class)
+  public static boolean isBinaryNameOrPrimitiveType(String s) {
+    return SignatureRegexes.BinaryNameOrPrimitiveTypePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a ClassGetName. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @ClassGetName
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetName.class)
+  public static boolean isClassGetName(String s) {
+    return SignatureRegexes.ClassGetNamePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a ClassGetSimpleName. The type it refers to
+   * might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @ClassGetSimpleName
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetSimpleName.class)
+  public static boolean isClassGetSimpleName(String s) {
+    return SignatureRegexes.ClassGetSimpleNamePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a DotSeparatedIdentifiers. The package or type
+   * it refers to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @DotSeparatedIdentifiers
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = DotSeparatedIdentifiers.class)
+  public static boolean isDotSeparatedIdentifiers(String s) {
+    return SignatureRegexes.DotSeparatedIdentifiersPattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a DotSeparatedIdentifiersOrPrimitiveType. The
+   * package or type it refers to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @DotSeparatedIdentifiersOrPrimitiveType
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(
+      result = true,
+      expression = "#1",
+      qualifier = DotSeparatedIdentifiersOrPrimitiveType.class)
+  public static boolean isDotSeparatedIdentifiersOrPrimitiveType(String s) {
+    return SignatureRegexes.DotSeparatedIdentifiersOrPrimitiveTypePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a FieldDescriptor. The type it refers to might
+   * or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @FieldDescriptor
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FieldDescriptor.class)
+  public static boolean isFieldDescriptor(String s) {
+    return SignatureRegexes.FieldDescriptorPattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a FieldDescriptorWithoutPackage. The type it
+   * refers to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @FieldDescriptorWithoutPackage
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(
+      result = true,
+      expression = "#1",
+      qualifier = FieldDescriptorWithoutPackage.class)
+  public static boolean isFieldDescriptorWithoutPackage(String s) {
+    return SignatureRegexes.FieldDescriptorWithoutPackagePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a FieldDescriptorForPrimitive.
+   *
+   * @param s a string
+   * @return true if the string is a @FieldDescriptorForPrimitive
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(
+      result = true,
+      expression = "#1",
+      qualifier = FieldDescriptorForPrimitive.class)
+  public static boolean isFieldDescriptorForPrimitive(String s) {
+    return SignatureRegexes.FieldDescriptorForPrimitivePattern.matcher(s).matches();
+  }
+
+  /**
    * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
    * might not exist.
    *
    * @param s a string
-   * @return true if the string is @FqBinaryName
+   * @return true if the string is a @FqBinaryName
    */
   @SuppressWarnings("signature")
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FqBinaryName.class)
@@ -164,16 +298,67 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a DotSeparatedIdentifiers. The package or type
-   * it refers to might or might not exist.
+   * Returns true if the argument has the format of a FullyQualifiedName. The type it refers to
+   * might or might not exist.
    *
    * @param s a string
-   * @return true if the string is @DotSeparatedIdentifiers
+   * @return true if the string is a @FullyQualifiedName
    */
   @SuppressWarnings("signature")
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = DotSeparatedIdentifiers.class)
-  public static boolean isDotSeparatedIdentifiers(String s) {
-    return SignatureRegexes.DotSeparatedIdentifiersPattern.matcher(s).matches();
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FullyQualifiedName.class)
+  public static boolean isFullyQualifiedName(String s) {
+    return SignatureRegexes.FullyQualifiedNamePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a Identifier. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @Identifier
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = Identifier.class)
+  public static boolean isIdentifier(String s) {
+    return SignatureRegexes.IdentifierPattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a IdentifierOrPrimitiveType. The type it refers
+   * to might or might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @IdentifierOrPrimitiveType
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = IdentifierOrPrimitiveType.class)
+  public static boolean isIdentifierOrPrimitiveType(String s) {
+    return SignatureRegexes.IdentifierOrPrimitiveTypePattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a InternalForm. The type it refers to might or
+   * might not exist.
+   *
+   * @param s a string
+   * @return true if the string is a @InternalForm
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = InternalForm.class)
+  public static boolean isInternalForm(String s) {
+    return SignatureRegexes.InternalFormPattern.matcher(s).matches();
+  }
+
+  /**
+   * Returns true if the argument has the format of a PrimitiveType.
+   *
+   * @param s a string
+   * @return true if the string is a @PrimitiveType
+   */
+  @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = PrimitiveType.class)
+  public static boolean isPrimitiveType(String s) {
+    return SignatureRegexes.PrimitiveTypePattern.matcher(s).matches();
   }
 
   ///////////////////////////////////////////////////////////////////////////

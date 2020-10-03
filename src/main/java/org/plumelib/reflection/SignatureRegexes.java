@@ -148,7 +148,7 @@ public class SignatureRegexes {
       ALTERNATE(KEYWORD, "true", "false", "null");
 
   /** A regex that matches Java identifier tokens, as defined by the Java grammar. */
-  private static final @Regex String IDENTIFIER_TOKEN = "[A-Za-z_][A-Za-z_0-9]*";
+  private static final @Regex String IDENTIFIER_TOKEN = "[A-Za-z_$][A-Za-z_$0-9]*";
 
   /** A grouped regex that matches identifiers. */
   private static final @Regex String IDENTIFIER =

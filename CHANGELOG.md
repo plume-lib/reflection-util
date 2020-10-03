@@ -2,7 +2,22 @@
 
 ## 1.0.2
 
+- New methods in class Signatures:
+   - isArrayWithoutPackage
+   - isBinaryNameWithoutPackage
+   - isBinaryNameOrPrimitiveType
+   - isClassGetSimpleName
+   - isDotSeparatedIdentifiersOrPrimitiveType
+   - isFieldDescriptor
+   - isFieldDescriptorWithoutPackage
+   - isFieldDescriptorForPrimitive
+   - isFullyQualifiedName
+   - isIdentifier
+   - isIdentifierOrPrimitiveType
+   - isInternalForm
+   - isPrimitiveType
 - New class SignatureRegexes
+- Bug fixes
 
 ## 1.0.1
 
