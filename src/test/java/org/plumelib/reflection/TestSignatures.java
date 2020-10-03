@@ -1,7 +1,6 @@
 package org.plumelib.reflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -110,7 +109,7 @@ public final class TestSignatures {
    */
   @Test
   public void testIsBinaryName() {
-    assertTrue(Signatures.isBinaryName("int"));
+    assertTrue(!Signatures.isBinaryName("int"));
     assertTrue(!Signatures.isBinaryName("int[][]"));
     assertTrue(Signatures.isBinaryName("java.lang.String"));
     assertTrue(!Signatures.isBinaryName("java.lang.String[]"));
@@ -126,8 +125,8 @@ public final class TestSignatures {
    */
   @Test
   public void testIsFqBinaryName() {
-    assertFalse(Signatures.isFqBinaryName("hello world"));
-    assertFalse(Signatures.isFqBinaryName("[[I"));
+    assertTrue(!Signatures.isFqBinaryName("hello world"));
+    assertTrue(!Signatures.isFqBinaryName("[[I"));
     assertTrue(Signatures.isFqBinaryName("int"));
     assertTrue(Signatures.isFqBinaryName("int[]"));
     assertTrue(Signatures.isFqBinaryName("int[][]"));
@@ -150,7 +149,7 @@ public final class TestSignatures {
   public void testIsDotSeparatedIdentifiers() {
     assertTrue(!Signatures.isDotSeparatedIdentifiers("hello world"));
     assertTrue(!Signatures.isDotSeparatedIdentifiers("[[I"));
-    assertTrue(Signatures.isDotSeparatedIdentifiers("int"));
+    assertTrue(!Signatures.isDotSeparatedIdentifiers("int"));
     assertTrue(!Signatures.isDotSeparatedIdentifiers("int[][]"));
     assertTrue(Signatures.isDotSeparatedIdentifiers("java.lang.String"));
     assertTrue(!Signatures.isDotSeparatedIdentifiers("java.lang.String[]"));

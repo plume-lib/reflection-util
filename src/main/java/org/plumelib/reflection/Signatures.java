@@ -124,12 +124,6 @@ public final class Signatures {
   /// Type tests
   ///
 
-  /** A regular expression for the ClassGetName string format. */
-  static Pattern classGetNamePattern =
-      Pattern.compile(
-          // Same string as in ClassGetName.java.
-          "(^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*|\\$[A-Za-z_0-9]+)*$)|^\\[+([BCDFIJSZ]|L[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*|\\$[A-Za-z_0-9]+)*;)$");
-
   /**
    * Returns true if the argument has the format of a ClassGetName. The type it refers to might or
    * might not exist.
@@ -137,17 +131,11 @@ public final class Signatures {
    * @param s a string
    * @return true if the string is @ClassGetName
    */
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetName.class)
   @SuppressWarnings("signature") // @FqBinaryName =@ClassGetName plus optional array brackets
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = ClassGetName.class)
   public static boolean isClassGetName(String s) {
-    return classGetNamePattern.matcher(s).matches();
+    return SignatureRegexes.ClassGetNamePattern.matcher(s).matches();
   }
-
-  /** A regular expression for the BinaryName string format. */
-  static Pattern binaryNamePattern =
-      Pattern.compile(
-          // Same string as in BinaryName.java.
-          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*(\\$[A-Za-z_0-9]+)*$");
 
   /**
    * Returns true if the argument has the format of a BinaryName. The type it refers to might or
@@ -156,17 +144,11 @@ public final class Signatures {
    * @param s a string
    * @return true if the string is @BinaryName
    */
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryName.class)
   @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryName.class)
   public static boolean isBinaryName(String s) {
-    return binaryNamePattern.matcher(s).matches();
+    return SignatureRegexes.BinaryNamePattern.matcher(s).matches();
   }
-
-  /** A regular expression for the FqBinaryName string format. */
-  static Pattern fqBinaryNamePattern =
-      Pattern.compile(
-          // Same string as in FqBinaryName.java.
-          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*(\\$[A-Za-z_0-9]+)*(\\[\\])*$");
 
   /**
    * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
@@ -175,17 +157,11 @@ public final class Signatures {
    * @param s a string
    * @return true if the string is @FqBinaryName
    */
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FqBinaryName.class)
   @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FqBinaryName.class)
   public static boolean isFqBinaryName(String s) {
-    return fqBinaryNamePattern.matcher(s).matches();
+    return SignatureRegexes.FqBinaryNamePattern.matcher(s).matches();
   }
-
-  /** A regular expression for the DotSeparatedIdentifiers string format. */
-  static Pattern dotSeparatedIdentifiersPattern =
-      Pattern.compile(
-          // Same string as in DotSeparatedIdentifiers.java.
-          "^[A-Za-z_][A-Za-z_0-9]*(\\.[A-Za-z_][A-Za-z_0-9]*)*$");
 
   /**
    * Returns true if the argument has the format of a DotSeparatedIdentifiers. The package or type
@@ -194,10 +170,10 @@ public final class Signatures {
    * @param s a string
    * @return true if the string is @DotSeparatedIdentifiers
    */
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = DotSeparatedIdentifiers.class)
   @SuppressWarnings("signature")
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = DotSeparatedIdentifiers.class)
   public static boolean isDotSeparatedIdentifiers(String s) {
-    return dotSeparatedIdentifiersPattern.matcher(s).matches();
+    return SignatureRegexes.DotSeparatedIdentifiersPattern.matcher(s).matches();
   }
 
   ///////////////////////////////////////////////////////////////////////////

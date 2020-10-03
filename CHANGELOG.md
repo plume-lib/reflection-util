@@ -1,5 +1,9 @@
 # Reflection-Util change log
 
+## 1.0.2
+
+- New class SignatureRegexes
+
 ## 1.0.1
 
 - Make ReflectionUtil.classpathToString work on Java 11
