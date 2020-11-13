@@ -91,6 +91,7 @@ public final class TestSignatures {
     assertTrue(Signatures.isBinaryName("pkg.Outer$Inner"));
     assertTrue(!Signatures.isBinaryName("pkg.Outer$Inner[]"));
     assertTrue(Signatures.isBinaryName("Class$Inner._"));
+    assertTrue(Signatures.isBinaryName("com.google.gson.internal.$Gson$Types"));
   }
 
   /**
@@ -118,6 +119,7 @@ public final class TestSignatures {
     assertTrue(Signatures.isClassGetName("[Lpkg.Outer$Inner;"));
     assertTrue(Signatures.isClassGetName("pkg.Outer$22"));
     assertTrue(Signatures.isClassGetName("[Lpkg.Outer$22;"));
+    assertTrue(Signatures.isClassGetName("com.google.gson.internal.$Gson$Types"));
   }
 
   /**
