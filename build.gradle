@@ -75,7 +75,7 @@ checkerFramework {
     '-Werror',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
-    '-AwarnUnneededSuppressions'
+    '-AwarnUnneededSuppressions',
   ]
 }
 
