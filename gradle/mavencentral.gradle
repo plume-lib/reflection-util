@@ -6,7 +6,7 @@
 
 // To make a release:
 //  * git pull
-//  * Update the version number in ../README.md and in this file (thrice).
+//  * Update the version number in ../README.md and in this file (multiple times in each).
 //  * Update ../CHANGELOG.md .
 //  * Save the files.
 //  * Run in the top-level directory:  ./gradlew javadocWeb && ./gradlew clean uploadArchives shadowJar
