@@ -160,6 +160,27 @@ public final class ReflectionPlume {
     return (qualifiedName.substring(offset + 1));
   }
 
+  /**
+   * Returns the class name, including outer classes but without the package. Uses "." as the
+   * separator between outer an inner classes, as in Java source code.
+   *
+   * @param c a class
+   * @return the class name, including outer classes but without the package
+   */
+  public static String nameWithoutPackage(Class<?> c) {
+    Class<?> enclosing = c.getEnclosingClass();
+    if (enclosing == null) {
+      return c.getSimpleName();
+    }
+
+    StringBuilder result = new StringBuilder(c.getSimpleName());
+    while (enclosing != null) {
+      result.insert(0, enclosing.getSimpleName() + ".");
+      enclosing = enclosing.getEnclosingClass();
+    }
+    return result.toString();
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// ClassLoader
   ///
