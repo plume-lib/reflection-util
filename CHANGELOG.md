@@ -1,9 +1,12 @@
 # Reflection-Util change log
 
+## 1.0.3
+
+- New method in class ReflectionPlume:
+   - nameWithoutPackage
+
 ## 1.0.2
 
-- New methods in class ReflectionPlume:
-   - nameWithoutPackage
 - New methods in class Signatures:
    - isArrayWithoutPackage
    - isBinaryNameWithoutPackage
