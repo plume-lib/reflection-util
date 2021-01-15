@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-  errorprone 'com.google.errorprone:error_prone_core:2.4.0'
+  errorprone 'com.google.errorprone:error_prone_core:2.5.1'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
