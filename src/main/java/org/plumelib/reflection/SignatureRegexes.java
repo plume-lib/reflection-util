@@ -36,7 +36,7 @@ public class SignatureRegexes {
    * @param arg a regular expression
    * @return the argument, repeated zero or more times
    */
-  @SuppressWarnings("regex:return.type.incompatible") // string concatenation
+  @SuppressWarnings("regex:return") // string concatenation
   private static final @Regex String ANY(@Regex String arg) {
     return GROUPED(arg) + "*";
   }
@@ -57,7 +57,7 @@ public class SignatureRegexes {
    * @param args regular expressions
    * @return a regex that matches any one of the arguments
    */
-  @SuppressWarnings("regex:return.type.incompatible") // string concatenation
+  @SuppressWarnings("regex:return") // string concatenation
   private static final @Regex String ALTERNATE(@Regex String... args) {
     return String.join("|", args);
   }
