@@ -152,9 +152,9 @@ public final class ReflectionPlume {
 
     int offset = qualifiedName.lastIndexOf('.');
     if (offset == -1) {
-      return (qualifiedName);
+      return qualifiedName;
     }
-    return (qualifiedName.substring(offset + 1));
+    return qualifiedName.substring(offset + 1);
   }
 
   /**
