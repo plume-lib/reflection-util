@@ -53,6 +53,16 @@ public final class TestReflectionPlume {
   }
 
   @Test
+  public void test_nameWithoutPackage() {
+    assertEquals("String", ReflectionPlume.nameWithoutPackage(String.class));
+    assertEquals("Map.Entry", ReflectionPlume.nameWithoutPackage(java.util.Map.Entry.class));
+    assertEquals("TestReflectionPlume.Inner", ReflectionPlume.nameWithoutPackage(Inner.class));
+    assertEquals(
+        "TestReflectionPlume.Inner.InnerInner",
+        ReflectionPlume.nameWithoutPackage(Inner.InnerInner.class));
+  }
+
+  @Test
   public void test_isSubtype() {
     // private boolean isSubtype(Class<?> sub, Class<?> sup) {
     assertTrue(ReflectionPlume.isSubtype(Integer.class, Integer.class));
@@ -83,7 +93,8 @@ public final class TestReflectionPlume {
     try {
       assertNotNull(
           ReflectionPlume.methodForName(
-              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])"));
+              "org.plumelib.reflection.ReflectionPlume.methodForName"
+                  + "(java.lang.String, java.lang.String, java.lang.Class[])"));
       assertNotNull(
           ReflectionPlume.methodForName(
               "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])"));

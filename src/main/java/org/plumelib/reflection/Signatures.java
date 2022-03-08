@@ -67,7 +67,7 @@ public final class Signatures {
    * @param classfilename the name of a classfile, relative to a directory on the CLASSPATH
    * @return the basename of the classfile
    */
-  @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
   public static @BinaryName String classfilenameToBinaryName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
@@ -87,12 +87,12 @@ public final class Signatures {
    * @param classfilename the name of a classfile
    * @return the basename of the classfile
    */
-  @SuppressWarnings("signature:return.type.incompatible") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
   public static @BinaryName String classfilenameToBaseName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    @SuppressWarnings("index:assignment.type.incompatible") // "/" is not the last character
+    @SuppressWarnings("index:assignment") // "/" is not the last character
     @IndexFor("classfilename") int start = classfilename.lastIndexOf("/") + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
@@ -123,7 +123,7 @@ public final class Signatures {
       if (!isDotSeparatedIdentifiers(packagename)) {
         throw new Error("Bad packagename argument to addPackage: " + packagename);
       }
-      @SuppressWarnings("signature:assignment.type.incompatible") // string concatenation
+      @SuppressWarnings("signature:assignment") // string concatenation
       @BinaryName String result = packagename + "." + classname;
       return result;
     }
@@ -393,8 +393,10 @@ public final class Signatures {
      */
     public static ClassnameAndDimensions parseFqBinaryName(@FqBinaryName String typename) {
       Matcher m = arrayBracketsPattern.matcher(typename);
-      @SuppressWarnings("signature:assignment.type.incompatible") // classname is a @ClassGetName
-      // for a non-array; equivalently, a binary name for a non-array
+      @SuppressWarnings(
+          "signature:assignment" // classname is a @ClassGetName for a non-array; equivalently, a
+      // binary name for a non-array
+      )
       @BinaryName String classname = m.replaceFirst("");
       int dimensions = (typename.length() - classname.length()) / 2;
       return new ClassnameAndDimensions(classname, dimensions);
@@ -479,9 +481,11 @@ public final class Signatures {
    * @param binaryName a type in binary name format
    * @return a fully-qualified name
    */
-  @SuppressWarnings("signature:return.type.incompatible") // implementation bug. There are binary
-  // names for anonymous classes, but no fully-qualified names for them.  Given a valid binary name
-  // "pkg.Outer$22", it produces "pkg.Outer.22" which is not a valid fully-qualified name.
+  @SuppressWarnings(
+      "signature:return" // implementation bug. There are binary names for anonymous classes, but no
+  // fully-qualified names for them.  Given a valid binary name "pkg.Outer$22", it produces
+  // "pkg.Outer.22" which is not a valid fully-qualified name.
+  )
   public static @FullyQualifiedName String binaryNameToFullyQualified(
       @BinaryName String binaryName) {
     return binaryName.replaceAll("\\$", ".");

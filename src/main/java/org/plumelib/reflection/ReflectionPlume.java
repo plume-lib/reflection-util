@@ -66,7 +66,7 @@ public final class ReflectionPlume {
     // Handle interfaces
     @SuppressWarnings({
       // "allcheckers:purity.not.deterministic.call.method",
-      "lock:method.guarantee.violated"
+      "lock:method.guarantee.violated" // order doesn't matter
     }) // order doesn't matter
     Class<?>[] interfaces = sub.getInterfaces();
     for (Class<?> ifc : interfaces) {
@@ -155,9 +155,30 @@ public final class ReflectionPlume {
 
     int offset = qualifiedName.lastIndexOf('.');
     if (offset == -1) {
-      return (qualifiedName);
+      return qualifiedName;
     }
-    return (qualifiedName.substring(offset + 1));
+    return qualifiedName.substring(offset + 1);
+  }
+
+  /**
+   * Returns the class name, including outer classes but without the package. Uses "." as the
+   * separator between outer an inner classes, as in Java source code.
+   *
+   * @param c a class
+   * @return the class name, including outer classes but without the package
+   */
+  public static String nameWithoutPackage(Class<?> c) {
+    Class<?> enclosing = c.getEnclosingClass();
+    if (enclosing == null) {
+      return c.getSimpleName();
+    }
+
+    StringBuilder result = new StringBuilder(c.getSimpleName());
+    while (enclosing != null) {
+      result.insert(0, enclosing.getSimpleName() + ".");
+      enclosing = enclosing.getEnclosingClass();
+    }
+    return result.toString();
   }
 
   ///////////////////////////////////////////////////////////////////////////
