@@ -200,11 +200,14 @@ public final class ReflectionPlume {
      */
     public Class<?> defineClassFromFile(@BinaryName String className, String pathname)
         throws FileNotFoundException, IOException {
-      FileInputStream fi = new FileInputStream(pathname);
-      int numbytes = fi.available();
-      byte[] classBytes = new byte[numbytes];
-      int bytesRead = fi.read(classBytes);
-      fi.close();
+      int numbytes;
+      byte[] classBytes;
+      int bytesRead;
+      try (FileInputStream fi = new FileInputStream(pathname)) {
+        numbytes = fi.available();
+        classBytes = new byte[numbytes];
+        bytesRead = fi.read(classBytes);
+      }
       if (bytesRead < numbytes) {
         throw new Error(
             String.format(
