@@ -189,6 +189,10 @@ public final class ReflectionPlume {
    * ClassLoader.defineClass is protected, so I subclass ClassLoader in order to call defineClass.
    */
   private static class PromiscuousLoader extends ClassLoader {
+
+    /** Create a new PromiscuousLoader. */
+    public PromiscuousLoader() {}
+
     /**
      * Converts the bytes in a file into an instance of class Class, and also resolves (links) the
      * class. Delegates the real work to defineClass.
@@ -537,7 +541,10 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  @SuppressWarnings("unchecked") // cast to Class<T>
+  @SuppressWarnings({
+    "unchecked", // cast to Class<T>
+    "signedness:method.invocation" // TODO: required under JDK 18.  Why?
+  })
   public static <T> @Nullable Class<T> leastUpperBound(
       List<? extends @MustCallUnknown @Nullable Object> objects) {
     Class<T> result = null;
