@@ -541,10 +541,7 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  @SuppressWarnings({
-    "unchecked", // cast to Class<T>
-    "signedness:method.invocation" // TODO: required under JDK 18.  Why?
-  })
+  @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(
       List<? extends @MustCallUnknown @Nullable Object> objects) {
     Class<T> result = null;
