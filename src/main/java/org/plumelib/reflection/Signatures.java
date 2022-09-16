@@ -40,6 +40,11 @@ public final class Signatures {
   /** The file-system-specific directory separator. */
   private static final String dirSep = File.separator;
 
+  /** Do not instantiate. */
+  private Signatures() {
+    throw new Error("Do not instantiate");
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Accessing parts of types
   ///

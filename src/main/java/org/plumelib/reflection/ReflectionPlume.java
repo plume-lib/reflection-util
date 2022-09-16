@@ -189,6 +189,10 @@ public final class ReflectionPlume {
    * ClassLoader.defineClass is protected, so I subclass ClassLoader in order to call defineClass.
    */
   private static class PromiscuousLoader extends ClassLoader {
+
+    /** Create a new PromiscuousLoader. */
+    public PromiscuousLoader() {}
+
     /**
      * Converts the bytes in a file into an instance of class Class, and also resolves (links) the
      * class. Delegates the real work to defineClass.
