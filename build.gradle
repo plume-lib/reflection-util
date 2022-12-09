@@ -1,7 +1,7 @@
 plugins {
   id 'java-library'
 
-  // To create a fat jar build/libs/reflection-util-all.jar, run: ./gradlew shadowJar
+  // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
   id 'com.github.johnrengelman.shadow' version '7.1.2'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
@@ -23,17 +23,17 @@ dependencies {
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 test {
-    useJUnitPlatform {
-        includeEngines 'junit-jupiter'
-        excludeEngines 'junit-vintage'
-    }
+  useJUnitPlatform {
+    includeEngines 'junit-jupiter'
+    excludeEngines 'junit-vintage'
+  }
 }
 
 spotless {
@@ -59,13 +59,13 @@ dependencies {
   errorprone("com.google.errorprone:error_prone_core:2.16")
 }
 tasks.withType(JavaCompile).configureEach {
+  // "-processing" avoids javac warning "No processor claimed any of these annotations".
   options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
   options.errorprone {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // disable("ReferenceEquality") // Use Interning Checker instead.
     // disable("StringSplitter") // obscure case isn't likely
     // disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod
-    // disable("UseCorrectAssertInTests") // Java's `assert` statument is so much more readable
   }
 }
 
