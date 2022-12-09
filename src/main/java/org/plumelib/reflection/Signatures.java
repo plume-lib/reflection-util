@@ -379,6 +379,7 @@ public final class Signatures {
     public final @BinaryName String classname;
     /** The number of array dimensions. */
     public final int dimensions;
+
     /**
      * Create a new ClassnameAndDimensions.
      *
@@ -389,6 +390,7 @@ public final class Signatures {
       this.classname = classname;
       this.dimensions = dimensions;
     }
+
     /**
      * Constructs a new ClassnameAndDimensions by parsing a fully-qualified binary name.
      *

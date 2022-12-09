@@ -97,7 +97,8 @@ public final class TestReflectionPlume {
                   + "(java.lang.String, java.lang.String, java.lang.Class[])"));
       assertNotNull(
           ReflectionPlume.methodForName(
-              "org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])"));
+              "org.plumelib.reflection.ReflectionPlume.methodForName"
+                  + "(java.lang.String,java.lang.String,java.lang.Class[])"));
       assertNotNull(ReflectionPlume.methodForName("java.lang.Math.min(int,int)"));
     } catch (Exception e) {
       e.printStackTrace();

@@ -219,9 +219,9 @@ public final class ReflectionPlume {
             String.format(
                 "Expected to read %d bytes from %s, got %d", numbytes, pathname, bytesRead));
       }
-      Class<?> return_class = defineClass(className, classBytes, 0, numbytes);
-      resolveClass(return_class); // link the class
-      return return_class;
+      Class<?> returnClass = defineClass(className, classBytes, 0, numbytes);
+      resolveClass(returnClass); // link the class
+      return returnClass;
     }
   }
 
@@ -314,8 +314,11 @@ public final class ReflectionPlume {
    * <p>Example calls are:
    *
    * <pre>
-   * UtilPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])")
-   * UtilPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])")
+   * UtilPlume.methodForName(
+   *   "org.plumelib.reflection.ReflectionPlume.methodForName"
+   *   +"(java.lang.String, java.lang.String, java.lang.Class[])")
+   * UtilPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName"
+   *                         +"(java.lang.String,java.lang.String,java.lang.Class[])")
    * UtilPlume.methodForName("java.lang.Math.min(int,int)")
    * </pre>
    *
@@ -352,28 +355,28 @@ public final class ReflectionPlume {
     @SuppressWarnings("signature") // throws exception if class does not exist
     @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
-    String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
-    Class<?>[] argclasses = args_seen.get(all_argnames);
+    String allArgnames = method.substring(oparenpos + 1, cparenpos).trim();
+    Class<?>[] argclasses = args_seen.get(allArgnames);
     if (argclasses == null) {
       @BinaryName String[] argnames;
-      if (all_argnames.equals("")) {
+      if (allArgnames.equals("")) {
         argnames = new String[0];
       } else {
         @SuppressWarnings("signature") // string manipulation: splitting a method signature
-        @BinaryName String[] bnArgnames = all_argnames.split(" *, *");
+        @BinaryName String[] bnArgnames = allArgnames.split(" *, *");
         argnames = bnArgnames;
       }
 
-      @MonotonicNonNull Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
+      @MonotonicNonNull Class<?>[] argclassesTmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
         @BinaryName String bnArgname = argnames[i];
         @ClassGetName String cgnArgname = Signatures.binaryNameToClassGetName(bnArgname);
-        argclasses_tmp[i] = classForName(cgnArgname);
+        argclassesTmp[i] = classForName(cgnArgname);
       }
       // TODO: Shouldn't this require a warning suppression?
-      Class<?>[] argclasses_res = (@NonNull Class<?>[]) argclasses_tmp;
-      argclasses = argclasses_res;
-      args_seen.put(all_argnames, argclasses_res);
+      Class<?>[] argclassesRes = (@NonNull Class<?>[]) argclassesTmp;
+      argclasses = argclassesRes;
+      args_seen.put(allArgnames, argclassesRes);
     }
     return methodForName(classname, methodname, argclasses);
   }
