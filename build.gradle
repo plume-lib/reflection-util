@@ -64,7 +64,7 @@ tasks.withType(JavaCompile).configureEach {
   options.errorprone {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // disable("ReferenceEquality") // Use Interning Checker instead.
-    // disable("StringSplitter") // obscure case isn't likely
+    // disable("StringSplitter") // Obscure case isn't likely.
     // disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod
   }
 }
