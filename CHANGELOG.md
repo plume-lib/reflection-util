@@ -1,8 +1,8 @@
 # Reflection-Util change log
 
-## 1.0.6 (??)
+## 1.0.6 (2022-01-07)
 
-- Tested under JDK 18.
+- Tested under JDK 19.
 
 ## 1.0.5 (2022-07-12)
 
