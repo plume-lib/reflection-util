@@ -39,6 +39,7 @@ test {
 
 ext.isJava11orHigher = JavaVersion.current() >= JavaVersion.VERSION_11
 if (isJava11orHigher) {
+  apply plugin: 'com.diffplug.spotless'
   spotless {
     format 'misc', {
       // define the files to apply `misc` to
