@@ -37,7 +37,7 @@ test {
   }
 }
 
-isJava11orHigher = JavaVersion.current() >= JavaVersion.VERSION_11
+ext.isJava11orHigher = JavaVersion.current() >= JavaVersion.VERSION_11
 if (isJava11orHigher) {
   spotless {
     format 'misc', {
