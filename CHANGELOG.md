@@ -1,5 +1,10 @@
 # Reflection-Util change log
 
+## 1.1.0 (??)
+
+- Changed type of `Signatures.ClassnameAndDimensions.classname` to `@BinaryNameOrPrimitiveType`.
+- Tested under JDK 20.
+
 ## 1.0.6 (2022-01-07)
 
 - Tested under JDK 19.

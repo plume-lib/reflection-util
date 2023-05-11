@@ -379,7 +379,7 @@ public final class Signatures {
    */
   public static class ClassnameAndDimensions {
     /** The class name. It is a binary name or a primitive. */
-    public final @FqBinaryName String classname;
+    public final @BinaryNameOrPrimitiveType String classname;
     /** The number of array dimensions. */
     public final int dimensions;
 
@@ -389,7 +389,7 @@ public final class Signatures {
      * @param classname the class name: a binary name or a primitive
      * @param dimensions the number of array dimensions
      */
-    public ClassnameAndDimensions(@FqBinaryName String classname, int dimensions) {
+    public ClassnameAndDimensions(@BinaryNameOrPrimitiveType String classname, int dimensions) {
       this.classname = classname;
       this.dimensions = dimensions;
     }
@@ -407,7 +407,7 @@ public final class Signatures {
           "signature:assignment" // classname is a @ClassGetName for a non-array; equivalently, a
       // binary name for a non-array
       )
-      @FqBinaryName String classname = m.replaceFirst("");
+      @BinaryNameOrPrimitiveType String classname = m.replaceFirst("");
       int dimensions = (typename.length() - classname.length()) / 2;
       return new ClassnameAndDimensions(classname, dimensions);
     }
