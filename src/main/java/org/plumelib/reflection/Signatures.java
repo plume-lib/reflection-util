@@ -380,6 +380,7 @@ public final class Signatures {
   public static class ClassnameAndDimensions {
     /** The class name. It is a binary name or a primitive. */
     public final @BinaryNameOrPrimitiveType String classname;
+
     /** The number of array dimensions. */
     public final int dimensions;
 
