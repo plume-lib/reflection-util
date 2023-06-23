@@ -526,7 +526,7 @@ public final class ReflectionPlume {
    *     null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
-  public static <T> @Nullable Class<T> leastUpperBound(@PolyNull @PolyMustCall Object[] objects) {
+  public static <T> @Nullable Class<T> leastUpperBound(@PolyMustCall @PolyNull Object[] objects) {
     Class<T> result = null;
     for (Object obj : objects) {
       if (obj != null) {
