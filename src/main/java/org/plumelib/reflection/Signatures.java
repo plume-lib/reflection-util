@@ -27,13 +27,12 @@ import org.checkerframework.checker.signature.qual.InternalForm;
 import org.checkerframework.checker.signature.qual.PrimitiveType;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
-// TODO: There are 6 major formats: https://checkerframework.org/manual/#signature-annotations
-// This should convert among all of them.  But perhaps just add functionality as the need comes up.
-
 /**
- * Conversion utilities between Java and JVM string formats, for types and signatures.
+ * Java specifies <a href="https://checkerframework.org/manual/#signature-annotations">6 major
+ * string formats to represent a type</a>. This class contains static methods to test strings,
+ * access their parts, and convert among the formats.
  *
- * <p>Also predicates for testing strings.
+ * <p>The class is not yet exhaustive; let the maintainers know if it lacks something you need.
  */
 public final class Signatures {
 
@@ -139,7 +138,7 @@ public final class Signatures {
   ///
 
   /**
-   * Returns true if the argument has the format of a ArrayWithoutPackage. The type it refers to
+   * Returns true if the argument has the format of an ArrayWithoutPackage. The type it refers to
    * might or might not exist.
    *
    * @param s a string
@@ -460,7 +459,8 @@ public final class Signatures {
    * @return name of the type, in field descriptor format
    * @throws IllegalArgumentException if primitiveName is not a valid primitive type name
    */
-  public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(String primitiveName) {
+  public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(
+      @PrimitiveType String primitiveName) {
     String result = primitiveToFieldDescriptor.get(primitiveName);
     if (result == null) {
       throw new IllegalArgumentException("Not the name of a primitive type: " + primitiveName);
@@ -536,14 +536,14 @@ public final class Signatures {
 
   // does not convert "V" to "void".  Should it?
   /**
-   * Convert a field descriptor to a binary name. For example, convert "[Ljava/lang/Object;" to
-   * "java.lang.Object[]" or "I" to "int".
+   * Convert a field descriptor to a binary name. For example, convert "[Ljava/util/Map$Entry;" to
+   * "java.lang.Map$Entry[]" or "I" to "int".
    *
-   * @param typename name of the type, in JVML format
-   * @return name of the type, in Java format
+   * @param typename a field descriptor (the name of a type in JVML format)
+   * @return the corresponding binary name
    */
   @SuppressWarnings("signature") // conversion routine
-  public static @BinaryName String fieldDescriptorToBinaryName(String typename) {
+  public static @BinaryName String fieldDescriptorToBinaryName(@FieldDescriptor String typename) {
     if (typename.equals("")) {
       throw new Error("Empty string passed to fieldDescriptorToBinaryName");
     }
@@ -563,6 +563,19 @@ public final class Signatures {
       result += "[]";
     }
     return result.replace('/', '.');
+  }
+
+  /**
+   * Convert a field descriptor to a fully-qualified name. For example, convert
+   * "[Ljava/util/Map$Entry;" to "java.util.Map.Entry[]" or "I" to "int".
+   *
+   * @param typename a field descriptor (the name of a type in JVML format)
+   * @return the corresponding fully-qualified name (what you would write in Java source code)
+   */
+  @SuppressWarnings("signature") // conversion routine
+  public static @FullyQualifiedName String fieldDescriptorToFullyQualified(
+      @FieldDescriptor String typename) {
+    return binaryNameToFullyQualified(fieldDescriptorToBinaryName(typename));
   }
 
   /**
@@ -656,11 +669,14 @@ public final class Signatures {
         if (semicolonPos == -1) {
           throw new Error("Malformed arglist: " + arglist);
         }
-        String fieldDescriptor = arglist.substring(pos, semicolonPos + 1);
+        @SuppressWarnings("signature:assignment") // string manipulation
+        @FieldDescriptor String fieldDescriptor = arglist.substring(pos, semicolonPos + 1);
         result += fieldDescriptorToBinaryName(fieldDescriptor);
         pos = semicolonPos + 1;
       } else {
-        String maybe = fieldDescriptorToBinaryName(arglist.substring(pos, nonarrayPos + 1));
+        @SuppressWarnings("signature:assignment") // string manipulation
+        @FieldDescriptor String fieldDescriptor = arglist.substring(pos, nonarrayPos + 1);
+        String maybe = fieldDescriptorToBinaryName(fieldDescriptor);
         if (maybe == null) {
           // return null;
           throw new Error("Malformed arglist: " + arglist);

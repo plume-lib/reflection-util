@@ -282,6 +282,9 @@ public final class TestSignatures {
     if (bn != null) {
       assertEquals(bn, Signatures.fieldDescriptorToBinaryName(fd));
     }
+    if (fqn != null) {
+      assertEquals(fqn, Signatures.fieldDescriptorToFullyQualified(fd));
+    }
     if (iform != null) {
       assertEquals(cgn, Signatures.internalFormToClassGetName(iform));
     }

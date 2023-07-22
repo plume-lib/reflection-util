@@ -1,5 +1,10 @@
 # Reflection-Util change log
 
+## 1.1.1 (2023-??-??)
+
+- Added method `Signatures.fieldDescriptorToFullyQualified()`.
+- Improved type qualifiers on some methods.
+
 ## 1.1.0 (2023-05-23)
 
 - Changed type of `Signatures.ClassnameAndDimensions.classname` to `@BinaryNameOrPrimitiveType`.
