@@ -4,6 +4,7 @@
 
 - Added method `Signatures.fieldDescriptorToFullyQualified()`.
 - Improved type qualifiers on some methods.
+- Tested under JDK 21.
 
 ## 1.1.0 (2023-05-23)
 
