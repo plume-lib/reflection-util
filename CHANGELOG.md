@@ -1,6 +1,6 @@
 # Reflection-Util change log
 
-## 1.1.1 (2023-??-??)
+## 1.1.1 (2023-12-08)
 
 - Added method `Signatures.fieldDescriptorToFullyQualified()`.
 - Improved type qualifiers on some methods.
