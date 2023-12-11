@@ -11,8 +11,8 @@ In a gradle buildfile, write
 
 ```
 dependencies {
-  implementation 'org.plumelib:reflection-util:1.1.1'
+  implementation 'org.plumelib:reflection-util:1.1.2'
 }
 ```
 
-Other build systems are [similar](https://search.maven.org/artifact/org.plumelib/reflection-util/1.1.1/jar).
+Other build systems are [similar](https://search.maven.org/artifact/org.plumelib/reflection-util/1.1.2/jar).
