@@ -68,7 +68,8 @@ dependencies {
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  options.compilerArgs << '-Xlint:all,-processing' << '-Werror'
+  // "-options" avoids javac warning "source value 8 is obsolete and will be removed in a future release"; remove it when we no longer support Java 8.
+  options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
   options.errorprone {
     // disable('ReferenceEquality') // Use Interning Checker instead.
     // disable('StringSplitter') // Obscure case isn't likely.
