@@ -1,8 +1,10 @@
 package org.plumelib.reflection;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
@@ -14,9 +16,6 @@ import org.checkerframework.checker.signature.qual.InternalForm;
 import org.junit.jupiter.api.Test;
 
 /** Test code for the Signatures class. */
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // I don't see the problem with using `assert`
-})
 public final class TestSignatures {
 
   ///////////////////////////////////////////////////////////////////////////
@@ -302,6 +301,15 @@ public final class TestSignatures {
   ///////////////////////////////////////////////////////////////////////////
   /// Method signatures, which combine multiple types
   ///
+
+  @Test
+  public void testSignatureSplitting() {
+    assertArrayEquals(new String[0], Signatures.splitJavaArglist("()"));
+    assertArrayEquals(new String[] {"int"}, Signatures.splitJavaArglist("(int)"));
+
+    assertEquals(Collections.emptyList(), Signatures.splitJvmArglist("()"));
+    assertEquals(Collections.singletonList("I"), Signatures.splitJvmArglist("(I)"));
+  }
 
   @Test
   public void testSignatureConversions() {

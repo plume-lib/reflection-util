@@ -1,5 +1,12 @@
 # Reflection-Util change log
 
+## 1.1.3 (??)
+
+- New methods in class Signatures:
+   - methodDescriptorToReturnType
+   - splitJvmArglist
+   - splitJavaArglist
+
 ## 1.1.2 (2023-12-08)
 
 - Produce Java 8 bytecodes (version 1.1.1 didn't work under Java 8).

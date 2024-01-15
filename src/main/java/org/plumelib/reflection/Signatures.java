@@ -1,12 +1,14 @@
 package org.plumelib.reflection;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexFor;
-import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signature.qual.ArrayWithoutPackage;
 import org.checkerframework.checker.signature.qual.BinaryName;
@@ -24,6 +26,7 @@ import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.checker.signature.qual.Identifier;
 import org.checkerframework.checker.signature.qual.IdentifierOrPrimitiveType;
 import org.checkerframework.checker.signature.qual.InternalForm;
+import org.checkerframework.checker.signature.qual.MethodDescriptor;
 import org.checkerframework.checker.signature.qual.PrimitiveType;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
@@ -613,6 +616,31 @@ public final class Signatures {
   /// Method signatures, which combine multiple types
   ///
 
+  /** The pattern that separates arguments in a Java argument string. */
+  private static Pattern commaSeparator = Pattern.compile(" *, *");
+
+  /**
+   * Split a fully-qualified argument list from Java format into an array of Java-format types. For
+   * example, convert "(java.lang.Integer[], int, java.lang.Integer[][])" to ["java.lang.Integer[]",
+   * "int", "java.lang.Integer[][]"].
+   *
+   * @param javaArglist an argument list, in Java format
+   * @return argument list, in JVML format
+   */
+  public static @BinaryName String[] splitJavaArglist(String javaArglist) {
+    if (!(javaArglist.startsWith("(") && javaArglist.endsWith(")"))) {
+      throw new Error("Malformed arglist: " + javaArglist);
+    }
+    // Remove parentheses and space adjacent to them
+    javaArglist = javaArglist.substring(1, javaArglist.length() - 1).trim();
+    if (javaArglist.isEmpty()) {
+      return new String[0];
+    }
+    @SuppressWarnings("signature:assignment") // string manipulation
+    @BinaryName String[] result = commaSeparator.split(javaArglist);
+    return result;
+  }
+
   /**
    * Convert a fully-qualified argument list from Java format to JVML format. For example, convert
    * "(java.lang.Integer[], int, java.lang.Integer[][])" to
@@ -625,16 +653,64 @@ public final class Signatures {
     if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
       throw new Error("Malformed arglist: " + arglist);
     }
-    String result = "(";
-    String commaSepArgs = arglist.substring(1, arglist.length() - 1);
-    StringTokenizer argsTokenizer = new StringTokenizer(commaSepArgs, ",", false);
-    while (argsTokenizer.hasMoreTokens()) {
-      @SuppressWarnings("signature") // substring
-      @BinaryName String arg = argsTokenizer.nextToken().trim();
-      result += binaryNameToFieldDescriptor(arg);
+    StringJoiner result = new StringJoiner("", "(", ")");
+    for (@BinaryName String javaArg : splitJavaArglist(arglist)) {
+      result.add(binaryNameToFieldDescriptor(javaArg));
     }
-    result += ")";
     // System.out.println("arglistToJvm: " + arglist + " => " + result);
+    return result.toString();
+  }
+
+  /**
+   * Split an argument list from JVML format into an array of JVML format types. For example,
+   * convert "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)" to ["[Ljava/lang/Integer;", "I",
+   * "[[Ljava/lang/Integer;"].
+   *
+   * @param jvmArglist an argument list, in JVML format
+   * @return argument list, in JVML format
+   */
+  public static List<@FieldDescriptor String> splitJvmArglist(String jvmArglist) {
+    if (!(jvmArglist.startsWith("(") && jvmArglist.endsWith(")"))) {
+      throw new Error("Malformed arglist: " + jvmArglist);
+    }
+    // Remove parentheses.  (There should be no spaces abutting them.)
+    jvmArglist = jvmArglist.substring(1, jvmArglist.length() - 1);
+
+    List<@FieldDescriptor String> result = new ArrayList<>();
+
+    @NonNegative int pos = 0;
+    while (pos < jvmArglist.length()) {
+      int nonarrayPos = pos;
+      while (jvmArglist.charAt(nonarrayPos) == '[') {
+        nonarrayPos++;
+        if (nonarrayPos >= jvmArglist.length()) {
+          throw new Error("Malformed arglist: " + jvmArglist);
+        }
+      }
+      char c = jvmArglist.charAt(nonarrayPos);
+      if (c == 'L') {
+        int semicolonPos = jvmArglist.indexOf(';', nonarrayPos);
+        if (semicolonPos == -1) {
+          throw new Error("Malformed arglist: " + jvmArglist);
+        }
+        @SuppressWarnings("signature:assignment") // string manipulation
+        @FieldDescriptor String fieldDescriptor = jvmArglist.substring(pos, semicolonPos + 1);
+        if (!isFieldDescriptor(fieldDescriptor)) {
+          throw new Error("Malformed arg " + fieldDescriptor + " in arglist: " + jvmArglist);
+        }
+        result.add(fieldDescriptor);
+        pos = semicolonPos + 1;
+      } else {
+        String primitiveFd = jvmArglist.substring(nonarrayPos, nonarrayPos + 1);
+        if (!isFieldDescriptorForPrimitive(primitiveFd)) {
+          throw new Error("Malformed arg " + primitiveFd + " in arglist: " + jvmArglist);
+        }
+        @SuppressWarnings("signature:assignment") // string manipulation
+        @FieldDescriptor String fieldDescriptor = jvmArglist.substring(pos, nonarrayPos + 1);
+        result.add(fieldDescriptor);
+        pos = nonarrayPos + 1;
+      }
+    }
     return result;
   }
 
@@ -647,44 +723,26 @@ public final class Signatures {
    * @return argument list, in Java format
    */
   public static String arglistFromJvm(String arglist) {
-    if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
-      throw new Error("Malformed arglist: " + arglist);
+
+    List<@FieldDescriptor String> args = splitJvmArglist(arglist);
+
+    StringJoiner result = new StringJoiner(", ", "(", ")");
+    for (@FieldDescriptor String arg : args) {
+      result.add(fieldDescriptorToBinaryName(arg));
     }
-    String result = "(";
-    @Positive int pos = 1;
-    while (pos < arglist.length() - 1) {
-      if (pos > 1) {
-        result += ", ";
-      }
-      int nonarrayPos = pos;
-      while (arglist.charAt(nonarrayPos) == '[') {
-        nonarrayPos++;
-        if (nonarrayPos >= arglist.length()) {
-          throw new Error("Malformed arglist: " + arglist);
-        }
-      }
-      char c = arglist.charAt(nonarrayPos);
-      if (c == 'L') {
-        int semicolonPos = arglist.indexOf(';', nonarrayPos);
-        if (semicolonPos == -1) {
-          throw new Error("Malformed arglist: " + arglist);
-        }
-        @SuppressWarnings("signature:assignment") // string manipulation
-        @FieldDescriptor String fieldDescriptor = arglist.substring(pos, semicolonPos + 1);
-        result += fieldDescriptorToBinaryName(fieldDescriptor);
-        pos = semicolonPos + 1;
-      } else {
-        @SuppressWarnings("signature:assignment") // string manipulation
-        @FieldDescriptor String fieldDescriptor = arglist.substring(pos, nonarrayPos + 1);
-        String maybe = fieldDescriptorToBinaryName(fieldDescriptor);
-        if (maybe == null) {
-          // return null;
-          throw new Error("Malformed arglist: " + arglist);
-        }
-        result += maybe;
-        pos = nonarrayPos + 1;
-      }
-    }
-    return result + ")";
+    return result.toString();
+  }
+
+  /**
+   * Returns the return type of the given method descriptor, or null if the method is void.
+   *
+   * @param methodDescriptor a method descriptor
+   * @return the return type of the given method descriptor, or null if the method is void
+   */
+  public static @Nullable @FieldDescriptor String methodDescriptorToReturnType(
+      @MethodDescriptor String methodDescriptor) {
+    @SuppressWarnings("signature:assignment") // string manipulation
+    @FieldDescriptor String result = methodDescriptor.substring(methodDescriptor.indexOf(")") + 1);
+    return result.equals("V") ? null : result;
   }
 }
