@@ -1,6 +1,6 @@
 # Reflection-Util change log
 
-## 1.1.3 (??)
+## 1.1.3 (2024-01-15)
 
 - New methods in class Signatures:
    - methodDescriptorToReturnType
