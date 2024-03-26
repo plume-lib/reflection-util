@@ -16,10 +16,16 @@ plugins {
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
+  maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
+ext.errorproneVersion = '2.26.1'
+
 dependencies {
+  compileOnly "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
+
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
@@ -27,8 +33,10 @@ dependencies {
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
-sourceCompatibility = 8
-targetCompatibility = 8
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
 
 test {
   useJUnitPlatform {
@@ -64,16 +72,17 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone('com.google.errorprone:error_prone_core:2.26.1')
+  errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" avoids javac warning "source value 8 is obsolete and will be removed in a future release"; remove it when we no longer support Java 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
   options.errorprone {
-    // disable('ReferenceEquality') // Use Interning Checker instead.
+    disable('ExtendsObject')  // Incorrect when using the Checker Framework
+    disable('ReferenceEquality') // Use Interning Checker instead.
     // disable('StringSplitter') // Obscure case isn't likely.
-    // disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
+    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
   }
 }
 
@@ -104,7 +113,19 @@ checkerFramework {
     '-AwarnUnneededSuppressions',
   ]
 }
-
+// To use a snapshot version of the Checker Framework.
+if (false) {
+  // TODO: Change the above test to false when CF is released.
+  ext.checkerFrameworkVersion = '3.43.0-SNAPSHOT'
+  dependencies {
+    compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+    testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+    checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
+  }
+  configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+  }
+}
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty('cfLocal')) {
   def cfHome = String.valueOf(System.getenv('CHECKERFRAMEWORK'))
@@ -141,6 +162,13 @@ task javadocWeb(type: Javadoc) {
     ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
     flags:'g', byline:true) {
       fileset(dir: destinationDir)
+    }
+    // Set permissions
+    project.exec {
+      commandLine('chgrp', '-R',  'plse_www', "/cse/web/research/plumelib/${project.name}/api")
+    }
+    project.exec {
+      commandLine('chmod', '-R',  'g+w', "/cse/web/research/plumelib/${project.name}/api")
     }
   }
 }

@@ -41,7 +41,7 @@ publishing {
 
       pom {
         name = 'Reflection Util'
-        description = 'Utility libraries for reflection, convert among string representations of Java types, etc.'
+        description = 'Utility libraries for reflection, converting among string representations of Java types, etc.'
         url = 'https://github.com/plume-lib/reflection-util'
 
         scm {
