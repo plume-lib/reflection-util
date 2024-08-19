@@ -185,7 +185,7 @@ public class SignatureRegexes {
   private static final @Regex String CLASS_GET_NAME_NONPRIMITIVE_NONARRAY =
       IDENTIFIER + "(\\." + IDENTIFIER + "|" + NESTED_ONE + ")*";
 
-  ///////////////////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////
   // Regexes and patterns for literal Strings, one per annotation definition.
 
   // Creating all the patterns at load time is a bit inefficient but is convenient for clients.
