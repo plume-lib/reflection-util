@@ -16,9 +16,9 @@ public class SignatureRegexes {
     throw new Error("Do not instantiate");
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Functions on regular expressions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Functions on regular expressions
+  //
 
   /**
    * Create a capturing group.
@@ -72,9 +72,9 @@ public class SignatureRegexes {
     return GROUPED(ALTERNATE(args));
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Building blocks for regular expressions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Building blocks for regular expressions
+  //
 
   /** An unanchored regex that matches keywords, except primitive types. */
   private static final @Regex String KEYWORD_NON_PRIMITIVE_TYPE =

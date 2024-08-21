@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 public final class TestSignatures {
 
   // //////////////////////////////////////////////////////////////////////
-  /// Accessing parts of types
-  ///
+  // Accessing parts of types
+  //
 
   /**
    * Returns the element type for the given type name, which results from removing all the array
@@ -59,8 +59,8 @@ public final class TestSignatures {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// String concatenations
-  ///
+  // String concatenations
+  //
 
   /*
    * Given a package name and a class name, combine them to form a qualified class name.
@@ -72,8 +72,8 @@ public final class TestSignatures {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Type tests
-  ///
+  // Type tests
+  //
 
   /**
    * Returns true if the argument has the format of a BinaryName. The type it refers to might or
@@ -173,8 +173,8 @@ public final class TestSignatures {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Type conversions
-  ///
+  // Type conversions
+  //
 
   private void assertParseFqBinaryName(
       @FqBinaryName String typename, String classname, int dimensions) {
@@ -299,8 +299,8 @@ public final class TestSignatures {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Method signatures, which combine multiple types
-  ///
+  // Method signatures, which combine multiple types
+  //
 
   @Test
   public void testSignatureSplitting() {

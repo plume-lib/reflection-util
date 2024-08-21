@@ -47,9 +47,9 @@ public final class Signatures {
     throw new Error("Do not instantiate");
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Accessing parts of types
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Accessing parts of types
+  //
 
   /**
    * Returns the element type for the given type name, which results from removing all the array
@@ -105,9 +105,9 @@ public final class Signatures {
     return classfilename.substring(start, end);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// String concatenations
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // String concatenations
+  //
 
   // These are not yet special-cased by the typechecker, so provide methods so clients don't have to
   // suppress warnings.
@@ -136,9 +136,9 @@ public final class Signatures {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Type tests (predicates)
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Type tests (predicates)
+  //
 
   /**
    * Returns true if the argument has the format of an ArrayWithoutPackage. The type it refers to
@@ -368,9 +368,9 @@ public final class Signatures {
     return SignatureRegexes.PrimitiveTypePattern.matcher(s).matches();
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Type conversions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Type conversions
+  //
 
   /** Matches the "[][][]" at the end of a Java array type. */
   private static Pattern arrayBracketsPattern = Pattern.compile("(\\[\\])+$");
@@ -612,9 +612,9 @@ public final class Signatures {
     return binaryNameToFullyQualified(internalFormToBinaryName(internalForm));
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Method signatures, which combine multiple types
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Method signatures, which combine multiple types
+  //
 
   /** The pattern that separates arguments in a Java argument string. */
   private static Pattern commaSeparator = Pattern.compile(" *, *");

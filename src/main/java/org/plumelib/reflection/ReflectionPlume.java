@@ -34,8 +34,8 @@ public final class ReflectionPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Class
-  ///
+  // Class
+  //
 
   /**
    * Return true iff sub is a subtype of sup. If sub == sup, then sub is considered a subtype of sub
@@ -178,8 +178,8 @@ public final class ReflectionPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// ClassLoader
-  ///
+  // ClassLoader
+  //
 
   /**
    * This static nested class has no purpose but to define defineClassFromFile.
@@ -244,8 +244,8 @@ public final class ReflectionPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Classpath
-  ///
+  // Classpath
+  //
 
   // Perhaps abstract out the simpler addToPath from this
   /**
@@ -279,8 +279,8 @@ public final class ReflectionPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Method
-  ///
+  // Method
+  //
 
   /**
    * Maps from a comma-delimited string of arg types, such as appears in a method signature, to an
@@ -382,8 +382,8 @@ public final class ReflectionPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Reflection
-  ///
+  // Reflection
+  //
 
   // TODO: add method invokeMethod; see
   // java/Translation/src/graph/tests/Reflect.java (but handle returning a
