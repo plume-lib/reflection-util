@@ -202,7 +202,15 @@ public final class TestSignatures {
 
   @Test
   public void testConversions() {
-    // Table from Checker Framework manual
+    // Table from Checker Framework manual.  Order of arguments:
+    // @FqBinaryName String fqbn,
+    // @Nullable @FullyQualifiedName String fqn,
+    // @ClassGetName String cgn,
+    // @FieldDescriptor String fd,
+    // @Nullable @BinaryName String bn,
+    // @Nullable @InternalForm String iform,
+    // @Nullable @ClassGetSimpleName String cgsn) {
+
     checkTypeConversions("int", "int", "int", "I", null, null, "int");
     checkTypeConversions("int[][]", "int[][]", "[[I", "[[I", null, null, "int[][]");
     checkTypeConversions(
@@ -280,6 +288,7 @@ public final class TestSignatures {
     assertEquals(cgn, Signatures.fieldDescriptorToClassGetName(fd));
     if (bn != null) {
       assertEquals(bn, Signatures.fieldDescriptorToBinaryName(fd));
+      assertEquals(bn, Signatures.classGetNameToBinaryName(cgn));
     }
     if (fqn != null) {
       assertEquals(fqn, Signatures.fieldDescriptorToFullyQualified(fd));

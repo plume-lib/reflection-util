@@ -475,7 +475,8 @@ public final class Signatures {
    * Convert from a BinaryName to the format of {@link Class#getName()}.
    *
    * <p>There are no binary names for primitives or array types. Nonetheless, this method works for
-   * them. It converts "java.lang.Object[]" to "[Ljava.lang.Object;" or "int" to "int".
+   * them. It converts "java.lang.Object[]" to "[Ljava.lang.Object;", and it converts "int" to
+   * "int".
    *
    * @param bn the binary name to convert
    * @return the class name, in Class.getName format
@@ -559,13 +560,50 @@ public final class Signatures {
     } else {
       result = fieldDescriptorToPrimitive.get(classname);
       if (result == null) {
-        throw new Error("Malformed base class: " + classname);
+        throw new Error(
+            "Malformed field descriptor should be \"L...;\" or a primitive: " + classname);
       }
     }
     for (int i = 0; i < dimensions; i++) {
       result += "[]";
     }
     return result.replace('/', '.');
+  }
+
+  /**
+   * Convert a name in Class.getName format to a binary name. For example, convert
+   * "[Ljava/util/Map$Entry;" to "java.lang.Map$Entry[]".
+   *
+   * @param typename a name in Class.getName format
+   * @return the corresponding binary name
+   */
+  @SuppressWarnings("signature") // conversion routine
+  public static @BinaryName String classGetNameToBinaryName(@ClassGetName String typename) {
+    if (typename.equals("")) {
+      throw new Error("Empty string passed to fieldDescriptorToBinaryName");
+    }
+    Matcher m = fdArrayBracketsPattern.matcher(typename);
+    String classname = m.replaceFirst("");
+    int dimensions = typename.length() - classname.length();
+    String result;
+    if (dimensions == 0) {
+      return classname;
+    } else {
+      if (classname.startsWith("L") && classname.endsWith(";")) {
+        result = classname.substring(1, classname.length() - 1);
+      } else {
+        result = fieldDescriptorToPrimitive.get(classname);
+        if (result == null) {
+          throw new Error(
+              "Malformed Class.getName array base type should be \"L...;\" or a primitive: "
+                  + classname);
+        }
+      }
+      for (int i = 0; i < dimensions; i++) {
+        result += "[]";
+      }
+      return result;
+    }
   }
 
   /**
