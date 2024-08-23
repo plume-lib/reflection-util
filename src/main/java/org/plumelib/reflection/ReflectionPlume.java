@@ -33,9 +33,9 @@ public final class ReflectionPlume {
     throw new Error("do not instantiate");
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Class
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Class
+  //
 
   /**
    * Return true iff sub is a subtype of sup. If sub == sup, then sub is considered a subtype of sub
@@ -177,9 +177,9 @@ public final class ReflectionPlume {
     return result.toString();
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// ClassLoader
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // ClassLoader
+  //
 
   /**
    * This static nested class has no purpose but to define defineClassFromFile.
@@ -243,9 +243,9 @@ public final class ReflectionPlume {
     return thePromiscuousLoader.defineClassFromFile(className, pathname);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Classpath
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Classpath
+  //
 
   // Perhaps abstract out the simpler addToPath from this
   /**
@@ -278,9 +278,9 @@ public final class ReflectionPlume {
         .replace(File.pathSeparator, System.lineSeparator());
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Method
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Method
+  //
 
   /**
    * Maps from a comma-delimited string of arg types, such as appears in a method signature, to an
@@ -381,9 +381,9 @@ public final class ReflectionPlume {
     return m;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Reflection
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Reflection
+  //
 
   // TODO: add method invokeMethod; see
   // java/Translation/src/graph/tests/Reflect.java (but handle returning a

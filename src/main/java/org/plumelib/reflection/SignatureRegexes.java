@@ -16,9 +16,9 @@ public class SignatureRegexes {
     throw new Error("Do not instantiate");
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Functions on regular expressions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Functions on regular expressions
+  //
 
   /**
    * Create a capturing group.
@@ -72,9 +72,9 @@ public class SignatureRegexes {
     return GROUPED(ALTERNATE(args));
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Building blocks for regular expressions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Building blocks for regular expressions
+  //
 
   /** An unanchored regex that matches keywords, except primitive types. */
   private static final @Regex String KEYWORD_NON_PRIMITIVE_TYPE =
@@ -185,7 +185,7 @@ public class SignatureRegexes {
   private static final @Regex String CLASS_GET_NAME_NONPRIMITIVE_NONARRAY =
       IDENTIFIER + "(\\." + IDENTIFIER + "|" + NESTED_ONE + ")*";
 
-  ///////////////////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////
   // Regexes and patterns for literal Strings, one per annotation definition.
 
   // Creating all the patterns at load time is a bit inefficient but is convenient for clients.
