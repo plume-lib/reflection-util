@@ -21,11 +21,13 @@ repositories {
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
-ext.errorproneVersion = '2.31.0'
+ext {
+  errorproneVersion = '2.32.0'
+  isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
+  isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
+}
 
 dependencies {
-  compileOnly "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
-
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
@@ -84,6 +86,7 @@ tasks.withType(JavaCompile).configureEach {
     // disable('StringSplitter') // Obscure case isn't likely.
     disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
   }
+  options.errorprone.enabled = isJava17orHigher
 }
 
 // Checker Framework pluggable type-checking
