@@ -633,9 +633,20 @@ public final class Signatures {
    * Given a class name in internal form, return it in as a binary name.
    *
    * @param internalForm a class name in internal form
-   * @return the class name sa a binary name
+   * @return the class name as a binary name
    */
   public static @BinaryName String internalFormToBinaryName(@InternalForm String internalForm) {
+    return internalForm.replace('/', '.');
+  }
+
+  /**
+   * Given a class name in internal form, return it in as dot-separated identifiers.
+   *
+   * @param internalForm a class name in internal form
+   * @return the class name as dot-separated identifiers
+   */
+  public static @DotSeparatedIdentifiers String internalFormToDotSeparatedIdentifiers(
+      @InternalForm String internalForm) {
     return internalForm.replace('/', '.');
   }
 
