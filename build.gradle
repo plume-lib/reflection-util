@@ -9,7 +9,7 @@ plugins {
   id 'com.diffplug.spotless' version '6.25.0'
 
   // Error Prone linter
-  id('net.ltgt.errorprone') version '4.0.1'
+  id('net.ltgt.errorprone') version '4.1.0'
 
   // Checker Framework pluggable type-checking
   id 'org.checkerframework' version '0.6.45'
@@ -22,13 +22,13 @@ repositories {
 }
 
 ext {
-  errorproneVersion = '2.33.0'
+  errorproneVersion = '2.34.0'
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
 
 dependencies {
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
@@ -119,7 +119,7 @@ checkerFramework {
 // To use a snapshot version of the Checker Framework.
 if (false) {
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.48.0'
+  ext.checkerFrameworkVersion = '3.48.1'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"

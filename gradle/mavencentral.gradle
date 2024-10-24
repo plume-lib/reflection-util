@@ -3,7 +3,7 @@
 //     SONATYPE_NEXUS_USERNAME=...
 //     SONATYPE_NEXUS_PASSWORD=...
 
-// To make a release (run on any filesystem, except the last step):
+// To make a release (run on any filesystem, except the `javadocWeb` step):
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
@@ -14,7 +14,7 @@
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
 //    VER=1.1.4 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "reflection-util 1.1.4", use text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "reflection-util 1.1.4", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 
 apply plugin: 'maven-publish'
@@ -22,6 +22,9 @@ apply plugin: 'signing'
 
 group 'org.plumelib'
 version '1.1.4'
+ext {
+  packageName = 'reflection-util'
+}
 
 final isSnapshot = version.contains('SNAPSHOT')
 
@@ -42,12 +45,12 @@ publishing {
       pom {
         name = 'Reflection Util'
         description = 'Utility libraries for reflection, converting among string representations of Java types, etc.'
-        url = 'https://github.com/plume-lib/reflection-util'
+        url = "https://github.com/plume-lib/${packageName}"
 
         scm {
-          connection = 'scm:git:git@github.com:plume-lib/reflection-util.git'
-          developerConnection = 'scm:git:git@github.com:plume-lib/reflection-util.git'
-          url = 'git@github.com:plume-lib/reflection-util.git'
+          connection = "scm:git:git@github.com:plume-lib/${packageName}.git"
+          developerConnection = "scm:git:git@github.com:plume-lib/${packageName}.git"
+          url = "git@github.com:plume-lib/${packageName}.git"
         }
 
         licenses {
