@@ -630,7 +630,7 @@ public final class Signatures {
   }
 
   /**
-   * Given a class name in internal form, return it in as a binary name.
+   * Given a class name in internal form, return it as a binary name.
    *
    * @param internalForm a class name in internal form
    * @return the class name as a binary name
@@ -640,7 +640,7 @@ public final class Signatures {
   }
 
   /**
-   * Given a class name in internal form, return it in as dot-separated identifiers.
+   * Given a class name in internal form, return it as dot-separated identifiers.
    *
    * @param internalForm a class name in internal form
    * @return the class name as dot-separated identifiers
@@ -651,7 +651,7 @@ public final class Signatures {
   }
 
   /**
-   * Given a class name in internal form, return it in as a fully-qualified name.
+   * Given a class name in internal form, return it as a fully-qualified name.
    *
    * @param internalForm a type in internal form
    * @return a fully-qualified name
