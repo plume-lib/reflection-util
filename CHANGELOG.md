@@ -1,5 +1,9 @@
 # Reflection-Util change log
 
+## 1.1.5 (??)
+
+- New method 'Signatures.internalFormToDotSeparatedIdentifiers'
+
 ## 1.1.4 (2024-10-09)
 
 - New method `Signatures.classGetNameToBinaryName()`
