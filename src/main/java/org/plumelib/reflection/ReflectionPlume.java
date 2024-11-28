@@ -130,7 +130,7 @@ public final class ReflectionPlume {
         try {
           return Class.forName(className);
         } catch (ClassNotFoundException ee) {
-          continue; // nothing to do
+          // nothing to do
         }
       }
     }
