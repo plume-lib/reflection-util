@@ -3,6 +3,7 @@
 ## 1.1.5 (??)
 
 - New method 'Signatures.internalFormToDotSeparatedIdentifiers'
+- Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`
 
 ## 1.1.4 (2024-10-09)
 

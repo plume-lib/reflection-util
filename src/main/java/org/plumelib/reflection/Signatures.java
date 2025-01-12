@@ -13,7 +13,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signature.qual.ArrayWithoutPackage;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.BinaryNameOrPrimitiveType;
-import org.checkerframework.checker.signature.qual.BinaryNameWithoutPackage;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
@@ -164,19 +163,6 @@ public final class Signatures {
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryName.class)
   public static boolean isBinaryName(String s) {
     return SignatureRegexes.BinaryNamePattern.matcher(s).matches();
-  }
-
-  /**
-   * Returns true if the argument has the format of a BinaryNameWithoutPackage. The type it refers
-   * to might or might not exist.
-   *
-   * @param s a string
-   * @return true if the string is a @BinaryNameWithoutPackage
-   */
-  @SuppressWarnings("signature")
-  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = BinaryNameWithoutPackage.class)
-  public static boolean isBinaryNameWithoutPackage(String s) {
-    return SignatureRegexes.BinaryNameWithoutPackagePattern.matcher(s).matches();
   }
 
   /**

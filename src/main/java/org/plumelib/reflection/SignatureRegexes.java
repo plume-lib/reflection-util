@@ -73,7 +73,7 @@ public class SignatureRegexes {
   }
 
   // ///////////////////////////////////////////////////////////////////////////
-  // Building blocks for regular expressions
+  // Building blocks for regular expressions.  These are private in general.
   //
 
   /** An unanchored regex that matches keywords, except primitive types. */
@@ -169,13 +169,15 @@ public class SignatureRegexes {
   /** A regex that matches the nested-class part of a class name, for one nested class. */
   private static final @Regex String NESTED_ONE = "\\$[A-Za-z_0-9]+";
 
-  /** A regex that matches the nested-class part of a class name. */
+  /**
+   * A regex that matches the nested-class part of a class name, which might be the empty string.
+   */
   private static final @Regex String NESTED = ANY(NESTED_ONE);
 
   /** An unanchored regex that matches BinaryName strings. */
   private static final @Regex String BINARY_NAME = DOT_SEPARATED_IDENTIFIERS + NESTED;
 
-  /** A regex that matches the nested-class part of a class name. */
+  /** A regex that matches the array part of a type, which might be the empty string. */
   private static final @Regex String ARRAY = "(\\[\\])*";
 
   /** A regex that matches InternalForm strings. */
@@ -203,13 +205,6 @@ public class SignatureRegexes {
 
   /** An anchored pattern that matches BinaryName strings. */
   public static final Pattern BinaryNamePattern = Pattern.compile(BinaryNameRegex);
-
-  /** An anchored regex that matches BinaryNameWithoutPackage strings. */
-  public static final @Regex String BinaryNameWithoutPackageRegex = ANCHORED(IDENTIFIER + NESTED);
-
-  /** An anchored pattern that matches BinaryNameWithoutPackage strings. */
-  public static final Pattern BinaryNameWithoutPackagePattern =
-      Pattern.compile(BinaryNameWithoutPackageRegex);
 
   /** An anchored regex that matches BinaryNameOrPrimitiveType strings. */
   public static final @Regex String BinaryNameOrPrimitiveTypeRegex =
