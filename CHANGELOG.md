@@ -4,6 +4,8 @@
 
 - New method 'Signatures.internalFormToDotSeparatedIdentifiers'
 - Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`
+- Deprecated fields `Signatures.FqBinaryNameRegex` and `Signatures.FqBinaryNamePattern`;
+  use `Signatures.FullyQualifiedNameRegex` and `Signatures.FullyQualifiedNamePattern` instead.
 
 ## 1.1.4 (2024-10-09)
 

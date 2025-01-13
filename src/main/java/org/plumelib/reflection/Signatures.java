@@ -281,18 +281,24 @@ public final class Signatures {
    * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
    * might not exist.
    *
+   * <p>This method has the same semantics as {@link isFullyQualifiedName}, because the syntactic
+   * formats are the same (though the interpretations of the strings differ).
+   *
    * @param s a string
    * @return true if the string is a @FqBinaryName
    */
   @SuppressWarnings("signature")
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FqBinaryName.class)
   public static boolean isFqBinaryName(String s) {
-    return SignatureRegexes.FqBinaryNamePattern.matcher(s).matches();
+    return SignatureRegexes.FullyQualifiedNamePattern.matcher(s).matches();
   }
 
   /**
    * Returns true if the argument has the format of a FullyQualifiedName. The type it refers to
    * might or might not exist.
+   *
+   * <p>This method has the same semantics as {@link isFqBinaryName}, because the syntactic formats
+   * are the same (though the interpretations of the strings differ).
    *
    * @param s a string
    * @return true if the string is a @FullyQualifiedName

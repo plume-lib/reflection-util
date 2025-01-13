@@ -147,7 +147,12 @@ public class SignatureRegexes {
   private static final @Regex String KEYWORD_OR_LITERAL =
       ALTERNATE(KEYWORD, "true", "false", "null");
 
-  /** A regex that matches Java identifier tokens, as defined by the Java grammar. */
+  /**
+   * A regex that matches Java identifier tokens, as defined by the Java grammar.
+   *
+   * <p>This includes identifiers containing "$". The "$" character is permitted but strongly
+   * discouraged in source code. However, "$" often occurs in identifiers in class files.
+   */
   private static final @Regex String IDENTIFIER_TOKEN = "[A-Za-z_$][A-Za-z_$0-9]*";
 
   /** A grouped regex that matches identifiers. */
@@ -162,10 +167,6 @@ public class SignatureRegexes {
   private static final @Regex String DOT_SEPARATED_IDENTIFIERS =
       IDENTIFIER + ANY("\\." + IDENTIFIER);
 
-  /** An unanchored regex that matches slash-separated identifiers. */
-  private static final @Regex String SLASH_SEPARATED_IDENTIFIERS =
-      IDENTIFIER + ANY("/" + IDENTIFIER);
-
   /** A regex that matches the nested-class part of a class name, for one nested class. */
   private static final @Regex String NESTED_ONE = "\\$[A-Za-z_0-9]+";
 
@@ -174,14 +175,14 @@ public class SignatureRegexes {
    */
   private static final @Regex String NESTED = ANY(NESTED_ONE);
 
-  /** An unanchored regex that matches BinaryName strings. */
-  private static final @Regex String BINARY_NAME = DOT_SEPARATED_IDENTIFIERS + NESTED;
+  /** A regex that matches BinaryName strings, which are dot-separated identifiers. */
+  private static final @Regex String BINARY_NAME = DOT_SEPARATED_IDENTIFIERS;
 
   /** A regex that matches the array part of a type, which might be the empty string. */
   private static final @Regex String ARRAY = "(\\[\\])*";
 
-  /** A regex that matches InternalForm strings. */
-  public static final @Regex String INTERNAL_FORM = SLASH_SEPARATED_IDENTIFIERS + NESTED;
+  /** A regex that matches InternalForm strings. These are slash-separated identifiers. */
+  public static final @Regex String INTERNAL_FORM = IDENTIFIER + ANY("/" + IDENTIFIER);
 
   /** A regex that matches ClassGetName, for non-primitive, non-array types. */
   private static final @Regex String CLASS_GET_NAME_NONPRIMITIVE_NONARRAY =
@@ -278,18 +279,24 @@ public class SignatureRegexes {
   public static final Pattern FieldDescriptorForPrimitivePattern =
       Pattern.compile(FieldDescriptorForPrimitiveRegex);
 
-  /** An anchored regex that matches FqBinaryName strings. */
+  /** Deprecated. Use {@link FullyQualifiedNameRegex} instead. */
   public static final @Regex String FqBinaryNameRegex =
       ANCHORED("(" + PRIMITIVE_TYPE + "|" + BINARY_NAME + ")" + ARRAY);
 
-  /** An anchored pattern that matches FqBinaryName strings. */
+  /** Deprecated. Use {@link FullyQualifiedNamePattern} instead. */
   public static final Pattern FqBinaryNamePattern = Pattern.compile(FqBinaryNameRegex);
 
-  /** An anchored regex that matches FullyQualifiedName strings. */
+  /**
+   * An anchored regex that matches FullyQualifiedName and FqBinaryName strings (which are
+   * syntactically identical but are interpreted differently).
+   */
   public static final @Regex String FullyQualifiedNameRegex =
       ANCHORED("(" + PRIMITIVE_TYPE + "|" + DOT_SEPARATED_IDENTIFIERS + ")" + ARRAY);
 
-  /** An anchored pattern that matches FullyQualifiedName strings. */
+  /**
+   * An anchored pattern that matches FullyQualifiedName and FqBinaryName strings (which are
+   * syntactically identical but are interpreted differently).
+   */
   public static final Pattern FullyQualifiedNamePattern = Pattern.compile(FullyQualifiedNameRegex);
 
   /** An anchored regex that matches Identifier strings. */
