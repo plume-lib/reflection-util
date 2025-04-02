@@ -6,7 +6,7 @@
 - Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`
 - Deprecated fields `Signatures.FqBinaryNameRegex` and `Signatures.FqBinaryNamePattern`;
   use `Signatures.FullyQualifiedNameRegex` and `Signatures.FullyQualifiedNamePattern` instead.
-- Requires Java 8 or later; no longer requires Java 11
+- Works on Java 8 or later; no longer requires Java 11.
 
 ## 1.1.4 (2024-10-09)
 
