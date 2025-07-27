@@ -38,8 +38,8 @@ public final class ReflectionPlume {
   //
 
   /**
-   * Return true iff sub is a subtype of sup. If sub == sup, then sub is considered a subtype of sub
-   * and this method returns true.
+   * Returns true iff sub is a subtype of sup. If sub == sup, then sub is considered a subtype of
+   * sub and this method returns true.
    *
    * @param sub class to test for being a subtype
    * @param sup class to test for being a supertype
