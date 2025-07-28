@@ -22,7 +22,7 @@ repositories {
 }
 
 ext {
-  errorproneVersion = '2.40.0'
+  errorproneVersion = '2.41.0'
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
@@ -84,7 +84,8 @@ tasks.withType(JavaCompile).configureEach {
     disable('ExtendsObject')  // Incorrect when using the Checker Framework
     disable('ReferenceEquality') // Use Interning Checker instead.
     // disable('StringSplitter') // Obscure case isn't likely.
-    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
+    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod.
+    disable('EffectivelyPrivate') // Loses information about the abstraction.
   }
   options.errorprone.enabled = isJava17orHigher
 }
