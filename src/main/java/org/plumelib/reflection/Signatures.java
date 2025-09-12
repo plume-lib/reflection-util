@@ -99,7 +99,7 @@ public final class Signatures {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
     @SuppressWarnings("index:assignment") // "/" is not the last character
-    @IndexFor("classfilename") int start = classfilename.lastIndexOf("/") + 1;
+    @IndexFor("classfilename") int start = classfilename.lastIndexOf('/') + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
   }
@@ -783,7 +783,7 @@ public final class Signatures {
   public static @Nullable @FieldDescriptor String methodDescriptorToReturnType(
       @MethodDescriptor String methodDescriptor) {
     @SuppressWarnings("signature:assignment") // string manipulation
-    @FieldDescriptor String result = methodDescriptor.substring(methodDescriptor.indexOf(")") + 1);
+    @FieldDescriptor String result = methodDescriptor.substring(methodDescriptor.indexOf(')') + 1);
     return result.equals("V") ? null : result;
   }
 }
