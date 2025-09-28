@@ -4,8 +4,9 @@
 
 - New method 'Signatures.internalFormToDotSeparatedIdentifiers'
 - Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`
-- Deprecated fields `Signatures.FqBinaryNameRegex` and `Signatures.FqBinaryNamePattern`;
-  use `Signatures.FullyQualifiedNameRegex` and `Signatures.FullyQualifiedNamePattern` instead.
+- Deprecated fields `Signatures.FqBinaryNameRegex` and
+  `Signatures.FqBinaryNamePattern`; use `Signatures.FullyQualifiedNameRegex` and
+  `Signatures.FullyQualifiedNamePattern` instead.
 - Works on Java 8 or later; no longer requires Java 11.
 
 ## 1.1.4 (2024-10-09)
@@ -16,9 +17,9 @@
 ## 1.1.3 (2024-01-15)
 
 - New methods in class Signatures:
-   - methodDescriptorToReturnType
-   - splitJvmArglist
-   - splitJavaArglist
+  - methodDescriptorToReturnType
+  - splitJvmArglist
+  - splitJavaArglist
 
 ## 1.1.2 (2023-12-08)
 
@@ -50,24 +51,24 @@
 ## 1.0.3 (2021-01-01)
 
 - New method in class ReflectionPlume:
-   - nameWithoutPackage
+  - nameWithoutPackage
 
 ## 1.0.2 (2020-10-03)
 
 - New methods in class Signatures:
-   - isArrayWithoutPackage
-   - isBinaryNameWithoutPackage
-   - isBinaryNameOrPrimitiveType
-   - isClassGetSimpleName
-   - isDotSeparatedIdentifiersOrPrimitiveType
-   - isFieldDescriptor
-   - isFieldDescriptorWithoutPackage
-   - isFieldDescriptorForPrimitive
-   - isFullyQualifiedName
-   - isIdentifier
-   - isIdentifierOrPrimitiveType
-   - isInternalForm
-   - isPrimitiveType
+  - isArrayWithoutPackage
+  - isBinaryNameWithoutPackage
+  - isBinaryNameOrPrimitiveType
+  - isClassGetSimpleName
+  - isDotSeparatedIdentifiersOrPrimitiveType
+  - isFieldDescriptor
+  - isFieldDescriptorWithoutPackage
+  - isFieldDescriptorForPrimitive
+  - isFullyQualifiedName
+  - isIdentifier
+  - isIdentifierOrPrimitiveType
+  - isInternalForm
+  - isPrimitiveType
 - New class SignatureRegexes
 - Bug fixes
 
@@ -100,19 +101,19 @@
 
 - Rename ClassGetNameAndDimensions to ClassnameAndDimensions
 - Add methods in class Signatures:
-   - addPackage
-   - classfilenameToBinaryName
-   - isBinaryName
-   - isDotSeparatedIdentifiers
-   - isFqBinaryName
+  - addPackage
+  - classfilenameToBinaryName
+  - isBinaryName
+  - isDotSeparatedIdentifiers
+  - isFqBinaryName
 
 ## 0.0.4 (2019-06-04)
 
 - Add methods in class Signatures:
-   - getArrayElementType
-   - internalFormToBinaryName
-   - internalFormToClassGetName
-   - isClassGetName
+  - getArrayElementType
+  - internalFormToBinaryName
+  - internalFormToClassGetName
+  - isClassGetName
 
 ## 0.0.3 (2019-05-30)
 
