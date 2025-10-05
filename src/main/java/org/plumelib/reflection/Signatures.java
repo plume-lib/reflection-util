@@ -532,8 +532,12 @@ public final class Signatures {
 
   // does not convert "V" to "void".  Should it?
   /**
-   * Convert a field descriptor to a binary name. For example, convert "[Ljava/util/Map$Entry;" to
-   * "java.lang.Map$Entry[]" or "I" to "int".
+   * Convert a field descriptor to a binary name. For example, convert "Ljava/util/Map$Entry;" to
+   * "java.lang.Map$Entry".
+   *
+   * <p>Strictly speaking, there is no binary name for primitives and arrays. In those cases, the
+   * result is a "fully-qualified binary name" ({@code @}{@link FqBinaryName}). For example, this
+   * method converts "[Ljava/util/Map$Entry;" to "java.lang.Map$Entry[]" and converts "I" to "int".
    *
    * @param typename a field descriptor (the name of a type in JVML format)
    * @return the corresponding binary name
