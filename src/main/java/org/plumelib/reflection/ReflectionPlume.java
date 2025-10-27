@@ -4,11 +4,13 @@
 package org.plumelib.reflection;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -206,7 +208,7 @@ public final class ReflectionPlume {
       int numbytes;
       byte[] classBytes;
       int bytesRead;
-      try (FileInputStream fi = new FileInputStream(pathname)) {
+      try (InputStream fi = Files.newInputStream(Path.of(pathname))) {
         numbytes = fi.available();
         classBytes = new byte[numbytes];
         bytesRead = fi.read(classBytes);
@@ -309,7 +311,7 @@ public final class ReflectionPlume {
    * @throws NoSuchMethodException if the method is not found
    */
   public static Method methodForName(String method)
-      throws ClassNotFoundException, NoSuchMethodException, SecurityException {
+      throws ClassNotFoundException, NoSuchMethodException {
 
     int oparenpos = method.indexOf('(');
     int dotpos = method.lastIndexOf('.', oparenpos);
@@ -374,7 +376,7 @@ public final class ReflectionPlume {
    */
   public static Method methodForName(
       @BinaryName String classname, String methodname, Class<?>[] params)
-      throws ClassNotFoundException, NoSuchMethodException, SecurityException {
+      throws ClassNotFoundException, NoSuchMethodException {
 
     Class<?> c = Class.forName(classname);
     Method m = c.getDeclaredMethod(methodname, params);
