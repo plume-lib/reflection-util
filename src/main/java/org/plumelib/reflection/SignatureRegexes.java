@@ -9,7 +9,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  * This class defines regular expressions for types supported by the <a
  * href="https://checkerframework.org/manual/#signature-checker">Signature String Checker</a>.
  */
-public class SignatureRegexes {
+public final class SignatureRegexes {
 
   /** Do not instantiate this class. */
   private SignatureRegexes() {
