@@ -11,7 +11,7 @@ In a gradle buildfile, write
 
 ```gradle
 dependencies {
-  implementation 'org.plumelib:reflection-util:1.1.5'
+  implementation("org.plumelib:reflection-util:1.1.5")
 }
 ```
 
