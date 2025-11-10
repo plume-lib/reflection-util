@@ -252,18 +252,10 @@ check.dependsOn(requireJavadoc)
 javadocWeb.dependsOn(requireJavadoc)
 
 
-// Publishing
-
-// To upload to Maven Central:
-// * ./gradlew publishToMavenCentral
-// * browse to https://central.sonatype.com/publishing/deployments
-
-ext {
-  packageName = "reflection-util"
-}
+// Publishing, see README-developers.md
 
 mavenPublishing {
-  coordinates("org.plumelib", "${packageName}", "1.1.5")
+  coordinates("org.plumelib", "${project.packageName}", "${project.version}")
 
   pom {
     name = "Reflection Util"
