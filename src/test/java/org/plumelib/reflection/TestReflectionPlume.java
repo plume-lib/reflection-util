@@ -10,9 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /** Test code for the ReflectionPlume class. */
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // I don't see the problem with using `assert`
-})
 public final class TestReflectionPlume {
 
   static class Inner {
