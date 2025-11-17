@@ -391,9 +391,9 @@ public final class ReflectionPlume {
   // java/Translation/src/graph/tests/Reflect.java (but handle returning a
   // value).
 
-  // TODO: make this restore the access to its original value, such as private?
   /**
-   * Sets the given field, which may be final and/or private. Leaves the field accessible.
+   * Sets the given field, which may be final and/or private. Restores the field's original
+   * accessibility.
    *
    * @param o object in which to set the field; null iff the field is static
    * @param fieldName name of field to set
@@ -407,8 +407,13 @@ public final class ReflectionPlume {
       // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
-        f.setAccessible(true);
-        f.set(o, value);
+        boolean originalAccessible = f.isAccessible();
+        try {
+          f.setAccessible(true);
+          f.set(o, value);
+        } finally {
+          f.setAccessible(originalAccessible);
+        }
         return;
       } catch (NoSuchFieldException e) {
         if (c.getSuperclass() == Object.class) { // Class is interned
@@ -423,13 +428,12 @@ public final class ReflectionPlume {
     throw new NoSuchFieldException(fieldName);
   }
 
-  // TODO: make this restore the access to its original value, such as private?
   /**
-   * Reads the given field, which may be private. Leaves the field accessible. Use with care!
+   * Reads the given field, which may be private. Restores the field's original accessibility.
    *
-   * @param o object in which to set the field
-   * @param fieldName name of field to set
-   * @return new value of field
+   * @param o object in which to get the field
+   * @param fieldName name of field to get
+   * @return value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
   public static @Nullable Object getPrivateField(Object o, String fieldName)
@@ -439,8 +443,13 @@ public final class ReflectionPlume {
       // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
-        f.setAccessible(true);
-        return f.get(o);
+        boolean originalAccessible = f.isAccessible();
+        try {
+          f.setAccessible(true);
+          return f.get(o);
+        } finally {
+          f.setAccessible(originalAccessible);
+        }
       } catch (IllegalAccessException e) {
         throw new Error("This can't happen: " + e);
       } catch (NoSuchFieldException e) {
