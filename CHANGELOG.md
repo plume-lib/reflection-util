@@ -1,9 +1,13 @@
 # Reflection-Util change log
 
+## 1.1.6 (????-??-??)
+
+- Methods `setFinalField` and `getPrivateField` restore original visibility.
+
 ## 1.1.5 (2025-04-02)
 
-- New method `Signatures.internalFormToDotSeparatedIdentifiers`
-- Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`
+- New method `Signatures.internalFormToDotSeparatedIdentifiers`.
+- Removed method `Signatures.isBinaryNameWithoutPackage`; use `Signatures.isIdentifier`.
 - Deprecated fields `Signatures.FqBinaryNameRegex` and
   `Signatures.FqBinaryNamePattern`; use `Signatures.FullyQualifiedNameRegex` and
   `Signatures.FullyQualifiedNamePattern` instead.
