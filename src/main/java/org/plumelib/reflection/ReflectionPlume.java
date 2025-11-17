@@ -407,6 +407,7 @@ public final class ReflectionPlume {
       // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
+        @SuppressWarnings("deprecation") // No non-deprecated alternative to query accessible flag.
         boolean originalAccessible = f.isAccessible();
         try {
           f.setAccessible(true);
@@ -443,6 +444,7 @@ public final class ReflectionPlume {
       // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
+        @SuppressWarnings("deprecation") // No non-deprecated alternative to query accessible flag.
         boolean originalAccessible = f.isAccessible();
         try {
           f.setAccessible(true);
