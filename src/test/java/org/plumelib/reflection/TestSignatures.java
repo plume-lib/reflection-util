@@ -27,7 +27,7 @@ public final class TestSignatures {
    * brackets.
    */
   @Test
-  public void getArrayElementType() {
+  public void test_getArrayElementType() {
     assertEquals("int", Signatures.getArrayElementType("int[][][]"));
     assertEquals("int", Signatures.getArrayElementType("int"));
   }
