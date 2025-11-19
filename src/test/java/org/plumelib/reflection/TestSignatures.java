@@ -27,14 +27,14 @@ public final class TestSignatures {
    * brackets.
    */
   @Test
-  void testGetArrayElementType() {
+  void test_getArrayElementType() {
     assertEquals("int", Signatures.getArrayElementType("int[][][]"));
     assertEquals("int", Signatures.getArrayElementType("int"));
   }
 
   /** Given a filename ending with ".class", return the binary name of the class. */
   @Test
-  void testClassfilenameToBinaryName() {
+  void test_classfilenameToBinaryName() {
     assertEquals(
         "foo.bar.baz.Quux", Signatures.classfilenameToBinaryName("/foo/bar/baz/Quux.class"));
     assertEquals(
@@ -49,7 +49,7 @@ public final class TestSignatures {
 
   /** Given a filename ending with ".class", return the simple binary name of the class. */
   @Test
-  void testClassfilenameToBaseName() {
+  void test_classfilenameToBaseName() {
     assertEquals("Quux", Signatures.classfilenameToBaseName("/foo/bar/baz/Quux.class"));
     assertEquals("Quux", Signatures.classfilenameToBaseName("foo/bar/baz/Quux.class"));
     assertEquals("Quux", Signatures.classfilenameToBaseName("Quux.class"));
@@ -66,7 +66,7 @@ public final class TestSignatures {
    * Given a package name and a class name, combine them to form a qualified class name.
    */
   @Test
-  void testAddPackage() {
+  void test_addPackage() {
     assertEquals("Foo", Signatures.addPackage(null, "Foo"));
     assertEquals("a.b.c.Foo", Signatures.addPackage("a.b.c", "Foo"));
   }
@@ -80,7 +80,7 @@ public final class TestSignatures {
    * might not exist.
    */
   @Test
-  void testIsBinaryName() {
+  void test_isBinaryName() {
     assertTrue(!Signatures.isBinaryName("int"));
     assertTrue(!Signatures.isBinaryName("int[][]"));
     assertTrue(Signatures.isBinaryName("java.lang.String"));
@@ -98,7 +98,7 @@ public final class TestSignatures {
    * might not exist.
    */
   @Test
-  void testIsClassGetName() {
+  void test_isClassGetName() {
     assertTrue(Signatures.isClassGetName("int"));
     assertTrue(Signatures.isClassGetName("[[I"));
     assertTrue(!Signatures.isClassGetName("int[][]"));
@@ -126,7 +126,7 @@ public final class TestSignatures {
    * it refers to might or might not exist.
    */
   @Test
-  void testIsDotSeparatedIdentifiers() {
+  void test_isDotSeparatedIdentifiers() {
     assertTrue(!Signatures.isDotSeparatedIdentifiers("hello world"));
     assertTrue(!Signatures.isDotSeparatedIdentifiers("[[I"));
     assertTrue(!Signatures.isDotSeparatedIdentifiers("int"));
@@ -145,7 +145,7 @@ public final class TestSignatures {
    * might not exist.
    */
   @Test
-  void testIsFqBinaryName() {
+  void test_isFqBinaryName() {
     assertTrue(!Signatures.isFqBinaryName("hello world"));
     assertTrue(!Signatures.isFqBinaryName("[[I"));
     assertTrue(Signatures.isFqBinaryName("int"));
@@ -167,7 +167,7 @@ public final class TestSignatures {
    * might not exist.
    */
   @Test
-  void testIsIdentifier() {
+  void test_isIdentifier() {
     assertTrue(Signatures.isIdentifier("_"));
     assertTrue(Signatures.isIdentifier("Class$Inner"));
   }
@@ -185,7 +185,7 @@ public final class TestSignatures {
   }
 
   @Test
-  void testParseFqBinaryName() {
+  void test_parseFqBinaryName() {
     assertParseFqBinaryName("int", "int", 0);
     assertParseFqBinaryName("int[]", "int", 1);
     assertParseFqBinaryName("int[][]", "int", 2);
@@ -201,7 +201,7 @@ public final class TestSignatures {
   }
 
   @Test
-  void testConversions() {
+  void test_conversions() {
     // Table from Checker Framework manual.  Order of arguments:
     // @FqBinaryName String fqbn,
     // @Nullable @FullyQualifiedName String fqn,
@@ -312,7 +312,7 @@ public final class TestSignatures {
   //
 
   @Test
-  void testSignatureSplitting() {
+  void test_signatureSplitting() {
     assertArrayEquals(new String[0], Signatures.splitJavaArglist("()"));
     assertArrayEquals(new String[] {"int"}, Signatures.splitJavaArglist("(int)"));
 
@@ -321,7 +321,7 @@ public final class TestSignatures {
   }
 
   @Test
-  void testSignatureConversions() {
+  void test_signatureConversions() {
     // public static String arglistToJvm(String arglist)
     assertEquals("()", Signatures.arglistToJvm("()"));
     assertEquals("(I)", Signatures.arglistToJvm("(int)"));
