@@ -17,7 +17,7 @@ public final class TestReflectionPlume {
   }
 
   @Test
-  public void test_classForName() {
+  void test_classForName() {
     try {
       assertTrue(ReflectionPlume.classForName("int") == int.class);
       assertTrue(ReflectionPlume.classForName("boolean") == boolean.class);
@@ -44,13 +44,13 @@ public final class TestReflectionPlume {
   }
 
   @Test
-  public void test_fullyQualifiedNameToSimpleName() {
+  void test_fullyQualifiedNameToSimpleName() {
     assertEquals("String", ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String"));
     assertEquals("String", ReflectionPlume.fullyQualifiedNameToSimpleName("String"));
   }
 
   @Test
-  public void test_nameWithoutPackage() {
+  void test_nameWithoutPackage() {
     assertEquals("String", ReflectionPlume.nameWithoutPackage(String.class));
     assertEquals("Map.Entry", ReflectionPlume.nameWithoutPackage(java.util.Map.Entry.class));
     assertEquals("TestReflectionPlume.Inner", ReflectionPlume.nameWithoutPackage(Inner.class));
@@ -60,7 +60,7 @@ public final class TestReflectionPlume {
   }
 
   @Test
-  public void test_isSubtype() {
+  void test_isSubtype() {
     // private boolean isSubtype(Class<?> sub, Class<?> sup) {
     assertTrue(ReflectionPlume.isSubtype(Integer.class, Integer.class));
     assertTrue(ReflectionPlume.isSubtype(Cloneable.class, Cloneable.class));
@@ -83,7 +83,7 @@ public final class TestReflectionPlume {
   }
 
   @Test
-  public void test_methodForName() {
+  void test_methodForName() {
     // public static Method methodForName(String methodname) throws ClassNotFoundException
     //
     // Just test that the method is found (return value is non-null and non-erroneous).
