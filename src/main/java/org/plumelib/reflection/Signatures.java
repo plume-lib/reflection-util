@@ -533,11 +533,11 @@ public final class Signatures {
   // does not convert "V" to "void".  Should it?
   /**
    * Convert a field descriptor to a binary name. For example, convert "Ljava/util/Map$Entry;" to
-   * "java.lang.Map$Entry".
+   * "java.util.Map$Entry".
    *
    * <p>Strictly speaking, there is no binary name for primitives and arrays. In those cases, the
    * result is a "fully-qualified binary name" ({@code @}{@link FqBinaryName}). For example, this
-   * method converts "[Ljava/util/Map$Entry;" to "java.lang.Map$Entry[]" and converts "I" to "int".
+   * method converts "[Ljava/util/Map$Entry;" to "java.util.Map$Entry[]" and converts "I" to "int".
    *
    * @param typename a field descriptor (the name of a type in JVML format)
    * @return the corresponding binary name
@@ -568,7 +568,7 @@ public final class Signatures {
 
   /**
    * Convert a name in Class.getName format to a binary name. For example, convert
-   * "[Ljava/util/Map$Entry;" to "java.lang.Map$Entry[]".
+   * "[Ljava/util/Map$Entry;" to "java.util.Map$Entry[]".
    *
    * @param typename a name in Class.getName format
    * @return the corresponding binary name
@@ -576,7 +576,7 @@ public final class Signatures {
   @SuppressWarnings("signature") // conversion routine
   public static @BinaryName String classGetNameToBinaryName(@ClassGetName String typename) {
     if (typename.equals("")) {
-      throw new Error("Empty string passed to fieldDescriptorToBinaryName");
+      throw new Error("Empty string passed to classGetNameToBinaryName");
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);
     String classname = m.replaceFirst("");
@@ -633,6 +633,16 @@ public final class Signatures {
    */
   public static @BinaryName String internalFormToBinaryName(@InternalForm String internalForm) {
     return internalForm.replace('/', '.');
+  }
+
+  /**
+   * Given a class name in binary name form, return it in internal form.
+   *
+   * @param binaryName a class name in binary name form
+   * @return the class name in internal form
+   */
+  public static @InternalForm String binaryNameToInternalForm(@BinaryName String binaryName) {
+    return binaryName.replace('.', '/');
   }
 
   /**
