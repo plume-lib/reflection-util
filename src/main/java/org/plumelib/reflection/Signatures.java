@@ -568,7 +568,7 @@ public final class Signatures {
 
   /**
    * Convert a name in Class.getName format to a binary name. For example, convert
-   * "[Ljava/util/Map$Entry;" to "java.util.Map$Entry[]".
+   * "[Ljava.util.Map$Entry;" to "java.util.Map$Entry[]".
    *
    * @param typename a name in Class.getName format
    * @return the corresponding binary name
