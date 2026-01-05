@@ -299,6 +299,9 @@ public final class TestSignatures {
     if (bn != null && iform != null) {
       assertEquals(bn, Signatures.internalFormToBinaryName(iform));
     }
+    if (bn != null && iform != null) {
+      assertEquals(iform, Signatures.binaryNameToInternalForm(bn));
+    }
     if (fqn != null && iform != null) {
       assertEquals(fqn, Signatures.internalFormToFullyQualified(iform));
     }
