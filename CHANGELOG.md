@@ -1,6 +1,6 @@
 # Reflection-Util change log
 
-## 1.1.6 (????-??-??)
+## 1.1.6 (2026-03-05)
 
 - Methods `setFinalField` and `getPrivateField` restore original visibility.
 
