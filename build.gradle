@@ -5,7 +5,6 @@ plugins {
   alias(libs.plugins.com.gradleup.shadow)
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // Version 8.0.0 and later requires Java 17+.
   alias(libs.plugins.com.diffplug.spotless)
 
   // Error Prone linter
@@ -111,10 +110,7 @@ tasks.withType(JavaCompile).configureEach {
     disable("EffectivelyPrivate") // Loses information about the abstraction.
     disable("ExtendsObject")  // Incorrect when using the Checker Framework.
     disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
-    disable("PatternMatchingInstanceof") // requires Java 16 or later
     disable("ReferenceEquality") // Use Interning Checker instead.
-    disable("StatementSwitchToExpressionSwitch") // requires Java 12 or later
-    disable("StringConcatToTextBlock") // requires Java 15 or later
   }
 }
 
