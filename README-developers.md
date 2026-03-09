@@ -31,7 +31,7 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Add a git tag and commit:
 
   ```sh
-  VER=1.1.5 && \
+  VER=1.1.6 && \
   git commit -m "Version $VER" && git push && \
   git tag -a v$VER -m "Version $VER" && git push && git push --tags
   ```
@@ -39,7 +39,7 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Make a GitHub release.
   * Browse to <https://github.com/plume-lib/reflection-util/releases>
   * Click "draft a new release"
-  * Call it "reflection-util 1.1.5"
+  * Call it "reflection-util 1.1.6"
   * Use the text from `CHANGELOG.md` as the description
   * Attach the .jar and -all.jar files from `build/libs/`
   * Click "publish release"
