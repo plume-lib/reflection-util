@@ -549,7 +549,6 @@ public final class Signatures {
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);
     String classname = m.replaceFirst("");
-    int dimensions = typename.length() - classname.length();
     String result;
     if (classname.startsWith("L") && classname.endsWith(";")) {
       result = classname.substring(1, classname.length() - 1);
@@ -560,6 +559,7 @@ public final class Signatures {
             "Malformed field descriptor should be \"L...;\" or a primitive: " + classname);
       }
     }
+    int dimensions = typename.length() - classname.length();
     for (int i = 0; i < dimensions; i++) {
       result += "[]";
     }
