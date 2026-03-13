@@ -1,7 +1,8 @@
 # Reflection-Util change log
 
-## 1.1.6 (????-??-??)
+## 2.0.0 (????-??-??)
 
+- Requires Java 21
 - Methods `setFinalField` and `getPrivateField` restore original visibility.
 
 ## 1.1.5 (2025-04-02)
