@@ -5,7 +5,6 @@ plugins {
   alias(libs.plugins.com.gradleup.shadow)
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // Version 8.0.0 and later requires Java 17+.
   alias(libs.plugins.com.diffplug.spotless)
 
   // Error Prone linter
@@ -31,19 +30,20 @@ repositories {
   gradlePluginPortal()
 }
 
-ext {
-  errorproneVersion = "2.48.0"
-  isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
-}
-
 dependencies {
   testImplementation(libs.junit.jupiter)
   testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  toolchain {
+    // Always compile using Java 21, but test using various Java versions.
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+tasks.withType(JavaCompile).configureEach {
+  // Set the language level and byte code to 21.
+  options.release = 21
 }
 
 test {
@@ -116,10 +116,7 @@ tasks.withType(JavaCompile).configureEach {
     disable("EffectivelyPrivate") // Loses information about the abstraction.
     disable("ExtendsObject")  // Incorrect when using the Checker Framework.
     disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
-    disable("PatternMatchingInstanceof") // requires Java 16 or later
     disable("ReferenceEquality") // Use Interning Checker instead.
-    disable("StatementSwitchToExpressionSwitch") // requires Java 12 or later
-    disable("StringConcatToTextBlock") // requires Java 15 or later
   }
 }
 
