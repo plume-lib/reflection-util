@@ -6,7 +6,6 @@
 
 ## 1.1.6 (2026-03-05)
 
-- Requires Java 21
 - Methods `setFinalField` and `getPrivateField` restore original visibility.
 
 ## 1.1.5 (2025-04-02)
