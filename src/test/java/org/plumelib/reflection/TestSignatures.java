@@ -180,8 +180,8 @@ public final class TestSignatures {
       @FqBinaryName String typename, String classname, int dimensions) {
     Signatures.ClassnameAndDimensions cad =
         Signatures.ClassnameAndDimensions.parseFqBinaryName(typename);
-    assertEquals(classname, cad.classname);
-    assertEquals(dimensions, cad.dimensions);
+    assertEquals(classname, cad.classname());
+    assertEquals(dimensions, cad.dimensions());
   }
 
   @Test
