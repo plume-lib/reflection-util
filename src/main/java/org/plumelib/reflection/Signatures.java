@@ -370,24 +370,12 @@ public final class Signatures {
   /**
    * A representation of an array: A pair of class name (a binary name or primitive) and the number
    * of array dimensions.
+   *
+   * @param classname the class name: a binary name or a primitive
+   * @param dimensions the number of array dimensions
    */
-  public static class ClassnameAndDimensions {
-    /** The class name. It is a binary name or a primitive. */
-    public final @BinaryNameOrPrimitiveType String classname;
-
-    /** The number of array dimensions. */
-    public final int dimensions;
-
-    /**
-     * Create a new ClassnameAndDimensions.
-     *
-     * @param classname the class name: a binary name or a primitive
-     * @param dimensions the number of array dimensions
-     */
-    public ClassnameAndDimensions(@BinaryNameOrPrimitiveType String classname, int dimensions) {
-      this.classname = classname;
-      this.dimensions = dimensions;
-    }
+  public static record ClassnameAndDimensions(
+      @BinaryNameOrPrimitiveType String classname, int dimensions) {
 
     /**
      * Constructs a new ClassnameAndDimensions by parsing a fully-qualified binary name.

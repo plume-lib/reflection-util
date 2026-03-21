@@ -3,6 +3,7 @@
 ## 2.0.0 (????-??-??)
 
 - Requires Java 17 to run.
+- `Signatures.ClassnameAndDimensions` is now a record.
 
 ## 1.1.6 (2026-03-05)
 
