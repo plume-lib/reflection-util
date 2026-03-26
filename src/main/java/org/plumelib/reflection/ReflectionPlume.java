@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
@@ -77,18 +78,16 @@ public final class ReflectionPlume {
   }
 
   /** Used by {@link #classForName}. */
-  private static HashMap<String, Class<?>> primitiveClasses = new HashMap<>(8);
-
-  static {
-    primitiveClasses.put("boolean", Boolean.TYPE);
-    primitiveClasses.put("byte", Byte.TYPE);
-    primitiveClasses.put("char", Character.TYPE);
-    primitiveClasses.put("double", Double.TYPE);
-    primitiveClasses.put("float", Float.TYPE);
-    primitiveClasses.put("int", Integer.TYPE);
-    primitiveClasses.put("long", Long.TYPE);
-    primitiveClasses.put("short", Short.TYPE);
-  }
+  private static final Map<String, Class<?>> primitiveClasses =
+      Map.of(
+          "boolean", Boolean.TYPE,
+          "byte", Byte.TYPE,
+          "char", Character.TYPE,
+          "double", Double.TYPE,
+          "float", Float.TYPE,
+          "int", Integer.TYPE,
+          "long", Long.TYPE,
+          "short", Short.TYPE);
 
   // TODO: Should create a method that handles any ClassGetName (including primitives), but not
   // fully-qualified names.  A routine with a polymorphic parameter type is confusing.
@@ -215,8 +214,7 @@ public final class ReflectionPlume {
       }
       if (bytesRead < numbytes) {
         throw new Error(
-            String.format(
-                "Expected to read %d bytes from %s, got %d", numbytes, pathname, bytesRead));
+            "Expected to read %d bytes from %s, got %d".formatted(numbytes, pathname, bytesRead));
       }
       Class<?> returnClass = defineClass(className, classBytes, 0, numbytes);
       resolveClass(returnClass); // link the class

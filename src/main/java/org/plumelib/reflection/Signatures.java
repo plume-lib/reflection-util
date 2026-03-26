@@ -2,8 +2,8 @@ package org.plumelib.reflection;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -397,19 +397,18 @@ public final class Signatures {
   }
 
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
-  private static HashMap<@PrimitiveType String, @FieldDescriptor String>
-      primitiveToFieldDescriptor = new HashMap<>(8);
-
-  static {
-    primitiveToFieldDescriptor.put("boolean", "Z");
-    primitiveToFieldDescriptor.put("byte", "B");
-    primitiveToFieldDescriptor.put("char", "C");
-    primitiveToFieldDescriptor.put("double", "D");
-    primitiveToFieldDescriptor.put("float", "F");
-    primitiveToFieldDescriptor.put("int", "I");
-    primitiveToFieldDescriptor.put("long", "J");
-    primitiveToFieldDescriptor.put("short", "S");
-  }
+  @SuppressWarnings("signature") // string literals are verified manually
+  private static final Map<@PrimitiveType String, @FieldDescriptor String>
+      primitiveToFieldDescriptor =
+          Map.of(
+              "boolean", "Z",
+              "byte", "B",
+              "char", "C",
+              "double", "D",
+              "float", "F",
+              "int", "I",
+              "long", "J",
+              "short", "S");
 
   /**
    * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
@@ -428,10 +427,12 @@ public final class Signatures {
     if (result == null) {
       result = "L" + cad.classname + ";";
     }
-    for (int i = 0; i < cad.dimensions; i++) {
-      result = "[" + result;
+    result = result.replace('.', '/');
+    if (cad.dimensions == 0) {
+      return result;
+    } else {
+      return "[".repeat(cad.dimensions) + result;
     }
-    return result.replace('.', '/');
   }
 
   /**
@@ -502,18 +503,16 @@ public final class Signatures {
   }
 
   /** A map from field descriptor (sach as "I") to Java primitive type (such as "int"). */
-  private static HashMap<String, String> fieldDescriptorToPrimitive = new HashMap<>(8);
-
-  static {
-    fieldDescriptorToPrimitive.put("Z", "boolean");
-    fieldDescriptorToPrimitive.put("B", "byte");
-    fieldDescriptorToPrimitive.put("C", "char");
-    fieldDescriptorToPrimitive.put("D", "double");
-    fieldDescriptorToPrimitive.put("F", "float");
-    fieldDescriptorToPrimitive.put("I", "int");
-    fieldDescriptorToPrimitive.put("J", "long");
-    fieldDescriptorToPrimitive.put("S", "short");
-  }
+  private static final Map<String, String> fieldDescriptorToPrimitive =
+      Map.of(
+          "Z", "boolean",
+          "B", "byte",
+          "C", "char",
+          "D", "double",
+          "F", "float",
+          "I", "int",
+          "J", "long",
+          "S", "short");
 
   /** Matches the "[[[" prefix of a field descriptor for an array. */
   private static Pattern fdArrayBracketsPattern = Pattern.compile("^\\[+");
@@ -547,11 +546,13 @@ public final class Signatures {
             "Malformed field descriptor should be \"L...;\" or a primitive: " + classname);
       }
     }
+    result = result.replace('/', '.');
     int dimensions = typename.length() - classname.length();
-    for (int i = 0; i < dimensions; i++) {
-      result += "[]";
+    if (dimensions == 0) {
+      return result;
+    } else {
+      return result + "[]".repeat(dimensions);
     }
-    return result.replace('/', '.');
   }
 
   /**
@@ -583,10 +584,8 @@ public final class Signatures {
                   + classname);
         }
       }
-      for (int i = 0; i < dimensions; i++) {
-        result += "[]";
-      }
-      return result;
+      // dimensions != 0, per `if` test above.
+      return result + "[]".repeat(dimensions);
     }
   }
 
