@@ -6,11 +6,11 @@ package org.plumelib.reflection;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,12 +170,13 @@ public final class ReflectionPlume {
       return c.getSimpleName();
     }
 
-    StringBuilder result = new StringBuilder(c.getSimpleName());
-    while (enclosing != null) {
-      result.insert(0, enclosing.getSimpleName() + ".");
-      enclosing = enclosing.getEnclosingClass();
+    ArrayDeque<String> parts = new ArrayDeque<>();
+    Class<?> current = c;
+    while (current != null) {
+      parts.addFirst(current.getSimpleName());
+      current = current.getEnclosingClass();
     }
-    return result.toString();
+    return String.join(".", parts);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -204,26 +205,20 @@ public final class ReflectionPlume {
      */
     public Class<?> defineClassFromFile(@BinaryName String className, String pathname)
         throws FileNotFoundException, IOException {
-      int numbytes;
       byte[] classBytes;
-      int bytesRead;
-      try (InputStream fi = Files.newInputStream(Path.of(pathname))) {
-        numbytes = fi.available();
-        classBytes = new byte[numbytes];
-        bytesRead = fi.read(classBytes);
+      try {
+        classBytes = Files.readAllBytes(Path.of(pathname));
+      } catch (java.nio.file.NoSuchFileException e) {
+        throw new FileNotFoundException(pathname);
       }
-      if (bytesRead < numbytes) {
-        throw new Error(
-            "Expected to read %d bytes from %s, got %d".formatted(numbytes, pathname, bytesRead));
-      }
-      Class<?> returnClass = defineClass(className, classBytes, 0, numbytes);
+      Class<?> returnClass = defineClass(className, classBytes, 0, classBytes.length);
       resolveClass(returnClass); // link the class
       return returnClass;
     }
   }
 
   /** A ClassLoader that can call defineClassFromFile. */
-  private static PromiscuousLoader thePromiscuousLoader = new PromiscuousLoader();
+  private static final PromiscuousLoader thePromiscuousLoader = new PromiscuousLoader();
 
   /**
    * Converts the bytes in a file into an instance of class Class, and resolves (links) the class.
@@ -256,7 +251,6 @@ public final class ReflectionPlume {
   public static void addToClasspath(String dir) {
     // If the dir isn't on CLASSPATH, add it.
     String pathSep = System.getProperty("path.separator");
-    // what is the point of the "replace()" call?
     String cp = System.getProperty("java.class.path", ".").replace('\\', '/');
     StringTokenizer tokenizer = new StringTokenizer(cp, pathSep, false);
     boolean found = false;
@@ -287,7 +281,7 @@ public final class ReflectionPlume {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  static HashMap<String, Class<?>[]> args_seen = new HashMap<>();
+  private static final HashMap<String, Class<?>[]> args_seen = new HashMap<>();
 
   /**
    * Given a method signature, return the method.
@@ -402,7 +396,6 @@ public final class ReflectionPlume {
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
     while (c != Object.class) { // Class is interned
-      // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
         @SuppressWarnings("deprecation") // No non-deprecated alternative to query accessible flag.
@@ -439,7 +432,6 @@ public final class ReflectionPlume {
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
     while (c != Object.class) { // Class is interned
-      // System.out.printf ("Setting field %s in %s%n", fieldName, c);
       try {
         Field f = c.getDeclaredField(fieldName);
         @SuppressWarnings("deprecation") // No non-deprecated alternative to query accessible flag.
