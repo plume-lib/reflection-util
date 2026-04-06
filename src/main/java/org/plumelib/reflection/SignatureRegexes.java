@@ -273,7 +273,7 @@ public final class SignatureRegexes {
       Pattern.compile(FieldDescriptorWithoutPackageRegex);
 
   /** An anchored regex that matches FieldDescriptorForPrimitive strings. */
-  public static final @Regex String FieldDescriptorForPrimitiveRegex = ANCHORED("^[BCDFIJSZ]$");
+  public static final @Regex String FieldDescriptorForPrimitiveRegex = ANCHORED("[BCDFIJSZ]");
 
   /** An anchored pattern that matches FieldDescriptorForPrimitive strings. */
   public static final Pattern FieldDescriptorForPrimitivePattern =

@@ -54,7 +54,7 @@ public final class Signatures {
    * Returns the element type for the given type name, which results from removing all the array
    * brackets.
    *
-   * @param fqBinaryName "a fully-qualified binary name" ({@code @FqBinaryNome})
+   * @param fqBinaryName "a fully-qualified binary name" ({@code @FqBinaryName})
    * @return the base element type of the argument, with all array brackets stripped
    */
   @SuppressWarnings("signature") // @FqBinaryName = @ClassGetName plus optional array brackets
@@ -484,7 +484,7 @@ public final class Signatures {
   )
   public static @FullyQualifiedName String binaryNameToFullyQualified(
       @BinaryName String binaryName) {
-    return binaryName.replaceAll("\\$", ".");
+    return binaryName.replace('$', '.');
   }
 
   /**
@@ -502,7 +502,7 @@ public final class Signatures {
     }
   }
 
-  /** A map from field descriptor (sach as "I") to Java primitive type (such as "int"). */
+  /** A map from field descriptor (such as "I") to Java primitive type (such as "int"). */
   private static final Map<String, String> fieldDescriptorToPrimitive =
       Map.of(
           "Z", "boolean",
@@ -699,7 +699,6 @@ public final class Signatures {
     for (@BinaryName String javaArg : splitJavaArglist(arglist)) {
       result.add(binaryNameToFieldDescriptor(javaArg));
     }
-    // System.out.println("arglistToJvm: " + arglist + " => " + result);
     return result.toString();
   }
 
