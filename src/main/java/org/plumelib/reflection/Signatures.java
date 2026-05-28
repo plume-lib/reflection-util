@@ -397,7 +397,6 @@ public final class Signatures {
   }
 
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
-  @SuppressWarnings("signature") // string literals are verified manually
   private static final Map<@PrimitiveType String, @FieldDescriptor String>
       primitiveToFieldDescriptor =
           Map.of(
@@ -596,7 +595,6 @@ public final class Signatures {
    * @param typename a field descriptor (the name of a type in JVML format)
    * @return the corresponding fully-qualified name (what you would write in Java source code)
    */
-  @SuppressWarnings("signature") // conversion routine
   public static @FullyQualifiedName String fieldDescriptorToFullyQualified(
       @FieldDescriptor String typename) {
     return binaryNameToFullyQualified(fieldDescriptorToBinaryName(typename));
