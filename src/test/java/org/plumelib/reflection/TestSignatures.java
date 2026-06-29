@@ -110,8 +110,7 @@ public final class TestSignatures {
     assertTrue(!Signatures.isClassGetName("pkg.Outer$Inner[]"));
     assertTrue(Signatures.isClassGetName("[LMyClass;"));
     assertTrue(Signatures.isClassGetName("MyClass$22"));
-    // Commented out due to bug in Checker Framework.  Enable after CF version 3.0 is released.
-    // assertTrue(Signatures.isClassGetName("[LMyClass$22;"));
+    assertTrue(Signatures.isClassGetName("[LMyClass$22;"));
     assertTrue(Signatures.isClassGetName("java.lang.Integer"));
     assertTrue(Signatures.isClassGetName("[Ljava.lang.Integer;"));
     assertTrue(Signatures.isClassGetName("pkg.Outer$Inner"));
