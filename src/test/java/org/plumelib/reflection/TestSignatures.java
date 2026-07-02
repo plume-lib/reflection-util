@@ -162,7 +162,7 @@ public final class TestSignatures {
   }
 
   /**
-   * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
+   * Returns true if the argument has the format of an Identifier. The type it refers to might or
    * might not exist.
    */
   @Test

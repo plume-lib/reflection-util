@@ -97,7 +97,7 @@ public final class ReflectionPlume {
    * fully-qualified name (in addition to a binary name).
    *
    * <p>If the given name can't be found, this method changes the last '.' to a dollar sign ($) and
-   * tries again. This accounts for inner classes that are incorrectly passed in in fully-qualified
+   * tries again. This accounts for inner classes that are incorrectly passed in fully-qualified
    * format instead of binary format. (It should try multiple dollar signs, not just at the last
    * position.)
    *
@@ -159,7 +159,7 @@ public final class ReflectionPlume {
 
   /**
    * Returns the class name, including outer classes but without the package. Uses "." as the
-   * separator between outer an inner classes, as in Java source code.
+   * separator between outer and inner classes, as in Java source code.
    *
    * @param c a class
    * @return the class name, including outer classes but without the package
