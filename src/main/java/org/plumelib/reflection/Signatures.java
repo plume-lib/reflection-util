@@ -71,9 +71,9 @@ public final class Signatures {
    * Given a filename ending with ".class", return the binary name of the class.
    *
    * @param classfilename the name of a classfile, relative to a directory on the CLASSPATH
-   * @return the basename of the classfile
+   * @return the binary name of the class
    */
-  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a BinaryName
   public static @BinaryName String classfilenameToBinaryName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
@@ -93,7 +93,7 @@ public final class Signatures {
    * @param classfilename the name of a classfile
    * @return the basename of the classfile
    */
-  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a BinaryName
   public static @BinaryName String classfilenameToBaseName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
@@ -310,7 +310,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a Identifier. The type it refers to might or
+   * Returns true if the argument has the format of an Identifier. The type it refers to might or
    * might not exist.
    *
    * @param s a string
@@ -323,7 +323,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a IdentifierOrPrimitiveType. The type it refers
+   * Returns true if the argument has the format of an IdentifierOrPrimitiveType. The type it refers
    * to might or might not exist.
    *
    * @param s a string
@@ -336,7 +336,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a InternalForm. The type it refers to might or
+   * Returns true if the argument has the format of an InternalForm. The type it refers to might or
    * might not exist.
    *
    * @param s a string
@@ -665,7 +665,7 @@ public final class Signatures {
    * "int", "java.lang.Integer[][]"].
    *
    * @param javaArglist an argument list, in Java format
-   * @return argument list, in JVML format
+   * @return argument list, in Java format
    */
   public static @BinaryName String[] splitJavaArglist(String javaArglist) {
     if (!(javaArglist.startsWith("(") && javaArglist.endsWith(")"))) {
