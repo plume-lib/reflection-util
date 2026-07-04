@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signature.qual.BinaryName;
 import org.checkerframework.checker.signature.qual.ClassGetName;
@@ -159,6 +160,44 @@ public final class TestSignatures {
     assertTrue(Signatures.isFqBinaryName("pkg.Outer$Inner"));
     assertTrue(Signatures.isFqBinaryName("pkg.Outer$Inner[]"));
     assertTrue(Signatures.isFqBinaryName("pkg.Outer$Inner[][]"));
+  }
+
+  /**
+   * A field descriptor for an array: {@code dims} copies of "[" followed by {@code base}.
+   *
+   * <p>Multidimensional field descriptors are constructed here at run time rather than written as
+   * source literals, to avoid a crash in the Checker Framework's literal annotator. Its bundled
+   * FieldDescriptorWithoutPackage regex predates the fix that makes strings such as "[[LMyClass;"
+   * match, so writing them as literals triggers a {@code BugInCF}.
+   *
+   * @param dims the number of array dimensions
+   * @param base the field descriptor of the element type
+   * @return a field descriptor for the array type
+   */
+  private static String nDimArray(@NonNegative int dims, String base) {
+    return "[".repeat(dims) + base;
+  }
+
+  /** Returns true if the argument has the format of a FieldDescriptorWithoutPackage. */
+  @Test
+  void test_isFieldDescriptorWithoutPackage() {
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage("I"));
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage("[[J"));
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage("[LMyClass;"));
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage("[LMyClass$22;"));
+    // Multidimensional arrays of unnamed-package classes (see nDimArray).
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage(nDimArray(2, "LMyClass;")));
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage(nDimArray(3, "LMyClass;")));
+    assertTrue(Signatures.isFieldDescriptorWithoutPackage(nDimArray(2, "LMyClass$22;")));
+    // Non-arrays of reference types are field descriptors, but not "without package" ones.
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage("LMyClass;"));
+    // A field descriptor whose element type has a package is not "without package".
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage("Ljava/lang/Object;"));
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage("[Ljava/lang/Object;"));
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage(nDimArray(2, "Ljava/lang/Object;")));
+    // Not field descriptors at all.
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage("int"));
+    assertTrue(!Signatures.isFieldDescriptorWithoutPackage("MyClass"));
   }
 
   /**
