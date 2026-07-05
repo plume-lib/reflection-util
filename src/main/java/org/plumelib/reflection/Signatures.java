@@ -98,8 +98,8 @@ public final class Signatures {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    @SuppressWarnings("index:assignment") // "/" is not the last character
-    @IndexFor("classfilename") int start = classfilename.lastIndexOf('/') + 1;
+    @SuppressWarnings("index:assignment") // the separator is not the last character
+    @IndexFor("classfilename") int start = Math.max(classfilename.lastIndexOf('/'), classfilename.lastIndexOf(dirSep)) + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
   }

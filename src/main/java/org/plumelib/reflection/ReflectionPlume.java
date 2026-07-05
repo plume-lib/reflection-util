@@ -97,9 +97,9 @@ public final class ReflectionPlume {
    * fully-qualified name (in addition to a binary name).
    *
    * <p>If the given name can't be found, this method changes the last '.' to a dollar sign ($) and
-   * tries again. This accounts for inner classes that are incorrectly passed in fully-qualified
-   * format instead of binary format. (It should try multiple dollar signs, not just at the last
-   * position.)
+   * tries again, repeating with successive dots (from right to left) until the class is found or no
+   * dots remain. This accounts for inner classes that are incorrectly passed in fully-qualified
+   * format instead of binary format.
    *
    * <p>Recall the rather odd specification for {@link Class#forName(String)}: the argument is a
    * binary name for non-arrays, but a field descriptor for arrays. This method uses the same rules,

@@ -266,7 +266,8 @@ public final class SignatureRegexes {
 
   /** An anchored regex that matches FieldDescriptorWithoutPackage strings. */
   public static final @Regex String FieldDescriptorWithoutPackageRegex =
-      ANCHORED("(" + FD_PRIMITIVE + "|\\[+" + FD_PRIMITIVE + "|\\[L" + IDENTIFIER + NESTED + ";)");
+      // Non-arrays of reference types are field descriptors, but not "without package" ones.
+      ANCHORED("(\\[*" + FD_PRIMITIVE + "|\\[+L" + IDENTIFIER + NESTED + ";)");
 
   /** An anchored pattern that matches FieldDescriptorWithoutPackage strings. */
   public static final Pattern FieldDescriptorWithoutPackagePattern =
