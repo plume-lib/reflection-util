@@ -29,10 +29,10 @@ import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions related to reflection, Class, Method, ClassLoader, and classpath. */
-public final class ReflectionPlume {
+public final class ReflectionP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private ReflectionPlume() {
+  private ReflectionP() {
     throw new Error("do not instantiate");
   }
 
@@ -289,12 +289,12 @@ public final class ReflectionPlume {
    * <p>Example calls are:
    *
    * <pre>
-   * UtilPlume.methodForName(
-   *   "org.plumelib.reflection.ReflectionPlume.methodForName"
+   * UtilP.methodForName(
+   *   "org.plumelib.reflection.ReflectionP.methodForName"
    *   +"(java.lang.String, java.lang.String, java.lang.Class[])")
-   * UtilPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName"
+   * UtilP.methodForName("org.plumelib.reflection.ReflectionP.methodForName"
    *                         +"(java.lang.String,java.lang.String,java.lang.Class[])")
-   * UtilPlume.methodForName("java.lang.Math.min(int,int)")
+   * UtilP.methodForName("java.lang.Math.min(int,int)")
    * </pre>
    *
    * @param method a method signature

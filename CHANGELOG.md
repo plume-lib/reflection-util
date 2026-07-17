@@ -2,6 +2,7 @@
 
 ## 2.0.0 (????-??-??)
 
+- Renamed `ReflectionPlume` to `ReflectionP`.
 - Requires Java 17 to run.
 - `Signatures.ClassnameAndDimensions` is now a record.
 

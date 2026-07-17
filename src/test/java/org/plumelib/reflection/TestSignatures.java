@@ -344,7 +344,7 @@ public final class TestSignatures {
       assertEquals(fqn, Signatures.internalFormToFullyQualified(iform));
     }
     if (cgsn != null && fqn != null) {
-      assertEquals(cgsn, ReflectionPlume.fullyQualifiedNameToSimpleName(fqn));
+      assertEquals(cgsn, ReflectionP.fullyQualifiedNameToSimpleName(fqn));
     }
   }
 

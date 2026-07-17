@@ -49,7 +49,7 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 ### Making a snapshot release
 
 * git pull
-* Set version to end in "-SNAPSHOT".
+* Set version number in `gradle.properties` to end in "-SNAPSHOT".
 * Make the snapshot release.
   * Approach 1:  to Maven Central
     * ./gradlew publishToMavenCentral
