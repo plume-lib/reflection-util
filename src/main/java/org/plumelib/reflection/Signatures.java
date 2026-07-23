@@ -281,7 +281,7 @@ public final class Signatures {
    * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
    * might not exist.
    *
-   * <p>This method has the same semantics as {@link isFullyQualifiedName}, because the syntactic
+   * <p>This method has the same semantics as {@link #isFullyQualifiedName}, because the syntactic
    * formats are the same (though the interpretations of the strings differ).
    *
    * @param s a string
@@ -297,7 +297,7 @@ public final class Signatures {
    * Returns true if the argument has the format of a FullyQualifiedName. The type it refers to
    * might or might not exist.
    *
-   * <p>This method has the same semantics as {@link isFqBinaryName}, because the syntactic formats
+   * <p>This method has the same semantics as {@link #isFqBinaryName}, because the syntactic formats
    * are the same (though the interpretations of the strings differ).
    *
    * @param s a string
