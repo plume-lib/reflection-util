@@ -489,9 +489,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of all the given classes.
    *
-   * @param classes a non-empty list of classes
+   * @param classes an array of classes
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of all the given classes
+   * @return the least upper bound of all the given classes, or null if the array is empty or all
+   *     its elements are null
    */
   public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
     Class<T> result = null;
@@ -504,10 +505,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a list of objects
+   * @param objects an array of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the array is
+   *     empty or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(@PolyMustCall @PolyNull Object[] objects) {
@@ -523,10 +524,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a non-empty list of objects
+   * @param objects a list of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the list is empty
+   *     or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(
