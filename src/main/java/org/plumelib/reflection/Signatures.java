@@ -530,7 +530,7 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @BinaryName String fieldDescriptorToBinaryName(@FieldDescriptor String typename) {
-    if (typename.equals("")) {
+    if (typename.isEmpty()) {
       throw new Error("Empty string passed to fieldDescriptorToBinaryName");
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);
@@ -563,7 +563,7 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @BinaryName String classGetNameToBinaryName(@ClassGetName String typename) {
-    if (typename.equals("")) {
+    if (typename.isEmpty()) {
       throw new Error("Empty string passed to classGetNameToBinaryName");
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);

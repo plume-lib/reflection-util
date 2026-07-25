@@ -1,5 +1,4 @@
-// If you edit this file, you must also edit its tests.
-// For tests of this and the entire plume package, see class TestPlume.
+// If you edit this file, you must also edit its tests in class TestReflectionP.
 
 package org.plumelib.reflection;
 
@@ -11,10 +10,10 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.mustcall.qual.PolyMustCall;
@@ -281,7 +280,7 @@ public final class ReflectionP {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  private static final HashMap<String, Class<?>[]> args_seen = new HashMap<>();
+  private static final ConcurrentHashMap<String, Class<?>[]> argsSeen = new ConcurrentHashMap<>();
 
   /**
    * Given a method signature, return the method.
@@ -323,7 +322,8 @@ public final class ReflectionP {
     for (int i = cparenpos + 1; i < method.length(); i++) {
       if (!Character.isWhitespace(method.charAt(i))) {
         throw new Error(
-            "malformed method name should contain only whitespace following close paren");
+            "malformed method name should contain only whitespace following close paren: "
+                + method);
       }
     }
 
@@ -331,10 +331,10 @@ public final class ReflectionP {
     @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String allArgnames = method.substring(oparenpos + 1, cparenpos).trim();
-    Class<?>[] argclasses = args_seen.get(allArgnames);
+    Class<?>[] argclasses = argsSeen.get(allArgnames);
     if (argclasses == null) {
       @BinaryName String[] argnames;
-      if (allArgnames.equals("")) {
+      if (allArgnames.isEmpty()) {
         argnames = new String[0];
       } else {
         @SuppressWarnings("signature") // string manipulation: splitting a method signature
@@ -351,7 +351,7 @@ public final class ReflectionP {
       // TODO: Shouldn't this require a warning suppression?
       Class<?>[] argclassesRes = (@NonNull Class<?>[]) argclassesTmp;
       argclasses = argclassesRes;
-      args_seen.put(allArgnames, argclassesRes);
+      argsSeen.put(allArgnames, argclassesRes);
     }
     return methodForName(classname, methodname, argclasses);
   }
@@ -489,9 +489,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of all the given classes.
    *
-   * @param classes a non-empty list of classes
+   * @param classes an array of classes
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of all the given classes
+   * @return the least upper bound of all the given classes, or null if the array is empty or all
+   *     its elements are null
    */
   public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
     Class<T> result = null;
@@ -504,10 +505,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a list of objects
+   * @param objects an array of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the array is
+   *     empty or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(@PolyMustCall @PolyNull Object[] objects) {
@@ -523,10 +524,10 @@ public final class ReflectionP {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a non-empty list of objects
+   * @param objects a list of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the list is empty
+   *     or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(
