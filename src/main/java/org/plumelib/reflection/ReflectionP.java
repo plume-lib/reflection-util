@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -32,7 +33,7 @@ public final class ReflectionP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private ReflectionP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -77,7 +78,8 @@ public final class ReflectionP {
   }
 
   /** Used by {@link #classForName}. */
-  private static final Map<String, Class<?>> primitiveClasses =
+  @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // field used by one method
+  private static final Map<String, Class<?>> PRIMITIVE_CLASSES =
       Map.of(
           "boolean", Boolean.TYPE,
           "byte", Byte.TYPE,
@@ -108,11 +110,12 @@ public final class ReflectionP {
    * @return the Class corresponding to className
    * @throws ClassNotFoundException if the class is not found
    */
+  @SuppressWarnings("PMD.AvoidReassigningParameters")
   // The @ClassGetName annotation encourages proper use, even though this can take a
   // fully-qualified name (only for a non-array).
   public static Class<?> classForName(@ClassGetName String className)
       throws ClassNotFoundException {
-    Class<?> result = primitiveClasses.get(className);
+    Class<?> result = PRIMITIVE_CLASSES.get(className);
     if (result != null) {
       return result;
     }
@@ -169,7 +172,7 @@ public final class ReflectionP {
       return c.getSimpleName();
     }
 
-    ArrayDeque<String> parts = new ArrayDeque<>();
+    Deque<String> parts = new ArrayDeque<>();
     Class<?> current = c;
     while (current != null) {
       parts.addFirst(current.getSimpleName());
@@ -186,10 +189,15 @@ public final class ReflectionP {
    * This static nested class has no purpose but to define defineClassFromFile.
    * ClassLoader.defineClass is protected, so I subclass ClassLoader in order to call defineClass.
    */
-  private static class PromiscuousLoader extends ClassLoader {
+  private static final class PromiscuousLoader extends ClassLoader {
+
+    /** A ClassLoader that can call {@code defineClassFromFile}. */
+    private static final PromiscuousLoader IT = new PromiscuousLoader();
 
     /** Create a new PromiscuousLoader. */
-    public PromiscuousLoader() {}
+    private PromiscuousLoader() {
+      super();
+    }
 
     /**
      * Converts the bytes in a file into an instance of class Class, and also resolves (links) the
@@ -202,7 +210,8 @@ public final class ReflectionP {
      * @throws FileNotFoundException if the file does not exist
      * @throws IOException if there is trouble reading the file
      */
-    public Class<?> defineClassFromFile(@BinaryName String className, String pathname)
+    @SuppressWarnings("PMD.PreserveStackTrace") // FileNotFoundException
+    private Class<?> defineClassFromFile(@BinaryName String className, String pathname)
         throws FileNotFoundException, IOException {
       byte[] classBytes;
       try {
@@ -215,9 +224,6 @@ public final class ReflectionP {
       return returnClass;
     }
   }
-
-  /** A ClassLoader that can call defineClassFromFile. */
-  private static final PromiscuousLoader thePromiscuousLoader = new PromiscuousLoader();
 
   /**
    * Converts the bytes in a file into an instance of class Class, and resolves (links) the class.
@@ -234,7 +240,7 @@ public final class ReflectionP {
   // Also throws UnsupportedClassVersionError and some other exceptions.
   public static Class<?> defineClassFromFile(@BinaryName String className, String pathname)
       throws FileNotFoundException, IOException {
-    return thePromiscuousLoader.defineClassFromFile(className, pathname);
+    return PromiscuousLoader.IT.defineClassFromFile(className, pathname);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -280,7 +286,8 @@ public final class ReflectionP {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  private static final ConcurrentHashMap<String, Class<?>[]> argsSeen = new ConcurrentHashMap<>();
+  @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // used only in one method
+  private static final Map<String, Class<?>[]> ARGS_SEEN = new ConcurrentHashMap<>();
 
   /**
    * Given a method signature, return the method.
@@ -331,7 +338,7 @@ public final class ReflectionP {
     @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String allArgnames = method.substring(oparenpos + 1, cparenpos).trim();
-    Class<?>[] argclasses = argsSeen.get(allArgnames);
+    Class<?>[] argclasses = ARGS_SEEN.get(allArgnames);
     if (argclasses == null) {
       @BinaryName String[] argnames;
       if (allArgnames.isEmpty()) {
@@ -349,9 +356,10 @@ public final class ReflectionP {
         argclassesTmp[i] = classForName(cgnArgname);
       }
       // TODO: Shouldn't this require a warning suppression?
+      @SuppressWarnings("PMD.UnnecessaryCast") // bug in PMD: ignores type annotations
       Class<?>[] argclassesRes = (@NonNull Class<?>[]) argclassesTmp;
       argclasses = argclassesRes;
-      argsSeen.put(allArgnames, argclassesRes);
+      ARGS_SEEN.put(allArgnames, argclassesRes);
     }
     return methodForName(classname, methodname, argclasses);
   }
@@ -371,8 +379,7 @@ public final class ReflectionP {
       throws ClassNotFoundException, NoSuchMethodException {
 
     Class<?> c = Class.forName(classname);
-    Method m = c.getDeclaredMethod(methodname, params);
-    return m;
+    return c.getDeclaredMethod(methodname, params);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -392,6 +399,7 @@ public final class ReflectionP {
    * @param value new value of field; may be null iff the field is nullable
    * @throws NoSuchFieldException if the field does not exist in the object
    */
+  @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
   public static void setFinalField(Object o, String fieldName, @Interned Object value)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
@@ -412,7 +420,7 @@ public final class ReflectionP {
           throw e;
         }
       } catch (IllegalAccessException e) {
-        throw new Error("This can't happen: " + e);
+        throw new Error("This can't happen", e);
       }
       c = c.getSuperclass();
       assert c != null : "@AssumeAssertion(nullness): c was not Object, so is not null now";
@@ -428,6 +436,7 @@ public final class ReflectionP {
    * @return value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
+  @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
   public static @Nullable Object getPrivateField(Object o, String fieldName)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
@@ -443,7 +452,7 @@ public final class ReflectionP {
           f.setAccessible(originalAccessible);
         }
       } catch (IllegalAccessException e) {
-        throw new Error("This can't happen: " + e);
+        throw new Error("This can't happen", e);
       } catch (NoSuchFieldException e) {
         if (c.getSuperclass() == Object.class) { // Class is interned
           throw e;

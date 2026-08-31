@@ -9,68 +9,12 @@ import org.checkerframework.checker.regex.qual.Regex;
  * This class defines regular expressions for types supported by the <a
  * href="https://checkerframework.org/manual/#signature-checker">Signature String Checker</a>.
  */
+@SuppressWarnings({
+  "PMD.DataClass", // It is indeed a data class.
+  "PMD.MethodNamingConventions", // `GROUPED()`, etc.
+  "PMD.FieldNamingConventions" // not all caps
+})
 public final class SignatureRegexes {
-
-  /** Do not instantiate this class. */
-  private SignatureRegexes() {
-    throw new Error("Do not instantiate");
-  }
-
-  // ///////////////////////////////////////////////////////////////////////////
-  // Functions on regular expressions
-  //
-
-  /**
-   * Create a capturing group.
-   *
-   * @param arg a regular expression
-   * @return the argument wrapped in a capturing group
-   */
-  private static final @Regex String GROUPED(@Regex String arg) {
-    return "(" + arg + ")";
-  }
-
-  /**
-   * Create a regex matching zero or more of the given argument (Kleene star).
-   *
-   * @param arg a regular expression
-   * @return the argument, repeated zero or more times
-   */
-  @SuppressWarnings("regex:return") // string concatenation
-  private static final @Regex String ANY(@Regex String arg) {
-    return GROUPED(arg) + "*";
-  }
-
-  /**
-   * Create a regex that must match the entire string.
-   *
-   * @param arg a regular expression
-   * @return the argument, made to match the entire string
-   */
-  private static final @Regex String ANCHORED(@Regex String arg) {
-    return "^" + arg + "$";
-  }
-
-  /**
-   * An ungrouped alternation.
-   *
-   * @param args regular expressions
-   * @return a regex that matches any one of the arguments
-   */
-  @SuppressWarnings("regex:return") // string concatenation
-  private static final @Regex String ALTERNATE(@Regex String... args) {
-    return String.join("|", args);
-  }
-
-  /**
-   * A grouped alternation.
-   *
-   * @param args regular expressions
-   * @return a regex that matches any one of the arguments, wrapped in a capturing group
-   */
-  private static final @Regex String GROUPED_ALTERNATE(@Regex String... args) {
-    return GROUPED(ALTERNATE(args));
-  }
 
   // ///////////////////////////////////////////////////////////////////////////
   // Building blocks for regular expressions.  These are private in general.
@@ -325,4 +269,69 @@ public final class SignatureRegexes {
 
   /** An anchored pattern that matches PrimitiveType strings. */
   public static final Pattern PrimitiveTypePattern = Pattern.compile(PrimitiveTypeRegex);
+
+  // ///////////////////////////////////////////////////////////////////////////
+  // Constructor
+  //
+
+  /** Do not instantiate this class. */
+  private SignatureRegexes() {
+    throw new UnsupportedOperationException("Do not instantiate");
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////
+  // Functions on regular expressions
+  //
+
+  /**
+   * Create a capturing group.
+   *
+   * @param arg a regular expression
+   * @return the argument wrapped in a capturing group
+   */
+  private static @Regex String GROUPED(@Regex String arg) {
+    return "(" + arg + ")";
+  }
+
+  /**
+   * Create a regex matching zero or more of the given argument (Kleene star).
+   *
+   * @param arg a regular expression
+   * @return the argument, repeated zero or more times
+   */
+  @SuppressWarnings("regex:return") // string concatenation
+  private static @Regex String ANY(@Regex String arg) {
+    return GROUPED(arg) + "*";
+  }
+
+  /**
+   * Create a regex that must match the entire string.
+   *
+   * @param arg a regular expression
+   * @return the argument, made to match the entire string
+   */
+  private static @Regex String ANCHORED(@Regex String arg) {
+    return "^" + arg + "$";
+  }
+
+  /**
+   * An ungrouped alternation.
+   *
+   * @param args regular expressions
+   * @return a regex that matches any one of the arguments
+   */
+  @SuppressWarnings("regex:return") // string concatenation
+  private static @Regex String ALTERNATE(@Regex String... args) {
+    return String.join("|", args);
+  }
+
+  /**
+   * A grouped alternation.
+   *
+   * @param args regular expressions
+   * @return a regex that matches any one of the arguments, wrapped in a capturing group
+   */
+  private static @Regex String GROUPED_ALTERNATE(@Regex String... args) {
+    return GROUPED(ALTERNATE(args));
+  }
 }
