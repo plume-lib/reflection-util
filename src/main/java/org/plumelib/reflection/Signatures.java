@@ -36,7 +36,7 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
  *
  * <p>The class is not yet exhaustive; let the maintainers know if it lacks something you need.
  */
-@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // fields used by one method
+// @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // fields used by one method
 public final class Signatures {
 
   /** Do not instantiate. */
@@ -706,7 +706,7 @@ public final class Signatures {
    * @param jvmArglist an argument list, in JVML format
    * @return argument list, in JVML format
    */
-  @SuppressWarnings("PMD.AvoidReassigningParameters")
+  // @SuppressWarnings("PMD.AvoidReassigningParameters")
   public static List<@FieldDescriptor String> splitJvmArglist(String jvmArglist) {
     if (!(jvmArglist.startsWith("(") && jvmArglist.endsWith(")"))) {
       throw new Error("Malformed arglist: " + jvmArglist);

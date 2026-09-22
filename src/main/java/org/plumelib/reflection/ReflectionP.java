@@ -77,7 +77,7 @@ public final class ReflectionP {
   }
 
   /** Used by {@link #classForName}. */
-  @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // field used by one method
+  // @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // field used by one method
   private static final Map<String, Class<?>> PRIMITIVE_CLASSES =
       Map.of(
           "boolean", Boolean.TYPE,
@@ -109,7 +109,7 @@ public final class ReflectionP {
    * @return the Class corresponding to className
    * @throws ClassNotFoundException if the class is not found
    */
-  @SuppressWarnings("PMD.AvoidReassigningParameters")
+  // @SuppressWarnings("PMD.AvoidReassigningParameters")
   // The @ClassGetName annotation encourages proper use, even though this can take a
   // fully-qualified name (only for a non-array).
   public static Class<?> classForName(@ClassGetName String className)
@@ -209,7 +209,7 @@ public final class ReflectionP {
      * @throws FileNotFoundException if the file does not exist
      * @throws IOException if there is trouble reading the file
      */
-    @SuppressWarnings("PMD.PreserveStackTrace") // FileNotFoundException
+    // @SuppressWarnings("PMD.PreserveStackTrace") // FileNotFoundException
     private Class<?> defineClassFromFile(@BinaryName String className, String pathname)
         throws FileNotFoundException, IOException {
       byte[] classBytes;
@@ -285,7 +285,7 @@ public final class ReflectionP {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // used only in one method
+  // @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // used only in one method
   private static final Map<String, Class<?>[]> ARGS_SEEN = new ConcurrentHashMap<>();
 
   /**
@@ -355,7 +355,7 @@ public final class ReflectionP {
         argclassesTmp[i] = classForName(cgnArgname);
       }
       // TODO: Shouldn't this require a warning suppression?
-      @SuppressWarnings("PMD.UnnecessaryCast") // bug in PMD: ignores type annotations
+      // @SuppressWarnings("PMD.UnnecessaryCast") // bug in PMD: ignores type annotations
       Class<?>[] argclassesRes = (@NonNull Class<?>[]) argclassesTmp;
       argclasses = argclassesRes;
       ARGS_SEEN.put(allArgnames, argclassesRes);
@@ -398,7 +398,7 @@ public final class ReflectionP {
    * @param value new value of field; may be null iff the field is nullable
    * @throws NoSuchFieldException if the field does not exist in the object
    */
-  @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
+  // @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
   public static void setFinalField(Object o, String fieldName, @Interned Object value)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
@@ -435,7 +435,7 @@ public final class ReflectionP {
    * @return value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
-  @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
+  // @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
   public static @Nullable Object getPrivateField(Object o, String fieldName)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();

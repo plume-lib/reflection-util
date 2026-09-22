@@ -9,11 +9,11 @@ import org.checkerframework.checker.regex.qual.Regex;
  * This class defines regular expressions for types supported by the <a
  * href="https://checkerframework.org/manual/#signature-checker">Signature String Checker</a>.
  */
-@SuppressWarnings({
-  "PMD.DataClass", // It is indeed a data class.
-  "PMD.MethodNamingConventions", // `GROUPED()`, etc.
-  "PMD.FieldNamingConventions" // not all caps
-})
+// @SuppressWarnings({
+//   "PMD.DataClass", // It is indeed a data class.
+//   "PMD.MethodNamingConventions", // `GROUPED()`, etc.
+//   "PMD.FieldNamingConventions" // not all caps
+// })
 public final class SignatureRegexes {
 
   // ///////////////////////////////////////////////////////////////////////////
