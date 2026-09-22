@@ -241,7 +241,7 @@ public final class Signatures {
    */
   @SuppressWarnings("signature")
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = FieldDescriptor.class)
-  public static boolean isFieldDescriptor(CharSequence s) {
+  public static boolean isFieldDescriptor(String s) {
     return SignatureRegexes.FieldDescriptorPattern.matcher(s).matches();
   }
 
