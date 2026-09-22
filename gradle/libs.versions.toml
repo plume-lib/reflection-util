@@ -1,6 +1,6 @@
 [versions]
 
-checker-framework = "4.2.2"
+checker-framework = "4.2.4-SNAPSHOT"
 
 google-java-format = "1.36.1"
 
@@ -15,8 +15,8 @@ pmd = "7.27.0"
 [libraries]
 
 # Some entries below are not dependencies.  Each such entry exists so that a dependency-update tool
-# such as Renovate proposes new versions of a tool whose version build.gradle.kts reads, by
-# itself, via "libs.versions.*".  Each such entry is marked "Version only".
+# such as Renovate proposes new versions of a tool whose version build.gradle.kts reads, by itself,
+# via "libs.versions.*".  Each such entry is marked "Version only".
 
 # Version only:  the org.checkerframework Gradle plugin adds the dependency, from
 # `checkerFramework.version`.
@@ -44,7 +44,7 @@ require-javadoc = { module = "org.plumelib:require-javadoc", version = "3.0.0" }
 
 [plugins]
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.1" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.2" }
 
 com-gradleup-shadow = { id = "com.gradleup.shadow", version = "9.6.1" }
 
