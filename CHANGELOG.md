@@ -1,7 +1,13 @@
 # Reflection-Util change log
 
-## 2.0.0 (????-??-??)
+## 9.9.9 (2026-08-??)
 
+- Tested under Java 27.
+- Requires Java 21 to run.
+
+## 2.0.0 (2026-08-05)
+
+- Renamed `ReflectionPlume` to `ReflectionP`.
 - Requires Java 17 to run.
 - `Signatures.ClassnameAndDimensions` is now a record.
 
@@ -21,7 +27,7 @@
 ## 1.1.4 (2024-10-09)
 
 - New method `Signatures.classGetNameToBinaryName()`
-- Requires Java 11 (its .class files uses classfile version 55)
+- Requires Java 11 (its .class files use classfile version 55)
 
 ## 1.1.3 (2024-01-15)
 

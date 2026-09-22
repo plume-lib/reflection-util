@@ -1,5 +1,4 @@
-// If you edit this file, you must also edit its tests.
-// For tests of this and the entire plume package, see class TestPlume.
+// If you edit this file, you must also edit its tests in class TestReflectionP.
 
 package org.plumelib.reflection;
 
@@ -11,10 +10,10 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
@@ -30,10 +29,10 @@ import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions related to reflection, Class, Method, ClassLoader, and classpath. */
-public final class ReflectionPlume {
+public final class ReflectionP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private ReflectionPlume() {
+  private ReflectionP() {
     throw new Error("do not instantiate");
   }
 
@@ -43,7 +42,7 @@ public final class ReflectionPlume {
 
   /**
    * Returns true iff sub is a subtype of sup. If sub == sup, then sub is considered a subtype of
-   * sub and this method returns true.
+   * sup and this method returns true.
    *
    * @param sub class to test for being a subtype
    * @param sup class to test for being a supertype
@@ -67,7 +66,6 @@ public final class ReflectionPlume {
     }
 
     // Handle interfaces
-    @SuppressWarnings({"lock:method.guarantee.violated"}) // order doesn't matter
     Class<?>[] interfaces = sub.getInterfaces();
     for (Class<?> ifc : interfaces) {
       if (ifc == sup || isSubtype(ifc, sup)) {
@@ -98,9 +96,9 @@ public final class ReflectionPlume {
    * fully-qualified name (in addition to a binary name).
    *
    * <p>If the given name can't be found, this method changes the last '.' to a dollar sign ($) and
-   * tries again. This accounts for inner classes that are incorrectly passed in in fully-qualified
-   * format instead of binary format. (It should try multiple dollar signs, not just at the last
-   * position.)
+   * tries again, repeating with successive dots (from right to left) until the class is found or no
+   * dots remain. This accounts for inner classes that are incorrectly passed in fully-qualified
+   * format instead of binary format.
    *
    * <p>Recall the rather odd specification for {@link Class#forName(String)}: the argument is a
    * binary name for non-arrays, but a field descriptor for arrays. This method uses the same rules,
@@ -160,7 +158,7 @@ public final class ReflectionPlume {
 
   /**
    * Returns the class name, including outer classes but without the package. Uses "." as the
-   * separator between outer an inner classes, as in Java source code.
+   * separator between outer and inner classes, as in Java source code.
    *
    * @param c a class
    * @return the class name, including outer classes but without the package
@@ -282,7 +280,8 @@ public final class ReflectionPlume {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  private static final @Modifiable HashMap<String, Class<?>[]> args_seen = new HashMap<>();
+  private static final @Modifiable ConcurrentHashMap<String, Class<?>[]> argsSeen =
+      new ConcurrentHashMap<>();
 
   /**
    * Given a method signature, return the method.
@@ -290,12 +289,12 @@ public final class ReflectionPlume {
    * <p>Example calls are:
    *
    * <pre>
-   * UtilPlume.methodForName(
-   *   "org.plumelib.reflection.ReflectionPlume.methodForName"
+   * UtilP.methodForName(
+   *   "org.plumelib.reflection.ReflectionP.methodForName"
    *   +"(java.lang.String, java.lang.String, java.lang.Class[])")
-   * UtilPlume.methodForName("org.plumelib.reflection.ReflectionPlume.methodForName"
+   * UtilP.methodForName("org.plumelib.reflection.ReflectionP.methodForName"
    *                         +"(java.lang.String,java.lang.String,java.lang.Class[])")
-   * UtilPlume.methodForName("java.lang.Math.min(int,int)")
+   * UtilP.methodForName("java.lang.Math.min(int,int)")
    * </pre>
    *
    * @param method a method signature
@@ -324,7 +323,8 @@ public final class ReflectionPlume {
     for (int i = cparenpos + 1; i < method.length(); i++) {
       if (!Character.isWhitespace(method.charAt(i))) {
         throw new Error(
-            "malformed method name should contain only whitespace following close paren");
+            "malformed method name should contain only whitespace following close paren: "
+                + method);
       }
     }
 
@@ -332,10 +332,10 @@ public final class ReflectionPlume {
     @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String allArgnames = method.substring(oparenpos + 1, cparenpos).trim();
-    Class<?>[] argclasses = args_seen.get(allArgnames);
+    Class<?>[] argclasses = argsSeen.get(allArgnames);
     if (argclasses == null) {
       @BinaryName String[] argnames;
-      if (allArgnames.equals("")) {
+      if (allArgnames.isEmpty()) {
         argnames = new String[0];
       } else {
         @SuppressWarnings("signature") // string manipulation: splitting a method signature
@@ -352,7 +352,7 @@ public final class ReflectionPlume {
       // TODO: Shouldn't this require a warning suppression?
       Class<?>[] argclassesRes = (@NonNull Class<?>[]) argclassesTmp;
       argclasses = argclassesRes;
-      args_seen.put(allArgnames, argclassesRes);
+      argsSeen.put(allArgnames, argclassesRes);
     }
     return methodForName(classname, methodname, argclasses);
   }
@@ -490,9 +490,10 @@ public final class ReflectionPlume {
   /**
    * Returns the least upper bound of all the given classes.
    *
-   * @param classes a non-empty list of classes
+   * @param classes an array of classes
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of all the given classes
+   * @return the least upper bound of all the given classes, or null if the array is empty or all
+   *     its elements are null
    */
   public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
     Class<T> result = null;
@@ -505,10 +506,10 @@ public final class ReflectionPlume {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a list of objects
+   * @param objects an array of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the array is
+   *     empty or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(@PolyMustCall @PolyNull Object[] objects) {
@@ -524,10 +525,10 @@ public final class ReflectionPlume {
   /**
    * Returns the least upper bound of the classes of the given objects.
    *
-   * @param objects a non-empty list of objects
+   * @param objects a list of objects
    * @param <T> the (inferred) least upper bound of the arguments
-   * @return the least upper bound of the classes of the given objects, or null if all arguments are
-   *     null
+   * @return the least upper bound of the classes of the given objects, or null if the list is empty
+   *     or all its elements are null
    */
   @SuppressWarnings("unchecked") // cast to Class<T>
   public static <T> @Nullable Class<T> leastUpperBound(

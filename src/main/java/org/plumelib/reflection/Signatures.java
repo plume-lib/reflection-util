@@ -71,9 +71,9 @@ public final class Signatures {
    * Given a filename ending with ".class", return the binary name of the class.
    *
    * @param classfilename the name of a classfile, relative to a directory on the CLASSPATH
-   * @return the basename of the classfile
+   * @return the binary name of the class
    */
-  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a BinaryName
   public static @BinaryName String classfilenameToBinaryName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
@@ -93,13 +93,13 @@ public final class Signatures {
    * @param classfilename the name of a classfile
    * @return the basename of the classfile
    */
-  @SuppressWarnings("signature:return") // basename of a classfile is a Binaryname
+  @SuppressWarnings("signature:return") // basename of a classfile is a BinaryName
   public static @BinaryName String classfilenameToBaseName(String classfilename) {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    @SuppressWarnings("index:assignment") // "/" is not the last character
-    @IndexFor("classfilename") int start = classfilename.lastIndexOf('/') + 1;
+    @SuppressWarnings("index:assignment") // the separator is not the last character
+    @IndexFor("classfilename") int start = Math.max(classfilename.lastIndexOf('/'), classfilename.lastIndexOf(dirSep)) + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
   }
@@ -281,7 +281,7 @@ public final class Signatures {
    * Returns true if the argument has the format of a FqBinaryName. The type it refers to might or
    * might not exist.
    *
-   * <p>This method has the same semantics as {@link isFullyQualifiedName}, because the syntactic
+   * <p>This method has the same semantics as {@link #isFullyQualifiedName}, because the syntactic
    * formats are the same (though the interpretations of the strings differ).
    *
    * @param s a string
@@ -297,7 +297,7 @@ public final class Signatures {
    * Returns true if the argument has the format of a FullyQualifiedName. The type it refers to
    * might or might not exist.
    *
-   * <p>This method has the same semantics as {@link isFqBinaryName}, because the syntactic formats
+   * <p>This method has the same semantics as {@link #isFqBinaryName}, because the syntactic formats
    * are the same (though the interpretations of the strings differ).
    *
    * @param s a string
@@ -310,7 +310,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a Identifier. The type it refers to might or
+   * Returns true if the argument has the format of an Identifier. The type it refers to might or
    * might not exist.
    *
    * @param s a string
@@ -323,7 +323,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a IdentifierOrPrimitiveType. The type it refers
+   * Returns true if the argument has the format of an IdentifierOrPrimitiveType. The type it refers
    * to might or might not exist.
    *
    * @param s a string
@@ -336,7 +336,7 @@ public final class Signatures {
   }
 
   /**
-   * Returns true if the argument has the format of a InternalForm. The type it refers to might or
+   * Returns true if the argument has the format of an InternalForm. The type it refers to might or
    * might not exist.
    *
    * @param s a string
@@ -530,7 +530,7 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @BinaryName String fieldDescriptorToBinaryName(@FieldDescriptor String typename) {
-    if (typename.equals("")) {
+    if (typename.isEmpty()) {
       throw new Error("Empty string passed to fieldDescriptorToBinaryName");
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);
@@ -563,7 +563,7 @@ public final class Signatures {
    */
   @SuppressWarnings("signature") // conversion routine
   public static @BinaryName String classGetNameToBinaryName(@ClassGetName String typename) {
-    if (typename.equals("")) {
+    if (typename.isEmpty()) {
       throw new Error("Empty string passed to classGetNameToBinaryName");
     }
     Matcher m = fdArrayBracketsPattern.matcher(typename);
@@ -665,7 +665,7 @@ public final class Signatures {
    * "int", "java.lang.Integer[][]"].
    *
    * @param javaArglist an argument list, in Java format
-   * @return argument list, in JVML format
+   * @return argument list, in Java format
    */
   public static @BinaryName String[] splitJavaArglist(String javaArglist) {
     if (!(javaArglist.startsWith("(") && javaArglist.endsWith(")"))) {
