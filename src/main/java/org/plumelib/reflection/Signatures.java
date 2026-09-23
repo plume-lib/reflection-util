@@ -36,14 +36,12 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
  *
  * <p>The class is not yet exhaustive; let the maintainers know if it lacks something you need.
  */
+// @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // fields used by one method
 public final class Signatures {
-
-  /** The file-system-specific directory separator. */
-  private static final String dirSep = File.separator;
 
   /** Do not instantiate. */
   private Signatures() {
-    throw new Error("Do not instantiate");
+    throw new UnsupportedOperationException("Do not instantiate");
   }
 
   // ///////////////////////////////////////////////////////////////////////////
@@ -78,12 +76,12 @@ public final class Signatures {
     if (!classfilename.endsWith(".class")) {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
-    classfilename = classfilename.substring(0, classfilename.length() - 6);
-    if (classfilename.startsWith("/") || classfilename.startsWith(dirSep)) {
-      classfilename = classfilename.substring(1);
+    String result = classfilename.substring(0, classfilename.length() - 6);
+    if (result.startsWith("/") || result.startsWith(File.separator)) {
+      result = result.substring(1);
     }
     // This might misbehave for a Windows file whose name contains "/".
-    return classfilename.replace("/", ".").replace(dirSep, ".");
+    return result.replace("/", ".").replace(File.separator, ".");
   }
 
   /**
@@ -99,7 +97,8 @@ public final class Signatures {
       throw new IllegalArgumentException("Bad class file name: " + classfilename);
     }
     @SuppressWarnings("index:assignment") // the separator is not the last character
-    @IndexFor("classfilename") int start = Math.max(classfilename.lastIndexOf('/'), classfilename.lastIndexOf(dirSep)) + 1;
+    @IndexFor("classfilename") int start =
+        Math.max(classfilename.lastIndexOf('/'), classfilename.lastIndexOf(File.separator)) + 1;
     int end = classfilename.length() - 6;
     return classfilename.substring(start, end);
   }
@@ -374,7 +373,7 @@ public final class Signatures {
    * @param classname the class name: a binary name or a primitive
    * @param dimensions the number of array dimensions
    */
-  public static record ClassnameAndDimensions(
+  public record ClassnameAndDimensions(
       @BinaryNameOrPrimitiveType String classname, int dimensions) {
 
     /**
@@ -398,7 +397,7 @@ public final class Signatures {
 
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
   private static final Map<@PrimitiveType String, @FieldDescriptor String>
-      primitiveToFieldDescriptor =
+      PRIMITIVE_TO_FIELD_DESCRIPTOR =
           Map.of(
               "boolean", "Z",
               "byte", "B",
@@ -422,7 +421,7 @@ public final class Signatures {
   @SuppressWarnings("signature") // conversion routine
   public static @FieldDescriptor String binaryNameToFieldDescriptor(@FqBinaryName String typename) {
     ClassnameAndDimensions cad = ClassnameAndDimensions.parseFqBinaryName(typename);
-    String result = primitiveToFieldDescriptor.get(cad.classname);
+    String result = PRIMITIVE_TO_FIELD_DESCRIPTOR.get(cad.classname);
     if (result == null) {
       result = "L" + cad.classname + ";";
     }
@@ -444,7 +443,7 @@ public final class Signatures {
    */
   public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(
       @PrimitiveType String primitiveName) {
-    String result = primitiveToFieldDescriptor.get(primitiveName);
+    String result = PRIMITIVE_TO_FIELD_DESCRIPTOR.get(primitiveName);
     if (result == null) {
       throw new IllegalArgumentException("Not the name of a primitive type: " + primitiveName);
     }
@@ -502,7 +501,7 @@ public final class Signatures {
   }
 
   /** A map from field descriptor (such as "I") to Java primitive type (such as "int"). */
-  private static final Map<String, String> fieldDescriptorToPrimitive =
+  private static final Map<String, String> FIELD_DESCRIPTOR_TO_PRIMITIVE =
       Map.of(
           "Z", "boolean",
           "B", "byte",
@@ -539,7 +538,7 @@ public final class Signatures {
     if (classname.startsWith("L") && classname.endsWith(";")) {
       result = classname.substring(1, classname.length() - 1);
     } else {
-      result = fieldDescriptorToPrimitive.get(classname);
+      result = FIELD_DESCRIPTOR_TO_PRIMITIVE.get(classname);
       if (result == null) {
         throw new Error(
             "Malformed field descriptor should be \"L...;\" or a primitive: " + classname);
@@ -576,7 +575,7 @@ public final class Signatures {
       if (classname.startsWith("L") && classname.endsWith(";")) {
         result = classname.substring(1, classname.length() - 1);
       } else {
-        result = fieldDescriptorToPrimitive.get(classname);
+        result = FIELD_DESCRIPTOR_TO_PRIMITIVE.get(classname);
         if (result == null) {
           throw new Error(
               "Malformed Class.getName array base type should be \"L...;\" or a primitive: "
@@ -667,18 +666,17 @@ public final class Signatures {
    * @param javaArglist an argument list, in Java format
    * @return argument list, in Java format
    */
+  @SuppressWarnings("signature:return") // string manipulation
   public static @BinaryName String[] splitJavaArglist(String javaArglist) {
     if (!(javaArglist.startsWith("(") && javaArglist.endsWith(")"))) {
       throw new Error("Malformed arglist: " + javaArglist);
     }
     // Remove parentheses and space adjacent to them
-    javaArglist = javaArglist.substring(1, javaArglist.length() - 1).trim();
-    if (javaArglist.isEmpty()) {
+    String withoutParens = javaArglist.substring(1, javaArglist.length() - 1).trim();
+    if (withoutParens.isEmpty()) {
       return new String[0];
     }
-    @SuppressWarnings("signature:assignment") // string manipulation
-    @BinaryName String[] result = commaSeparator.split(javaArglist);
-    return result;
+    return commaSeparator.split(withoutParens);
   }
 
   /**
@@ -708,6 +706,7 @@ public final class Signatures {
    * @param jvmArglist an argument list, in JVML format
    * @return argument list, in JVML format
    */
+  // @SuppressWarnings("PMD.AvoidReassigningParameters")
   public static List<@FieldDescriptor String> splitJvmArglist(String jvmArglist) {
     if (!(jvmArglist.startsWith("(") && jvmArglist.endsWith(")"))) {
       throw new Error("Malformed arglist: " + jvmArglist);
