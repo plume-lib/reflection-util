@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import org.checkerframework.checker.interning.qual.Interned;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -286,7 +287,7 @@ public final class ReflectionP {
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
   // @SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass") // used only in one method
-  private static final Map<String, Class<?>[]> ARGS_SEEN = new ConcurrentHashMap<>();
+  private static final @Modifiable Map<String, Class<?>[]> ARGS_SEEN = new ConcurrentHashMap<>();
 
   /**
    * Given a method signature, return the method.
