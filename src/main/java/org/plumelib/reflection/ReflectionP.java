@@ -49,7 +49,7 @@ public final class ReflectionP {
    * @return true iff sub is a subtype of sup
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.deterministic.call", // getInterfaces() is used as a set
+    "allcheckers:purity.call", // getInterfaces() is used as a set
     "allcheckers:method.guarantee.violated" // getInterfaces() is used as a set
   })
   @Pure
